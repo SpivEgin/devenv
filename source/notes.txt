@@ -1,0 +1,2 @@
+virtualenv -p C:\Users\SpivEgin\AppData\Local\Programs\Python\Python36\python.exe zP361env
+zP361env\Scripts\activate

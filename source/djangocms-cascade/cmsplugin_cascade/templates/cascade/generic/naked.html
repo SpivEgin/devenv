@@ -1,0 +1,6 @@
+{% load cms_tags %}
+{% with instance_css_classes=instance.css_classes instance_inline_styles=instance.inline_styles %}
+{% for plugin in instance.child_plugin_instances %}
+	{% render_plugin plugin %}
+{% endfor %}
+{% endwith %}

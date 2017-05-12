@@ -1,0 +1,41 @@
+sudo: false
+language: python
+python:
+    - "2.7"
+    - "3.4"
+    - "3.6"
+cache: pip
+env:
+    - DJANGO_VERSION=1.5.*
+    - DJANGO_VERSION=1.6.*
+    - DJANGO_VERSION=1.7.*
+    - DJANGO_VERSION=1.8.*
+    - DJANGO_VERSION=1.9.*
+    - DJANGO_VERSION=1.10.*
+    - DJANGO_VERSION=1.11.*
+matrix:
+    exclude:
+        - python: '3.6'
+          env: DJANGO_VERSION=1.5.*
+        - python: '3.6'
+          env: DJANGO_VERSION=1.6.*
+        - python: '3.6'
+          env: DJANGO_VERSION=1.7.*
+        - python: '3.6'
+          env: DJANGO_VERSION=1.8.*
+        - python: '3.6'
+          env: DJANGO_VERSION=1.9.*
+        - python: '3.6'
+          env: DJANGO_VERSION=1.10.*
+install:
+    - pip install -q Django==$DJANGO_VERSION
+    - pip install coveralls
+    - pip install mock
+    - pip install south
+    - pip install nose
+    - pip install testfixtures
+script:
+    - python setup.py build
+    - PYTHONHASHSEED=0 python setup.py nosetests --verbosity 2 --with-coverage --cover-tests --cover-erase
+after_success:
+    - coveralls

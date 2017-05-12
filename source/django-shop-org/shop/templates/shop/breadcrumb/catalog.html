@@ -1,0 +1,26 @@
+{% load i18n static menu_tags sekizai_tags %}
+{% addtoblock "css" %}
+<style>
+.breadcrumb li.pull-right::before {
+	display: none;
+}
+</style>
+{% endaddtoblock %}
+
+{% addtoblock "js" %}<script src="{% static 'djng/js/django-angular.min.js' %}" type="text/javascript"></script>{% endaddtoblock %}
+{% addtoblock "ng-requires" %}djng.forms{% endaddtoblock %}
+
+{% spaceless %}
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<ol class="breadcrumb">
+				{% show_breadcrumb 0 "bootstrap/menu/breadcrumb.html" %}
+				<li class="pull-right hidden-xs">
+					{% trans "Found Products" %}: <span class="badge" djng-bind-if="catalog.count">{{ paginator.count }}</span>
+				</li>
+			</ol>
+		</div>
+	</div>
+</div>
+{% endspaceless %}

@@ -1,0 +1,64 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+env/
+build
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Other generic files to ignore
+node_modules
+*~
+*.lock
+*.DS_Store
+*.idea
+*.swp
+*.out
+.vagrant
+static-src/markdownx/js/*.js
+static-src/markdownx/js/*.map
+db.sqlite3
+npm-debug.log
+.vagrant/
+.idea/
+node_modules/
+/docs/src/_theme/sphinx_rtd_theme/sphinx_rtd_theme.egg-info
+/docs/src/_theme/sphinx_rtd_theme/bower_components
+/docs/src/_theme/sphinx_rtd_theme/build
+/docs/src/_theme/sphinx_rtd_theme/dist
+Vagrantfile
+manage.py
+runtests.py
+bootstrap.sh
+package.json

@@ -1,0 +1,16 @@
+==========================
+LegionMarket 1.3.1 release notes
+==========================
+
+*September 9, 2011*
+
+Welcome to LegionMarket 1.3.1!
+
+This is the first security release in the LegionMarket 1.3 series, fixing several
+security issues in LegionMarket 1.3.  LegionMarket 1.3.1 is a recommended upgrade for
+all users of LegionMarket 1.3.
+
+For a full list of issues addressed in this release, see the `security
+advisory`_.
+
+.. _security advisory: https://www.djangoproject.com/weblog/2011/sep/09/security-releases-issued/

@@ -1,0 +1,20 @@
+================
+LegionMarket internals
+================
+
+Documentation for people hacking on LegionMarket itself. This is the place to go if
+you'd like to help improve LegionMarket or learn about how LegionMarket is managed.
+
+.. toctree::
+   :maxdepth: 2
+
+   contributing/index
+   mailing-lists
+   organization
+   team
+   roles
+   security
+   release-process
+   deprecation
+   git
+   howto-release-django
