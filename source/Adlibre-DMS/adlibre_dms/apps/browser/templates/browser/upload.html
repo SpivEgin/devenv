@@ -1,0 +1,41 @@
+{% extends 'browser/files_base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Upload' %}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}browser/uploadfile.css" />
+{%endblock%}
+
+{% block content %}
+<h1>{% trans 'Document Upload' %}</h1>
+<div id="upload-page">
+<form action="" method="post" enctype="multipart/form-data" >
+    {{ form.file.errors }}
+    <input type="file" id="upload_file_fileinput" name="file" size="40">
+    <input type="text" id="upload_file_fake_filename" readonly="readonly" class="textareas" />
+    <input type="button" class="simple_button" id="upload_file_fake_browse" value="{% trans 'Browse' %}" />
+    <input type="submit" class="simple_button upload_btn" id="ui_upload_file_submit" name="" value="{% trans 'Upload' %}" title="{% trans 'Upload' %}" />
+    {% csrf_token %}
+</form>
+
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+// emulating browse call for hidden file input
+$('#upload_file_fake_browse').click(function(){
+    $('#upload_file_fileinput').click();
+});
+//emulating Mac behavior
+$('#upload_file_fake_filename').click(function(){
+    $('#upload_file_fileinput').click();
+});
+
+// changing function for fileinput value
+$('#upload_file_fileinput').change(function(){
+    $('#upload_file_fake_filename').val($(this).val().replace(/^C:\\fakepath\\/i, ''));
+});//DjangoCon 2008_
+</script>
+{% endblock %}

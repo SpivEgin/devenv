@@ -1,0 +1,18 @@
+{% extends THEME_TEMPLATE %}
+
+{% load i18n %}
+
+{% block title %}Login{% endblock %}
+
+{% block body_class %}login{% endblock %}
+
+{% block content %}
+<h1>Login</h1>
+{% if error_message %}
+<p class="errornote">{{ error_message }}</p>
+{% endif %}
+
+{% include "registration/loginform.html" %}
+
+{% endblock %}
+

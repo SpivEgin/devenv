@@ -1,0 +1,58 @@
+{% load i18n %}
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>{% block title %}{% trans 'Welcome' %}{% endblock %} - {% trans 'Adlibre DMS' %}</title>
+    {% block theme_css %}{% endblock %}
+    <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico" />
+    <script type="text/javascript" language="javascript" charset="utf-8" src="{{ STATIC_URL }}js/jquery-1.7.1.min.js"></script>
+    {%block extra_head%}{%endblock%}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<div id="page_wrapper">
+    <div id="logo_wrapper">
+        {% block logo %}{% endblock %}
+    </div>
+    <div id="header">
+        {% block header %}
+        <div id="menu">
+            <ul>
+                <li class="home"><a href="{% url "home" %}">{% trans 'Home' %}</a></li>
+                {% if user.is_staff %}
+                <li class="files"><a href="{% url "files_index" %}">{% trans 'Files' %}</a></li>
+                <li class="settings"><a href="{% url "setting" %}">{% trans 'Settings' %}</a></li>
+                <li class="plugins"><a href="{% url "plugins" %}">{% trans 'Plugins' %}</a></li>
+                {% endif %}
+                {% if user.is_superuser %}
+                <li class="ui"><a href="{% url "admin:index" %}">{% trans 'Admin' %}</a></li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                {% include 'aui_menu_item.html' %}
+                <li class="mdtui"><a href="{% url "mdtui-home" %}">{% trans 'MUI' %}</a></li>
+                <li class="logout"><a href="{% url "logout" %}">{% trans 'Log out' %}</a></li>
+                {% else %}
+                <li class="login"><a href="{% url "login" %}">{% trans 'Log in' %}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        {% endblock %}
+    </div>
+    <div id="container">
+        {% block body %}{% endblock %}
+    </div>
+    <div id="footer">
+        {% block footer %}
+            <p>
+                {% trans 'Adlibre DMS' %} - &copy; Adlibre {% now "Y" %}
+                {% if user.is_authenticated %}
+                &middot; <a href="{% url "upload" %}">{% trans 'Upload' %}</a>
+                {% endif %}
+                <span>{% trans 'Version' %}: {{ PRODUCT_VERSION }}. {% if user.is_authenticated %}{% trans 'Logged in as' %} {{ user }}{% else %}{% trans 'Logged out' %}{% endif %}.</span>
+            </p>
+        {% endblock %}
+	</div>
+
+{% block javascript %}{% endblock %}
+</div>
+</body>
+</html>

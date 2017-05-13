@@ -1,0 +1,36 @@
+{% extends 'site_base.html' %}
+{% load i18n %}
+
+{% block theme_css %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}theme/{{ THEME_NAME }}/style.css" />
+{% endblock %}
+
+{% block logo %}
+    <a href="/"><img src="{{ STATIC_URL }}theme/{{ THEME_NAME }}/adlibre-dms-logo.png" title="{% trans 'Adlibre DMS' %}" alt="{% trans 'Adlibre DMS' %}" /></a>
+{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+{% endblock %}
+
+{% block body %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {{ block.super }}
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+{% endblock %}

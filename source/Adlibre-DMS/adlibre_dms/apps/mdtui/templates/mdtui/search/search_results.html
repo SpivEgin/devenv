@@ -1,0 +1,66 @@
+{% load i18n %}
+{% load index_keys %}
+{% load mui_permissions %}
+{% check_edit_index_permit %}
+<fieldset>
+    <legend>{% if request.session.searching_docrule_id %}{% get_docrule_name_by_id request.session.searching_docrule_id %}{% endif %}{% if request.session.search_mdt_id %}{% get_used_in_search_mdt %}{% endif %} Results</legend>
+</fieldset>
+<form id="dummy" style="display:none;" action="{{ request.path }}" method="post">{% csrf_token %}</form>
+<table class="table table-striped" id="results-table">
+    <caption>Search with keys:
+        <ul class="metainfo">
+            {% for item in document_keys %}
+                {% if item != 'end_date' %} {# 'end_date' already included via get_key_li_item templatetag #}
+                <li>{% get_key_li_item document_keys item %}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </caption>
+{% block custom_branding %}
+    <colgroup>
+        <col class="">
+        <col class="{% ifequal sorting_field "Indexing Date" %}selected{% endifequal %}">
+        {% for key in mdts %}
+        {% if key != "metadata_user_name" and key != "metadata_user_id" %}
+        <col class="{% ifequal sorting_field key %}selected{% endifequal %}">
+        {% endif %}
+        {% endfor %}
+        <col class="{% ifequal sorting_field "Description" %}selected{% endifequal %}">
+        <col class="{% ifequal sorting_field "Document Type" %}selected{% endifequal %}">
+        <col class="">
+    </colgroup>
+    <thead id="results-table-head">
+    <tr>
+        <th>{% trans 'View' %}</th>
+        {% set_key 'Indexing Date' %}{% include "mdtui/search/search_results_header_field.html" %}
+        {% for key in mdts %}
+        {% include "mdtui/search/search_results_header_field.html" %}
+        {% endfor %}
+        {% set_key 'Description' %}{% include "mdtui/search/search_results_header_field.html" %}
+        {% set_key 'Type' %}{% include "mdtui/search/search_results_header_field.html" %}
+        <th>{% trans 'Actions' %}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for doc in paginated_documents.object_list %}
+        <tr>
+            <td class="nw"><a href="{% url 'mdtui-view-object' doc.id %}" title="{% trans 'View Document' %}" alt="{% trans 'View Document' %}" target="_blank"><i class="icon-download"></i> {{ doc.id }}</a></td>
+            <td class="nw">{{ doc.metadata_created_date|date:DATE_FORMAT }}</td>
+            {% for key in mdts %}
+                {% if key != "metadata_user_name" and key != "metadata_user_id" %}
+                    <td>{% get_sec_key_for_doc doc.mdt_indexes key %}</td>
+                {% endif %}
+            {% endfor %}
+            <td>{{ doc.metadata_description }}</td>
+            <td>{% get_docrule_name_by_id doc.metadata_doc_type_rule_id %}</td>
+            <td><a href="{% url 'bcp-print' 'Code128' doc.id %}" title="{% trans 'Reprint Barcode' %}" alt="{% trans 'Reprint Barcode' %}" target="_blank"><i class="icon-barcode"></i></a> {% if edit_index_permitted %}| <a href="{% url 'mdtui-edit' doc.id %}" title="{% trans 'Edit Metadata' %}"><i class="icon-edit"></i></a>{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+{% endblock %}
+</table>
+{% if paginated_documents.paginator %}
+<hr />
+{% include "mdtui/search/search_results_paginator.html" %}
+{% endif %}
+<p><a href="{% url "mdtui-search-export" %}" title="{% trans 'Download Results to CSV' %}" class="btn"><i class="icon-download-alt"></i> {% trans 'Export Results' %}</a></p>
