@@ -1,2 +1,5 @@
 virtualenv -p C:\Users\SpivEgin\AppData\Local\Programs\Python\Python36\python.exe zP361env
 zP361env\Scripts\activate
+
+cwd=$(pwd) # Stores full path in a variable :)
+${cwd}/

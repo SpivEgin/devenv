@@ -1,28 +1,31 @@
 #!/usr/bin/env bash
-pip3 install -r ~/devenv/requirements/common-oscar.txt
-pip3 install -r ~/devenv/requirements/reqGit-oscar.txt
+pip3 install -r ${cwd}/requirements/common-oscar.txt
+pip3 install -r ${cwd}/requirements/reqGit-oscar.txt
 pip3 uninstall -y django django-cms django-cascade django-oscar django-jet pinax-stripe
 
-cd ~/source/django
+cwd=$(pwd)
+
+
+cd ${cwd}/source/django
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/django-oscar
+cd ${cwd}/source/django-oscar
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/djangocms-cascade
+cd ${cwd}/source/djangocms-cascade
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/django-jet
+cd ${cwd}/source/django-jet
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/pinax-stripe
+cd ${cwd}/source/pinax-stripe
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/django-cms
+cd ${cwd}/source/django-cms
 yarn install
 python setup.py build && python setup.py install

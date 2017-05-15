@@ -1,28 +1,29 @@
 #!/usr/bin/env bash
 pip3 install -r requirements/common-shop.txt
 pip3 install -r requirements/reqGit-shop.txt
-pip3 uninstall -y django django-cms django-cascade django-oscar django-jet pinax-stripe
+pip3 uninstall -y django-cms django-shop django-jet pinax-stripe
 
-cd ~/source/django
+cwd=$(pwd)
+
+cd ${cwd}/source/django-shop
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/django-shop
+cd ${cwd}/source/django-jet
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/djangocms-cascade
+pip3 uninstall -y django
+cd ${cwd}/source/django
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/django-jet
+pip uninstall -y django-cms
+cd ${cwd}/source/django-cms
 yarn install
 python setup.py build && python setup.py install
 
-cd ~/source/pinax-stripe
-yarn install
-python setup.py build && python setup.py install
-
-cd ~/source/django-cms
+pip uninstall -y django-cascade
+cd ${cwd}/source/djangocms-cascade
 yarn install
 python setup.py build && python setup.py install
