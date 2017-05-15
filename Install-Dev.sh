@@ -7,6 +7,10 @@ cd /c//Source/CMS/devenv/source/django
 yarn install
 python setup.py build && python setup.py install
 
+cd /c//Source/CMS/devenv/source/django-admin-interface
+yarn install
+python setup.py build && python setup.py install
+
 cd /c//Source/CMS/devenv/source/django-oscar
 yarn install
 python setup.py build && python setup.py install

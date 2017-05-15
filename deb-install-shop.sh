@@ -27,3 +27,7 @@ pip uninstall -y django-cascade
 cd ${cwd}/source/djangocms-cascade
 yarn install
 python setup.py build && python setup.py install
+
+cd ${cwd}/source/django-admin-interface
+yarn install
+python setup.py build && python setup.py install
