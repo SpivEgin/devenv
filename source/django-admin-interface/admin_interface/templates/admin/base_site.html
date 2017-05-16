@@ -3,7 +3,7 @@
 
 {% block title %}
 {% get_admin_interface_theme as theme %}
-{% if title %}{{ title }} | {% endif %}{% if theme.title %}{% trans theme.title %}{% else %}{{ site_title|default:_('Django administration') }}{% endif %}
+{% if title %}{{ title }} | {% endif %}{% if theme.title %}{% trans theme.title %}{% else %}{{ site_title|default:_('TLM administration') }}{% endif %}
 {% endblock %}
 
 {% block extrastyle %}
@@ -619,7 +619,7 @@
     <img class="logo" src="{{ theme.logo.url }}" width="{{ theme.logo.width }}" height="{{ theme.logo.height }}" />
     {% endif %}
     {% if theme.title_visible %}
-    <span>{% if theme.title %}{% trans theme.title %}{% else %}{% trans 'Django administration' %}{% endif %}</span>
+    <span>{% if theme.title %}{% trans theme.title %}{% else %}{% trans 'TLM administration' %}{% endif %}</span>
     {% endif %}
 </h1>
 {% endblock %}

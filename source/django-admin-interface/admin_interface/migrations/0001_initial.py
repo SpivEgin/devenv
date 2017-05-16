@@ -15,9 +15,9 @@ class Migration(migrations.Migration):
             name='Theme',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(default=b'Django', max_length=50)),
+                ('name', models.CharField(default=b'TLM', max_length=50)),
                 ('active', models.BooleanField(default=True)),
-                ('title', models.CharField(default=b'Django administration', max_length=50, blank=True)),
+                ('title', models.CharField(default=b'TLM administration', max_length=50, blank=True)),
                 ('title_visible', models.BooleanField(default=True, verbose_name=b'visible')),
                 ('logo', models.FileField(upload_to=b'admin-interface/logo/', blank=True)),
                 ('logo_visible', models.BooleanField(default=True, verbose_name=b'visible')),

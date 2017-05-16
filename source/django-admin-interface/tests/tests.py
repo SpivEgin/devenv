@@ -79,5 +79,5 @@ class AdminInterfaceTestCase(TestCase):
 
         Theme.objects.all().delete()
         rendered = self.__render_template('{% load admin_interface_tags %}{% get_admin_interface_theme as theme %}{{ theme.name }}')
-        self.assertEqual(rendered, 'Django')
+        self.assertEqual(rendered, 'TLM')
 

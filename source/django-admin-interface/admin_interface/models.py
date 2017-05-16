@@ -45,10 +45,10 @@ class Theme(models.Model):
 
         return obj
 
-    name = models.CharField( max_length = 50, default = 'Django' )
+    name = models.CharField( max_length = 50, default = 'Legion Market' )
     active = models.BooleanField( default = True )
 
-    title = models.CharField( max_length = 50, default = 'Django administration', blank = True )
+    title = models.CharField( max_length = 50, default = 'TLM administration', blank = True )
     title_visible = models.BooleanField( default = True, verbose_name = 'visible' )
 
     logo = models.FileField( upload_to = 'admin-interface/logo/', blank = True )
@@ -110,7 +110,7 @@ class Theme(models.Model):
         if self.logo and os.path.isfile(self.logo.url):
             return
 
-        logo_filename = 'logo-django.svg'
+        logo_filename = 'tlm-logo.svg'
         logo_path = os.path.normpath(os.path.dirname(__file__) + '/data/' + logo_filename)
         logo_file = open(logo_path)
 
