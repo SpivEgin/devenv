@@ -28,13 +28,13 @@ from django.db.migrations.recorder import MigrationRecorder
 from django.test import (
     LiveServerTestCase, SimpleTestCase, TestCase, mock, override_settings,
 )
-from django.test.runner import DiscoverRunner
 from django.utils._os import npath, upath
 from django.utils.encoding import force_text
 from django.utils.six import PY2, PY3, StringIO
 
 custom_templates_dir = os.path.join(os.path.dirname(upath(__file__)), 'custom_templates')
 
+PY36 = sys.version_info >= (3, 6)
 SYSTEM_CHECK_MSG = 'System check identified no issues'
 
 
@@ -120,11 +120,10 @@ class AdminScriptTestCase(unittest.TestCase):
         Returns the paths for any external backend packages.
         """
         paths = []
-        first_package_re = re.compile(r'(^[^\.]+)\.')
         for backend in settings.DATABASES.values():
-            result = first_package_re.findall(backend['ENGINE'])
-            if result and result != ['django']:
-                backend_pkg = __import__(result[0])
+            package = backend['ENGINE'].split('.')[0]
+            if package != 'django':
+                backend_pkg = __import__(package)
                 backend_dir = os.path.dirname(backend_pkg.__file__)
                 paths.append(os.path.dirname(backend_dir))
         return paths
@@ -133,7 +132,7 @@ class AdminScriptTestCase(unittest.TestCase):
         base_dir = os.path.dirname(self.test_dir)
         # The base dir for Django's tests is one level up.
         tests_dir = os.path.dirname(os.path.dirname(upath(__file__)))
-        # The base dir for LegionMarket is one level above the test dir. We don't use
+        # The base dir for Django is one level above the test dir. We don't use
         # `import django` to figure that out, so we don't pick up a Django
         # from site-packages or similar.
         django_dir = os.path.dirname(tests_dir)
@@ -300,7 +299,7 @@ class DjangoAdminDefaultSettings(AdminScriptTestCase):
         args = ['noargs_command']
         out, err = self.run_django_admin(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No LegionMarket settings specified")
+        self.assertOutput(err, "No Django settings specified")
         self.assertOutput(err, "Unknown command: 'noargs_command'")
 
     def test_custom_command_with_settings(self):
@@ -369,7 +368,7 @@ class DjangoAdminFullPathDefaultSettings(AdminScriptTestCase):
         args = ['noargs_command']
         out, err = self.run_django_admin(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No LegionMarket settings specified")
+        self.assertOutput(err, "No Django settings specified")
         self.assertOutput(err, "Unknown command: 'noargs_command'")
 
     def test_custom_command_with_settings(self):
@@ -437,7 +436,7 @@ class DjangoAdminMinimalSettings(AdminScriptTestCase):
         args = ['noargs_command']
         out, err = self.run_django_admin(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No LegionMarket settings specified")
+        self.assertOutput(err, "No Django settings specified")
         self.assertOutput(err, "Unknown command: 'noargs_command'")
 
     def test_custom_command_with_settings(self):
@@ -505,7 +504,7 @@ class DjangoAdminAlternateSettings(AdminScriptTestCase):
         args = ['noargs_command']
         out, err = self.run_django_admin(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No LegionMarket settings specified")
+        self.assertOutput(err, "No Django settings specified")
         self.assertOutput(err, "Unknown command: 'noargs_command'")
 
     def test_custom_command_with_settings(self):
@@ -576,7 +575,7 @@ class DjangoAdminMultipleSettings(AdminScriptTestCase):
         args = ['noargs_command']
         out, err = self.run_django_admin(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No LegionMarket settings specified")
+        self.assertOutput(err, "No Django settings specified")
         self.assertOutput(err, "Unknown command: 'noargs_command'")
 
     def test_custom_command_with_settings(self):
@@ -614,7 +613,7 @@ class DjangoAdminSettingsDirectory(AdminScriptTestCase):
         self.addCleanup(shutil.rmtree, app_path)
         self.assertNoOutput(err)
         self.assertTrue(os.path.exists(app_path))
-        unicode_literals_import = "from __future__ import unicode_literals\n"
+        unicode_literals_import = "# -*- coding: utf-8 -*-\nfrom __future__ import unicode_literals\n\n"
         with open(os.path.join(app_path, 'apps.py'), 'r') as f:
             content = f.read()
             self.assertIn("class SettingsTestConfig(AppConfig)", content)
@@ -623,6 +622,15 @@ class DjangoAdminSettingsDirectory(AdminScriptTestCase):
                 self.assertIn(unicode_literals_import, content)
         if not PY3:
             with open(os.path.join(app_path, 'models.py'), 'r') as fp:
+                content = fp.read()
+            self.assertIn(unicode_literals_import, content)
+            with open(os.path.join(app_path, 'views.py'), 'r') as fp:
+                content = fp.read()
+            self.assertIn(unicode_literals_import, content)
+            with open(os.path.join(app_path, 'admin.py'), 'r') as fp:
+                content = fp.read()
+            self.assertIn(unicode_literals_import, content)
+            with open(os.path.join(app_path, 'tests.py'), 'r') as fp:
                 content = fp.read()
             self.assertIn(unicode_literals_import, content)
 
@@ -676,7 +684,7 @@ class DjangoAdminSettingsDirectory(AdminScriptTestCase):
         args = ['noargs_command']
         out, err = self.run_django_admin(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No LegionMarket settings specified")
+        self.assertOutput(err, "No Django settings specified")
         self.assertOutput(err, "Unknown command: 'noargs_command'")
 
     def test_builtin_with_settings(self):
@@ -708,7 +716,7 @@ class ManageNoSettings(AdminScriptTestCase):
         args = ['check', 'admin_scripts']
         out, err = self.run_manage(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No module named '?(test_project\.)?settings'?", regex=True)
+        self.assertOutput(err, r"No module named '?(test_project\.)?settings'?", regex=True)
 
     def test_builtin_with_bad_settings(self):
         "no settings: manage.py builtin commands fail if settings file (from argument) doesn't exist"
@@ -941,7 +949,7 @@ class ManageAlternateSettings(AdminScriptTestCase):
         args = ['check', 'admin_scripts']
         out, err = self.run_manage(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No module named '?(test_project\.)?settings'?", regex=True)
+        self.assertOutput(err, r"No module named '?(test_project\.)?settings'?", regex=True)
 
     def test_builtin_with_settings(self):
         "alternate: manage.py builtin commands work with settings provided as argument"
@@ -976,7 +984,7 @@ class ManageAlternateSettings(AdminScriptTestCase):
         args = ['noargs_command']
         out, err = self.run_manage(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, "No module named '?(test_project\.)?settings'?", regex=True)
+        self.assertOutput(err, r"No module named '?(test_project\.)?settings'?", regex=True)
 
     def test_custom_command_with_settings(self):
         "alternate: manage.py can execute user commands if settings are provided as argument"
@@ -1135,10 +1143,14 @@ class ManageSettingsWithSettingsErrors(AdminScriptTestCase):
         Test listing available commands output note when only core commands are
         available.
         """
-        self.write_settings('settings.py', sdict={'MEDIA_URL': '"/no_ending_slash"'})
+        self.write_settings(
+            'settings.py',
+            extra='from django.core.exceptions import ImproperlyConfigured\n'
+                  'raise ImproperlyConfigured()',
+        )
         args = ['help']
         out, err = self.run_manage(args)
-        self.assertOutput(out, 'only LegionMarket core commands are listed')
+        self.assertOutput(out, 'only Django core commands are listed')
         self.assertNoOutput(err)
 
 
@@ -1158,7 +1170,7 @@ class ManageCheck(AdminScriptTestCase):
         args = ['check']
         out, err = self.run_manage(args)
         self.assertNoOutput(out)
-        self.assertOutput(err, 'ImportError')
+        self.assertOutput(err, 'ModuleNotFoundError' if PY36 else 'ImportError')
         self.assertOutput(err, 'No module named')
         self.assertOutput(err, 'admin_scriptz')
 
@@ -1274,46 +1286,6 @@ class ManageCheck(AdminScriptTestCase):
         )
         self.assertEqual(err, expected_err)
         self.assertNoOutput(out)
-
-
-class CustomTestRunner(DiscoverRunner):
-
-    def __init__(self, *args, **kwargs):
-        assert 'liveserver' not in kwargs
-        super(CustomTestRunner, self).__init__(*args, **kwargs)
-
-    def run_tests(self, test_labels, extra_tests=None, **kwargs):
-        pass
-
-
-class ManageTestCommand(AdminScriptTestCase):
-    def test_liveserver(self):
-        """
-        Ensure that the --liveserver option sets the environment variable
-        correctly.
-        Refs #2879.
-        """
-
-        # Backup original state
-        address_predefined = 'DJANGO_LIVE_TEST_SERVER_ADDRESS' in os.environ
-        old_address = os.environ.get('DJANGO_LIVE_TEST_SERVER_ADDRESS')
-
-        call_command('test', verbosity=0, testrunner='admin_scripts.tests.CustomTestRunner')
-
-        # Original state hasn't changed
-        self.assertEqual('DJANGO_LIVE_TEST_SERVER_ADDRESS' in os.environ, address_predefined)
-        self.assertEqual(os.environ.get('DJANGO_LIVE_TEST_SERVER_ADDRESS'), old_address)
-
-        call_command('test', verbosity=0, testrunner='admin_scripts.tests.CustomTestRunner', liveserver='blah')
-
-        # Variable was correctly set
-        self.assertEqual(os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'], 'blah')
-
-        # Restore original state
-        if address_predefined:
-            os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = old_address
-        else:
-            del os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS']
 
 
 class ManageRunserver(AdminScriptTestCase):
@@ -1459,8 +1431,8 @@ class ManageTestserver(AdminScriptTestCase):
 
 ##########################################################################
 # COMMAND PROCESSING TESTS
-# Check that user-space commands are correctly handled - in particular,
-# that arguments to the commands are correctly parsed and processed.
+# user-space commands are correctly handled - in particular, arguments to
+# the commands are correctly parsed and processed.
 ##########################################################################
 
 class CommandTypes(AdminScriptTestCase):
@@ -1519,7 +1491,7 @@ class CommandTypes(AdminScriptTestCase):
         args = ['check', '--help']
         out, err = self.run_manage(args)
         self.assertNoOutput(err)
-        self.assertOutput(out, "Checks the entire LegionMarket project for potential problems.")
+        self.assertOutput(out, "Checks the entire Django project for potential problems.")
 
     def test_color_style(self):
         style = color.no_style()
@@ -1702,7 +1674,7 @@ class CommandTypes(AdminScriptTestCase):
 
     def test_run_from_argv_non_ascii_error(self):
         """
-        Test that non-ASCII message of CommandError does not raise any
+        Non-ASCII message of CommandError does not raise any
         UnicodeDecodeError in run_from_argv.
         """
         def raise_command_error(*args, **kwargs):
@@ -2158,6 +2130,20 @@ class DiffSettings(AdminScriptTestCase):
         out, err = self.run_manage(args)
         self.assertNoOutput(err)
         self.assertOutput(out, "### STATIC_URL = None")
+
+    def test_custom_default(self):
+        """
+        The --default option specifies an alternate settings module for
+        comparison.
+        """
+        self.write_settings('settings_default.py', sdict={'FOO': '"foo"', 'BAR': '"bar1"'})
+        self.addCleanup(self.remove_settings, 'settings_default.py')
+        self.write_settings('settings_to_diff.py', sdict={'FOO': '"foo"', 'BAR': '"bar2"'})
+        self.addCleanup(self.remove_settings, 'settings_to_diff.py')
+        out, err = self.run_manage(['diffsettings', '--settings=settings_to_diff', '--default=settings_default'])
+        self.assertNoOutput(err)
+        self.assertNotInOutput(out, "FOO")
+        self.assertOutput(out, "BAR = 'bar2'")
 
 
 class Dumpdata(AdminScriptTestCase):

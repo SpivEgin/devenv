@@ -17,7 +17,7 @@ from django.test.utils import (
 from django.utils.encoding import force_text
 from django.utils.six import StringIO
 
-from .models import SimpleModel
+from .models import SimpleModel, my_check
 
 
 class DummyObj(object):
@@ -110,6 +110,24 @@ class MessageTests(SimpleTestCase):
         expected = "check_framework.SimpleModel.manager: Error"
         self.assertEqual(force_text(e), expected)
 
+    def test_equal_to_self(self):
+        e = Error("Error", obj=SimpleModel)
+        self.assertEqual(e, e)
+
+    def test_equal_to_same_constructed_check(self):
+        e1 = Error("Error", obj=SimpleModel)
+        e2 = Error("Error", obj=SimpleModel)
+        self.assertEqual(e1, e2)
+
+    def test_not_equal_to_different_constructed_check(self):
+        e1 = Error("Error", obj=SimpleModel)
+        e2 = Error("Error2", obj=SimpleModel)
+        self.assertNotEqual(e1, e2)
+
+    def test_not_equal_to_non_check(self):
+        e = Error("Error", obj=DummyObj())
+        self.assertNotEqual(e, 'a string')
+
 
 def simple_system_check(**kwargs):
     simple_system_check.kwargs = kwargs
@@ -119,12 +137,16 @@ def simple_system_check(**kwargs):
 def tagged_system_check(**kwargs):
     tagged_system_check.kwargs = kwargs
     return [checks.Warning('System Check')]
+
+
 tagged_system_check.tags = ['simpletag']
 
 
 def deployment_system_check(**kwargs):
     deployment_system_check.kwargs = kwargs
     return [checks.Warning('Deployment Check')]
+
+
 deployment_system_check.tags = ['deploymenttag']
 
 
@@ -281,3 +303,8 @@ class CheckFrameworkReservedNamesTests(SimpleTestCase):
             ),
         ]
         self.assertEqual(errors, expected)
+
+
+class ChecksRunDuringTests(SimpleTestCase):
+    def test_registered_check_did_run(self):
+        self.assertTrue(my_check.did_run)

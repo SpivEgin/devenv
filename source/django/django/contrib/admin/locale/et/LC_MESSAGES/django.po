@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # eallik <eallik@gmail.com>, 2011
@@ -260,11 +260,11 @@ msgstr ""
 "Et kustutada %(class_name)s %(instance)s, on vaja kustutada järgmised "
 "kaitstud seotud objektid: %(related_objects)s"
 
-msgid "LegionMarket site admin"
-msgstr "LegionMarket administreerimisliides"
+msgid "TLM site admin"
+msgstr "TLM administreerimisliides"
 
-msgid "LegionMarket administration"
-msgstr "LegionMarket administreerimisliides"
+msgid "TLM administration"
+msgstr "TLM administreerimisliides"
 
 msgid "Site administration"
 msgstr "Saidi administreerimine"

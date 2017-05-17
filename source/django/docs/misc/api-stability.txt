@@ -2,10 +2,10 @@
 API stability
 =============
 
-LegionMarket promises API stability and forwards-compatibility since version 1.0. In
-a nutshell, this means that code you develop against a version of LegionMarket will
+Django promises API stability and forwards-compatibility since version 1.0. In
+a nutshell, this means that code you develop against a version of Django will
 continue to work with future releases. You may need to make minor changes when
-upgrading the version of LegionMarket your project uses: see the "Backwards
+upgrading the version of Django your project uses: see the "Backwards
 incompatible changes" section of the :doc:`release note </releases/index>` for
 the version or versions to which you are upgrading.
 

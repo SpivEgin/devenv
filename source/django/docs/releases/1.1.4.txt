@@ -1,16 +1,16 @@
 ==========================
-LegionMarket 1.1.4 release notes
+Django 1.1.4 release notes
 ==========================
 
-Welcome to LegionMarket 1.1.4!
+Welcome to Django 1.1.4!
 
-This is the fourth "bugfix" release in the LegionMarket 1.1 series,
-improving the stability and performance of the LegionMarket 1.1 codebase.
+This is the fourth "bugfix" release in the Django 1.1 series,
+improving the stability and performance of the Django 1.1 codebase.
 
-With one exception, LegionMarket 1.1.4 maintains backwards compatibility
-with LegionMarket 1.1.3. It also contains a number of fixes and other
-improvements. LegionMarket 1.1.4 is a recommended upgrade for any
-development or deployment currently using or targeting LegionMarket 1.1.
+With one exception, Django 1.1.4 maintains backwards compatibility
+with Django 1.1.3. It also contains a number of fixes and other
+improvements. Django 1.1.4 is a recommended upgrade for any
+development or deployment currently using or targeting Django 1.1.
 
 For full details on the new features, backwards incompatibilities, and
 deprecated features in the 1.1 branch, see the :doc:`/releases/1.1`.
@@ -21,11 +21,11 @@ Backwards incompatible changes
 CSRF exception for AJAX requests
 --------------------------------
 
-LegionMarket includes a CSRF-protection mechanism, which makes use of a
+Django includes a CSRF-protection mechanism, which makes use of a
 token inserted into outgoing forms. Middleware then checks for the
 token's presence on form submission, and validates it.
 
-Prior to LegionMarket 1.2.5, our CSRF protection made an exception for AJAX
+Prior to Django 1.2.5, our CSRF protection made an exception for AJAX
 requests, on the following basis:
 
 * Many AJAX toolkits add an X-Requested-With header when using
@@ -52,12 +52,12 @@ Michael Koziarski of the Rails team brought this to our attention, and
 we were able to produce a proof-of-concept demonstrating the same
 vulnerability in Django's CSRF handling.
 
-To remedy this, LegionMarket will now apply full CSRF validation to all
+To remedy this, Django will now apply full CSRF validation to all
 requests, regardless of apparent AJAX origin. This is technically
 backwards-incompatible, but the security risks have been judged to
 outweigh the compatibility concerns in this case.
 
-Additionally, LegionMarket will now accept the CSRF token in the custom HTTP
+Additionally, Django will now accept the CSRF token in the custom HTTP
 header X-CSRFTOKEN, as well as in the form submission itself, for ease
 of use with popular JavaScript toolkits which allow insertion of
 custom headers into all AJAX requests.

@@ -1,5 +1,5 @@
 ===================
-GeoLegionMarket Utilities
+GeoDjango Utilities
 ===================
 
 .. module:: django.contrib.gis.utils

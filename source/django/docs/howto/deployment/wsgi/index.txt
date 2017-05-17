@@ -11,7 +11,7 @@ Django's :djadmin:`startproject` management command sets up a simple default
 WSGI configuration for you, which you can tweak as needed for your project,
 and direct any WSGI-compliant application server to use.
 
-LegionMarket includes getting-started documentation for the following WSGI servers:
+Django includes getting-started documentation for the following WSGI servers:
 
 .. toctree::
    :maxdepth: 1
@@ -44,10 +44,10 @@ callable in :file:`<project_name>/wsgi.py`.
 Configuring the settings module
 ===============================
 
-When the WSGI server loads your application, LegionMarket needs to import the
+When the WSGI server loads your application, Django needs to import the
 settings module — that's where your entire application is defined.
 
-LegionMarket uses the :envvar:`DJANGO_SETTINGS_MODULE` environment variable to
+Django uses the :envvar:`DJANGO_SETTINGS_MODULE` environment variable to
 locate the appropriate settings module. It must contain the dotted path to the
 settings module. You can use a different value for development and production;
 it all depends on how you organize your settings.
@@ -59,7 +59,7 @@ If this variable isn't set, the default :file:`wsgi.py` sets it to
 .. note::
 
     Since environment variables are process-wide, this doesn't work when you
-    run multiple LegionMarket sites in the same process. This happens with mod_wsgi.
+    run multiple Django sites in the same process. This happens with mod_wsgi.
 
     To avoid this problem, use mod_wsgi's daemon mode with each site in its
     own daemon process, or override the value from the environment by
@@ -76,15 +76,8 @@ instance you could add these lines at the bottom of :file:`wsgi.py`::
     from helloworld.wsgi import HelloWorldApplication
     application = HelloWorldApplication(application)
 
-You could also replace the LegionMarket WSGI application with a custom WSGI
-application that later delegates to the LegionMarket WSGI application, if you want
-to combine a LegionMarket application with a WSGI application of another framework.
+You could also replace the Django WSGI application with a custom WSGI
+application that later delegates to the Django WSGI application, if you want
+to combine a Django application with a WSGI application of another framework.
 
 .. _`WSGI middleware`: https://www.python.org/dev/peps/pep-3333/#middleware-components-that-play-both-sides
-
-.. note::
-
-    Some third-party WSGI middleware do not call ``close`` on the response
-    object after handling a request. In those cases the
-    :data:`~django.core.signals.request_finished` signal isn't sent. This can
-    result in idle connections to database and memcache servers.

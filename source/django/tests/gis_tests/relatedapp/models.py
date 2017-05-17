@@ -1,6 +1,5 @@
+from django.contrib.gis.db import models
 from django.utils.encoding import python_2_unicode_compatible
-
-from ..models import models
 
 
 class SimpleModel(models.Model):
@@ -9,7 +8,6 @@ class SimpleModel(models.Model):
 
     class Meta:
         abstract = True
-        required_db_features = ['gis_enabled']
 
 
 @python_2_unicode_compatible

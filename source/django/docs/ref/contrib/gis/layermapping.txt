@@ -3,17 +3,17 @@
 ====================================
 
 .. module:: django.contrib.gis.utils.layermapping
-    :synopsis: Spatial data import utility for GeoLegionMarket models.
+    :synopsis: Spatial data import utility for GeoDjango models.
 
 .. currentmodule:: django.contrib.gis.utils
 
 The :class:`LayerMapping` class provides a way to map the contents of
-vector spatial data files (e.g. shapefiles) into GeoLegionMarket models.
+vector spatial data files (e.g. shapefiles) into GeoDjango models.
 
 This utility grew out of the author's personal needs to eliminate
 the code repetition that went into pulling geometries and fields out of
 a vector layer, converting to another coordinate system (e.g. WGS84), and
-then inserting into a GeoLegionMarket model.
+then inserting into a GeoDjango model.
 
 .. note::
 
@@ -24,7 +24,7 @@ then inserting into a GeoLegionMarket model.
     GIS data sources, like shapefiles, may be very large.  If you find
     that :class:`LayerMapping` is using too much memory, set
     :setting:`DEBUG` to ``False`` in your settings.  When :setting:`DEBUG`
-    is set to ``True``, LegionMarket :ref:`automatically logs <faq-see-raw-sql-queries>`
+    is set to ``True``, Django :ref:`automatically logs <faq-see-raw-sql-queries>`
     *every* SQL query -- thus, when SQL statements contain geometries, it is
     easy to consume more memory than is typical.
 
@@ -50,7 +50,7 @@ Example
         PRIMEM["Greenwich",0],
         UNIT["Degree",0.017453292519943295]]
 
-2. Now we define our corresponding LegionMarket model (make sure to use :djadmin:`migrate`)::
+2. Now we define our corresponding Django model (make sure to use :djadmin:`migrate`)::
 
     from django.contrib.gis.db import models
 
@@ -77,7 +77,7 @@ Example
 
 Here, :class:`LayerMapping` just transformed the three geometries from the
 shapefile in their original spatial reference system (WGS84) to the spatial
-reference system of the GeoLegionMarket model (NAD83).  If no spatial reference
+reference system of the GeoDjango model (NAD83).  If no spatial reference
 system is defined for the layer, use the ``source_srs`` keyword with a
 :class:`~django.contrib.gis.gdal.SpatialReference` object to specify one.
 
@@ -199,7 +199,7 @@ Troubleshooting
 Running out of memory
 ---------------------
 
-As noted in the warning at the top of this section, LegionMarket stores all SQL
+As noted in the warning at the top of this section, Django stores all SQL
 queries when ``DEBUG=True``.  Set ``DEBUG=False`` in your settings, and this
 should stop excessive memory use when running ``LayerMapping`` scripts.
 

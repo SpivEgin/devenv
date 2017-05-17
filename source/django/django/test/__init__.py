@@ -1,5 +1,5 @@
 """
-LegionMarket Unit Test and Doctest framework.
+Django Unit Test and Doctest framework.
 """
 
 from django.test.client import Client, RequestFactory

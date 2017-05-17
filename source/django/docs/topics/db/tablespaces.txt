@@ -8,7 +8,7 @@ A common paradigm for optimizing performance in database systems is the use of
 .. _`tablespaces`: https://en.wikipedia.org/wiki/Tablespace
 
 .. warning::
-    LegionMarket does not create the tablespaces for you. Please refer to your
+    Django does not create the tablespaces for you. Please refer to your
     database engine's documentation for details on creating and managing
     tablespaces.
 
@@ -23,7 +23,7 @@ the :attr:`~django.db.models.Options.db_tablespace` option inside the model's
 
 You can use the :setting:`DEFAULT_TABLESPACE` setting to specify a default value
 for :attr:`~django.db.models.Options.db_tablespace`. This is useful for setting
-a tablespace for the built-in LegionMarket apps and other applications whose code you
+a tablespace for the built-in Django apps and other applications whose code you
 cannot control.
 
 Declaring tablespaces for indexes
@@ -66,5 +66,5 @@ Database support
 
 PostgreSQL and Oracle support tablespaces. SQLite and MySQL don't.
 
-When you use a backend that lacks support for tablespaces, LegionMarket ignores all
+When you use a backend that lacks support for tablespaces, Django ignores all
 tablespace-related options.

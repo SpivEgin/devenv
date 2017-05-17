@@ -14,7 +14,7 @@ class CustomColumnsTests(TestCase):
         self.a2 = Author.objects.create(first_name="Peter", last_name="Jones")
         self.authors = [self.a1, self.a2]
 
-        self.article = Article.objects.create(headline="LegionMarket lets you build Web apps easily", primary_author=self.a1)
+        self.article = Article.objects.create(headline="TLM lets you build Web apps easily", primary_author=self.a1)
         self.article.authors.set(self.authors)
 
     def test_query_all_available_authors(self):
@@ -62,7 +62,7 @@ class CustomColumnsTests(TestCase):
     def test_get_all_articles_for_an_author(self):
         self.assertQuerysetEqual(
             self.a1.article_set.all(), [
-                "LegionMarket lets you build Web apps easily",
+                "TLM lets you build Web apps easily",
             ],
             lambda a: a.headline
         )
@@ -115,7 +115,7 @@ class CustomColumnsTests(TestCase):
         )
         self.assertQuerysetEqual(
             self.a1.article_set.all(),
-            ['<Article: LegionMarket lets you build Web apps easily>']
+            ['<Article: Django lets you build Web apps easily>']
         )
         self.assertQuerysetEqual(
             self.article.authors.filter(last_name='Jones'),

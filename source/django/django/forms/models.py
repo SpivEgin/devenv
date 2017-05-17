@@ -1,5 +1,5 @@
 """
-Helper functions for creating Form classes from LegionMarket models
+Helper functions for creating Form classes from Django models
 and database field objects.
 """
 
@@ -19,7 +19,7 @@ from django.forms.widgets import (
     HiddenInput, MultipleHiddenInput, SelectMultiple,
 )
 from django.utils import six
-from django.utils.encoding import force_text, smart_text
+from django.utils.encoding import force_text
 from django.utils.text import capfirst, get_text_list
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -170,6 +170,11 @@ def fields_for_model(model, fields=None, exclude=None, widgets=None,
             formfield = formfield_callback(f, **kwargs)
 
         if formfield:
+            # Apply ``limit_choices_to``.
+            if hasattr(formfield, 'queryset') and hasattr(formfield, 'get_limit_choices_to'):
+                limit_choices_to = formfield.get_limit_choices_to()
+                if limit_choices_to is not None:
+                    formfield.queryset = formfield.queryset.complex_filter(limit_choices_to)
             field_list.append((f.name, formfield))
         else:
             ignored.append(f.name)
@@ -291,13 +296,6 @@ class BaseModelForm(BaseForm):
             data, files, auto_id, prefix, object_data, error_class,
             label_suffix, empty_permitted, use_required_attribute=use_required_attribute,
         )
-        # Apply ``limit_choices_to`` to each field.
-        for field_name in self.fields:
-            formfield = self.fields[field_name]
-            if hasattr(formfield, 'queryset') and hasattr(formfield, 'get_limit_choices_to'):
-                limit_choices_to = formfield.get_limit_choices_to()
-                if limit_choices_to is not None:
-                    formfield.queryset = formfield.queryset.complex_filter(limit_choices_to)
 
     def _get_validation_exclusions(self):
         """
@@ -757,12 +755,13 @@ class BaseModelFormSet(BaseFormSet):
         forms_to_delete = self.deleted_forms
         for form in self.initial_forms:
             obj = form.instance
+            # If the pk is None, it means either:
+            # 1. The object is an unexpected empty model, created by invalid
+            #    POST data such as an object outside the formset's queryset.
+            # 2. The object was already deleted from the database.
+            if obj.pk is None:
+                continue
             if form in forms_to_delete:
-                # If the pk is None, it means that the object can't be
-                # deleted again. Possible reason for this is that the
-                # object was already deleted from the DB. Refs #14877.
-                if obj.pk is None:
-                    continue
                 self.deleted_objects.append(obj)
                 self.delete_existing(obj, commit=commit)
             elif form.has_changed():
@@ -837,7 +836,7 @@ def modelformset_factory(model, form=ModelForm, formfield_callback=None,
                          labels=None, help_texts=None, error_messages=None,
                          min_num=None, validate_min=False, field_classes=None):
     """
-    Returns a FormSet class for the given LegionMarket model class.
+    Returns a FormSet class for the given Django model class.
     """
     meta = getattr(form, 'Meta', None)
     if (getattr(meta, 'fields', fields) is None and
@@ -895,12 +894,17 @@ class BaseInlineFormSet(BaseModelFormSet):
     def _construct_form(self, i, **kwargs):
         form = super(BaseInlineFormSet, self)._construct_form(i, **kwargs)
         if self.save_as_new:
+            mutable = getattr(form.data, '_mutable', None)
+            # Allow modifying an immutable QueryDict.
+            if mutable is not None:
+                form.data._mutable = True
             # Remove the primary key from the form's data, we are only
             # creating new instances
             form.data[form.add_prefix(self._pk_field.name)] = None
-
             # Remove the foreign key from the form's data
             form.data[form.add_prefix(self.fk.name)] = None
+            if mutable is not None:
+                form.data._mutable = mutable
 
         # Set the fk value here so that the form can do its validation.
         fk_value = self.instance.pk
@@ -1133,6 +1137,7 @@ class ModelChoiceField(ChoiceField):
         'invalid_choice': _('Select a valid choice. That choice is not one of'
                             ' the available choices.'),
     }
+    iterator = ModelChoiceIterator
 
     def __init__(self, queryset, empty_label="---------",
                  required=True, widget=None, label=None, initial=None,
@@ -1165,7 +1170,8 @@ class ModelChoiceField(ChoiceField):
     def __deepcopy__(self, memo):
         result = super(ChoiceField, self).__deepcopy__(memo)
         # Need to force a new ModelChoiceIterator to be created, bug #11183
-        result.queryset = result.queryset
+        if self.queryset is not None:
+            result.queryset = self.queryset.all()
         return result
 
     def _get_queryset(self):
@@ -1185,7 +1191,7 @@ class ModelChoiceField(ChoiceField):
         generate the labels for the choices presented by this object. Subclasses
         can override this method to customize the display of the choices.
         """
-        return smart_text(obj)
+        return force_text(obj)
 
     def _get_choices(self):
         # If self._choices is set, then somebody must have manually set
@@ -1200,7 +1206,7 @@ class ModelChoiceField(ChoiceField):
         # accessed) so that we can ensure the QuerySet has not been consumed. This
         # construct might look complicated but it allows for lazy evaluation of
         # the queryset.
-        return ModelChoiceIterator(self)
+        return self.iterator(self)
 
     choices = property(_get_choices, ChoiceField._set_choices)
 

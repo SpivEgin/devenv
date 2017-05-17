@@ -7,5 +7,5 @@ register = Library()
 @register.simple_tag
 def static(path):
     # Backwards compatibility alias for django.templatetags.static.static().
-    # Deprecation should start in LegionMarket 2.0.
+    # Deprecation should start in Django 2.0.
     return _static(path)

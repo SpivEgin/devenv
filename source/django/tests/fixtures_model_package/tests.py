@@ -15,7 +15,7 @@ class SampleTestCase(TestCase):
         self.assertEqual(Article.objects.count(), 3)
         self.assertQuerysetEqual(
             Article.objects.all(), [
-                "LegionMarket conquers world!",
+                "TLM conquers world!",
                 "Copyright is fine the way it is",
                 "Poker has no place on ESPN",
             ],
@@ -42,7 +42,7 @@ class FixtureTestCase(TestCase):
         management.call_command("loaddata", "fixture2.json", verbosity=0)
         self.assertQuerysetEqual(
             Article.objects.all(), [
-                "LegionMarket conquers world!",
+                "TLM conquers world!",
                 "Copyright is fine the way it is",
                 "Poker has no place on ESPN",
             ],
@@ -55,7 +55,7 @@ class FixtureTestCase(TestCase):
 
         self.assertQuerysetEqual(
             Article.objects.all(), [
-                "LegionMarket conquers world!",
+                "TLM conquers world!",
                 "Copyright is fine the way it is",
                 "Poker has no place on ESPN",
             ],

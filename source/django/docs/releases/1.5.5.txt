@@ -1,24 +1,24 @@
 ==========================
-LegionMarket 1.5.5 release notes
+Django 1.5.5 release notes
 ==========================
 
 *October 23, 2013*
 
-LegionMarket 1.5.5 fixes a couple security-related bugs and several other bugs in the
+Django 1.5.5 fixes a couple security-related bugs and several other bugs in the
 1.5 series.
 
 Readdressed denial-of-service via password hashers
 ==================================================
 
-LegionMarket 1.5.4 imposes a 4096-byte limit on passwords in order to mitigate a
+Django 1.5.4 imposes a 4096-byte limit on passwords in order to mitigate a
 denial-of-service attack through submission of bogus but extremely large
-passwords. In LegionMarket 1.5.5, we've reverted this change and instead improved
+passwords. In Django 1.5.5, we've reverted this change and instead improved
 the speed of our PBKDF2 algorithm by not rehashing the key on every iteration.
 
 Properly rotate CSRF token on login
 ===================================
 
-This behavior introduced as a security hardening measure in LegionMarket 1.5.2 did
+This behavior introduced as a security hardening measure in Django 1.5.2 did
 not work properly and is now fixed.
 
 Bugfixes

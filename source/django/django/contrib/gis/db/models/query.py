@@ -420,7 +420,7 @@ class GeoQuerySet(QuerySet):
           the spatial function to.
         """
         warnings.warn(
-            "The %s GeoQuerySet method is deprecated. See GeoLegionMarket Functions "
+            "The %s GeoQuerySet method is deprecated. See GeoDjango Functions "
             "documentation to find the expression-based replacement." % att,
             RemovedInDjango20Warning, stacklevel=2
         )
@@ -546,7 +546,7 @@ class GeoQuerySet(QuerySet):
                 u, unit_name, s = get_srid_info(srid, connection)
                 geodetic = unit_name.lower() in geo_field.geodetic_units
 
-            if geodetic and not connection.features.supports_distance_geodetic:
+            if geodetic and (not connection.features.supports_distance_geodetic or connection.ops.spatialite):
                 raise ValueError(
                     'This database does not support linear distance '
                     'calculations on geodetic coordinate systems.'

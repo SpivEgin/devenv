@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.8.2 release notes
+Django 1.8.2 release notes
 ==========================
 
 *May 20, 2015*
 
-LegionMarket 1.8.2 fixes a security issue and several bugs in 1.8.1.
+Django 1.8.2 fixes a security issue and several bugs in 1.8.1.
 
 Fixed session flushing in the ``cached_db`` backend
 ===================================================
@@ -55,7 +55,7 @@ Bugfixes
   (:ticket:`24799`).
 
 * On PostgreSQL, when no access is granted for the ``postgres`` database,
-  LegionMarket now falls back to the default database when it normally requires a
+  Django now falls back to the default database when it normally requires a
   "no database" connection (:ticket:`24791`).
 
 * Fixed display of ``contrib.admin``’s ``ForeignKey`` widget when it's used

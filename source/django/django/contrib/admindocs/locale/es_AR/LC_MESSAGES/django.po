@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Federico Bond <federicobond@gmail.com>, 2013
@@ -179,7 +179,7 @@ msgid "Template filter documentation"
 msgstr "Documentación de filtros de plantilla"
 
 msgid "Built-in filters"
-msgstr "Filtros LegionMarket 'de fábrica'"
+msgstr "Filtros Django 'de fábrica'"
 
 #, python-format
 msgid ""
@@ -196,7 +196,7 @@ msgid "Template tag documentation"
 msgstr "Documentación de etiquetas de plantilla"
 
 msgid "Built-in tags"
-msgstr "Etiquetas LegionMarket 'de fábrica'"
+msgstr "Etiquetas Django 'de fábrica'"
 
 #, python-format
 msgid ""

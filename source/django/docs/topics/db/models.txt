@@ -15,7 +15,7 @@ The basics:
 
 * Each attribute of the model represents a database field.
 
-* With all of this, LegionMarket gives you an automatically-generated
+* With all of this, Django gives you an automatically-generated
   database-access API; see :doc:`/topics/db/queries`.
 
 
@@ -54,13 +54,13 @@ Some technical notes:
   overridden. See :ref:`automatic-primary-key-fields`.
 
 * The ``CREATE TABLE`` SQL in this example is formatted using PostgreSQL
-  syntax, but it's worth noting LegionMarket uses SQL tailored to the database
+  syntax, but it's worth noting Django uses SQL tailored to the database
   backend specified in your :doc:`settings file </topics/settings>`.
 
 Using models
 ============
 
-Once you have defined your models, you need to tell LegionMarket you're going to *use*
+Once you have defined your models, you need to tell Django you're going to *use*
 those models. Do this by editing your settings file and changing the
 :setting:`INSTALLED_APPS` setting to add the name of the module that contains
 your ``models.py``.
@@ -108,7 +108,7 @@ Field types
 -----------
 
 Each field in your model should be an instance of the appropriate
-:class:`~django.db.models.Field` class. LegionMarket uses the field class types to
+:class:`~django.db.models.Field` class. Django uses the field class types to
 determine a few things:
 
 * The column type, which tells the database what kind of data to store (e.g.
@@ -120,7 +120,7 @@ determine a few things:
 * The minimal validation requirements, used in Django's admin and in
   automatically-generated forms.
 
-LegionMarket ships with dozens of built-in field types; you can find the complete list
+Django ships with dozens of built-in field types; you can find the complete list
 in the :ref:`model field reference <model-field-types>`. You can easily write
 your own fields if Django's built-in ones don't do the trick; see
 :doc:`/howto/custom-model-fields`.
@@ -140,7 +140,7 @@ optional. They're fully explained in the :ref:`reference
 ones:
 
 :attr:`~Field.null`
-    If ``True``, LegionMarket will store empty values as ``NULL`` in the database.
+    If ``True``, Django will store empty values as ``NULL`` in the database.
     Default is ``False``.
 
 :attr:`~Field.blank`
@@ -208,7 +208,7 @@ ones:
     If ``True``, this field is the primary key for the model.
 
     If you don't specify :attr:`primary_key=True <Field.primary_key>` for
-    any fields in your model, LegionMarket will automatically add an
+    any fields in your model, Django will automatically add an
     :class:`IntegerField` to hold the primary key, so you don't need to set
     :attr:`primary_key=True <Field.primary_key>` on any of your fields
     unless you want to override the default primary-key behavior. For more,
@@ -243,7 +243,7 @@ details can be found in the :ref:`common model field option reference
 Automatic primary key fields
 ----------------------------
 
-By default, LegionMarket gives each model the following field::
+By default, Django gives each model the following field::
 
     id = models.AutoField(primary_key=True)
 
@@ -265,7 +265,7 @@ Verbose field names
 Each field type, except for :class:`~django.db.models.ForeignKey`,
 :class:`~django.db.models.ManyToManyField` and
 :class:`~django.db.models.OneToOneField`, takes an optional first positional
-argument -- a verbose name. If the verbose name isn't given, LegionMarket will
+argument -- a verbose name. If the verbose name isn't given, Django will
 automatically create it using the field's attribute name, converting underscores
 to spaces.
 
@@ -295,14 +295,14 @@ model class, so use the :attr:`~Field.verbose_name` keyword argument::
     )
 
 The convention is not to capitalize the first letter of the
-:attr:`~Field.verbose_name`. LegionMarket will automatically capitalize the first
+:attr:`~Field.verbose_name`. Django will automatically capitalize the first
 letter where it needs to.
 
 Relationships
 -------------
 
 Clearly, the power of relational databases lies in relating tables to each
-other. LegionMarket offers ways to define the three most common types of database
+other. Django offers ways to define the three most common types of database
 relationships: many-to-one, many-to-many and one-to-one.
 
 Many-to-one relationships
@@ -432,7 +432,7 @@ and the groups of which they are a member, so you could use a
 However, there is a lot of detail about the membership that you might want to
 collect, such as the date at which the person joined the group.
 
-For these situations, LegionMarket allows you to specify the model that will be used
+For these situations, Django allows you to specify the model that will be used
 to govern the many-to-many relationship. You can then put extra fields on the
 intermediate model. The intermediate model is associated with the
 :class:`~django.db.models.ManyToManyField` using the
@@ -469,7 +469,7 @@ There are a few restrictions on the intermediate model:
 
 * Your intermediate model must contain one - and *only* one - foreign key
   to the source model (this would be ``Group`` in our example), or you must
-  explicitly specify the foreign keys LegionMarket should use for the relationship
+  explicitly specify the foreign keys Django should use for the relationship
   using :attr:`ManyToManyField.through_fields <ManyToManyField.through_fields>`.
   If you have more than one foreign key and ``through_fields`` is not
   specified, a validation error will be raised. A similar restriction applies
@@ -648,7 +648,7 @@ just refer to the other model class wherever needed. For example::
 Field name restrictions
 -----------------------
 
-LegionMarket places only two restrictions on model field names:
+Django places only two restrictions on model field names:
 
 1. A field name cannot be a Python reserved word, because that would result
    in a Python syntax error. For example::
@@ -667,7 +667,7 @@ necessarily have to match your database column name. See the
 :attr:`~Field.db_column` option.
 
 SQL reserved words, such as ``join``, ``where`` or ``select``, *are* allowed as
-model field names, because LegionMarket escapes all database table names and column
+model field names, because Django escapes all database table names and column
 names in every underlying SQL query. It uses the quoting syntax of your
 particular database engine.
 
@@ -712,7 +712,7 @@ Model attributes
 ``objects``
     The most important attribute of a model is the
     :class:`~django.db.models.Manager`. It's the interface through which
-    database query operations are provided to LegionMarket models and is used to
+    database query operations are provided to Django models and is used to
     :ref:`retrieve the instances <retrieving-objects>` from the database. If no
     custom ``Manager`` is defined, the default name is
     :attr:`~django.db.models.Model.objects`. Managers are only accessible via
@@ -749,10 +749,10 @@ For example, this model has a few custom methods::
             else:
                 return "Post-boomer"
 
-        def _get_full_name(self):
+        @property
+        def full_name(self):
             "Returns the person's full name."
             return '%s %s' % (self.first_name, self.last_name)
-        full_name = property(_get_full_name)
 
 The last method in this example is a :term:`property`.
 
@@ -763,7 +763,7 @@ below -- but there are a couple that you'll almost always want to define:
 
 :meth:`~Model.__str__` (Python 3)
     A Python "magic method" that returns a unicode "representation" of any
-    object. This is what Python and LegionMarket will use whenever a model
+    object. This is what Python and Django will use whenever a model
     instance needs to be coerced and displayed as a plain string. Most
     notably, this happens when you display an object in an interactive
     console or in the admin.
@@ -775,7 +775,7 @@ below -- but there are a couple that you'll almost always want to define:
     Python 2 equivalent of ``__str__()``.
 
 :meth:`~Model.get_absolute_url`
-    This tells LegionMarket how to calculate the URL for an object. LegionMarket uses
+    This tells Django how to calculate the URL for an object. Django uses
     this in its admin interface, and any time it needs to figure out a URL
     for an object.
 
@@ -832,7 +832,7 @@ database won't get touched.
 
 It's also important that you pass through the arguments that can be
 passed to the model method -- that's what the ``*args, **kwargs`` bit
-does. LegionMarket will, from time to time, extend the capabilities of
+does. Django will, from time to time, extend the capabilities of
 built-in model methods, adding new arguments. If you use ``*args,
 **kwargs`` in your method definitions, you are guaranteed that your
 code will automatically support those arguments when they are added.
@@ -866,7 +866,7 @@ on :doc:`using raw SQL</topics/db/sql>`.
 Model inheritance
 =================
 
-Model inheritance in LegionMarket works almost identically to the way normal
+Model inheritance in Django works almost identically to the way normal
 class inheritance works in Python, but the basics at the beginning of the page
 should still be followed. That means the base class should subclass
 :class:`django.db.models.Model`.
@@ -901,7 +901,7 @@ class. This model will then not be used to create any database
 table. Instead, when it is used as a base class for other models, its
 fields will be added to those of the child class. It is an error to
 have fields in the abstract base class with the same name as those in
-the child (and LegionMarket will raise an exception).
+the child (and Django will raise an exception).
 
 An example::
 
@@ -929,7 +929,7 @@ still only creating one database table per child model at the database level.
 ``Meta`` inheritance
 ~~~~~~~~~~~~~~~~~~~~
 
-When an abstract base class is created, LegionMarket makes any :ref:`Meta <meta-options>`
+When an abstract base class is created, Django makes any :ref:`Meta <meta-options>`
 inner class you declared in the base class available as an
 attribute. If a child class does not declare its own :ref:`Meta <meta-options>`
 class, it will inherit the parent's :ref:`Meta <meta-options>`. If the child wants to
@@ -948,7 +948,7 @@ extend the parent's :ref:`Meta <meta-options>` class, it can subclass it. For ex
         class Meta(CommonInfo.Meta):
             db_table = 'student_info'
 
-LegionMarket does make one adjustment to the :ref:`Meta <meta-options>` class of an abstract base
+Django does make one adjustment to the :ref:`Meta <meta-options>` class of an abstract base
 class: before installing the :ref:`Meta <meta-options>` attribute, it sets ``abstract=False``.
 This means that children of abstract base classes don't automatically become
 abstract classes themselves. Of course, you can make an abstract base class
@@ -1022,7 +1022,7 @@ The reverse name of the ``common.ChildB.m2m`` field will be
 will be ``rare_childb_related`` and the reverse query name will be
 ``rare_childbs``. It's up to you how you use the ``'%(class)s'`` and
 ``'%(app_label)s'`` portion to construct your related name or related query name
-but if you forget to use it, LegionMarket will raise errors when you perform system
+but if you forget to use it, Django will raise errors when you perform system
 checks (or run :djadmin:`migrate`).
 
 If you don't specify a :attr:`~django.db.models.ForeignKey.related_name`
@@ -1044,7 +1044,7 @@ field.
 Multi-table inheritance
 -----------------------
 
-The second type of model inheritance supported by LegionMarket is when each model in
+The second type of model inheritance supported by Django is when each model in
 the hierarchy is a model all by itself. Each model corresponds to its own
 database table and can be queried and created individually. The inheritance
 relationship introduces links between the child model and each of its parents
@@ -1081,6 +1081,18 @@ However, if ``p`` in the above example was *not* a ``Restaurant`` (it had been
 created directly as a ``Place`` object or was the parent of some other class),
 referring to ``p.restaurant`` would raise a ``Restaurant.DoesNotExist``
 exception.
+
+The automatically-created :class:`~django.db.models.OneToOneField` on
+``Restaurant`` that links it to ``Place`` looks like this::
+
+    place_ptr = models.OneToOneField(
+        Place, on_delete=models.CASCADE,
+        parent_link=True,
+    )
+
+You can override that field by declaring your own
+:class:`~django.db.models.OneToOneField` with :attr:`parent_link=True
+<django.db.models.OneToOneField.parent_link>` on ``Restaurant``.
 
 .. _meta-and-multi-table-inheritance:
 
@@ -1122,7 +1134,7 @@ default :attr:`~django.db.models.ForeignKey.related_name` value for
 :class:`~django.db.models.ManyToManyField` relations.  If you
 are putting those types of relations on a subclass of the parent model, you
 **must** specify the :attr:`~django.db.models.ForeignKey.related_name`
-attribute on each such field. If you forget, LegionMarket will raise a validation
+attribute on each such field. If you forget, Django will raise a validation
 error.
 
 For example, using the above ``Place`` class again, let's create another
@@ -1145,7 +1157,7 @@ error: ``models.ManyToManyField(Place, related_name='provider')``.
 Specifying the parent link field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As mentioned, LegionMarket will automatically create a
+As mentioned, Django will automatically create a
 :class:`~django.db.models.OneToOneField` linking your child
 class back to any non-abstract parent models. If you want to control the
 name of the attribute linking back to the parent, you can create your
@@ -1172,7 +1184,7 @@ model. The difference is that you can change things like the default model
 ordering or the default manager in the proxy, without having to alter the
 original.
 
-Proxy models are declared like normal models. You tell LegionMarket that it's a
+Proxy models are declared like normal models. You tell Django that it's a
 proxy model by setting the :attr:`~django.db.models.Options.proxy` attribute of
 the ``Meta`` class to ``True``.
 
@@ -1218,7 +1230,7 @@ models <meta-and-multi-table-inheritance>`.
 ``QuerySet``\s still return the model that was requested
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There is no way to have LegionMarket return, say, a ``MyPerson`` object whenever you
+There is no way to have Django return, say, a ``MyPerson`` object whenever you
 query for ``Person`` objects. A queryset for ``Person`` objects will return
 those types of objects. The whole point of proxy objects is that code relying
 on the original ``Person`` will use those and your own code can use the
@@ -1318,7 +1330,7 @@ The general rules are:
 Multiple inheritance
 --------------------
 
-Just as with Python's subclassing, it's possible for a LegionMarket model to inherit
+Just as with Python's subclassing, it's possible for a Django model to inherit
 from multiple parent models. Keep in mind that normal Python name resolution
 rules apply. The first base class that a particular name (e.g. :ref:`Meta
 <meta-options>`) appears in will be the one that is used; for example, this
@@ -1362,7 +1374,7 @@ Or use a common ancestor to hold the :class:`~django.db.models.AutoField`::
         pass
 
 Field name "hiding" is not permitted
--------------------------------------
+------------------------------------
 
 In normal Python class inheritance, it is permissible for a child class to
 override any attribute from the parent class. In Django, this isn't usually
@@ -1399,7 +1411,7 @@ Overriding fields in a parent model leads to difficulties in areas such as
 initializing new instances (specifying which field is being initialized in
 ``Model.__init__``) and serialization. These are features which normal Python
 class inheritance doesn't have to deal with in quite the same way, so the
-difference between LegionMarket model inheritance and Python class inheritance isn't
+difference between Django model inheritance and Python class inheritance isn't
 arbitrary.
 
 This restriction only applies to attributes which are
@@ -1410,7 +1422,7 @@ column name, you can have the same column name appearing in both a child and
 an ancestor model for multi-table inheritance (they are columns in two
 different database tables).
 
-LegionMarket will raise a :exc:`~django.core.exceptions.FieldError` if you override
+Django will raise a :exc:`~django.core.exceptions.FieldError` if you override
 any model field in any ancestor model.
 
 Organizing models in a package

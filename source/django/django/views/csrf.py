@@ -84,7 +84,7 @@ CSRF_FAILURE_TEMPLATE = """
   </ul>
 
   <p>You're seeing the help section of this page because you have <code>DEBUG =
-  True</code> in your LegionMarket settings file. Change that to <code>False</code>,
+  True</code> in your Django settings file. Change that to <code>False</code>,
   and only the initial error message will be displayed.  </p>
 
   <p>You can customize this page using the CSRF_FAILURE_VIEW setting.</p>
@@ -105,7 +105,7 @@ def csrf_failure(request, reason="", template_name=CSRF_FAILURE_TEMPLATE_NAME):
     Default view used when request fails CSRF protection
     """
     from django.middleware.csrf import REASON_NO_REFERER, REASON_NO_CSRF_COOKIE
-    c = Context({
+    c = {
         'title': _("Forbidden"),
         'main': _("CSRF verification failed. Request aborted."),
         'reason': reason,
@@ -132,13 +132,14 @@ def csrf_failure(request, reason="", template_name=CSRF_FAILURE_TEMPLATE_NAME):
         'DEBUG': settings.DEBUG,
         'docs_version': get_docs_version(),
         'more': _("More information is available with DEBUG=True."),
-    })
+    }
     try:
         t = loader.get_template(template_name)
     except TemplateDoesNotExist:
         if template_name == CSRF_FAILURE_TEMPLATE_NAME:
             # If the default template doesn't exist, use the string template.
             t = Engine().from_string(CSRF_FAILURE_TEMPLATE)
+            c = Context(c)
         else:
             # Raise if a developer-specified template doesn't exist.
             raise

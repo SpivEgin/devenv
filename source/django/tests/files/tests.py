@@ -6,7 +6,7 @@ import os
 import struct
 import tempfile
 import unittest
-from io import BytesIO, StringIO
+from io import BytesIO, StringIO, TextIOWrapper
 
 from django.core.files import File
 from django.core.files.base import ContentFile
@@ -120,18 +120,39 @@ class FileTests(unittest.TestCase):
         f = File(StringIO('one\ntwo\nthree'))
         self.assertEqual(list(f), ['one\n', 'two\n', 'three'])
 
+    def test_readable(self):
+        with tempfile.TemporaryFile() as temp, File(temp, name='something.txt') as test_file:
+            self.assertTrue(test_file.readable())
+        self.assertFalse(test_file.readable())
+
+    def test_writable(self):
+        with tempfile.TemporaryFile() as temp, File(temp, name='something.txt') as test_file:
+            self.assertTrue(test_file.writable())
+        self.assertFalse(test_file.writable())
+        with tempfile.TemporaryFile('rb') as temp, File(temp, name='something.txt') as test_file:
+            self.assertFalse(test_file.writable())
+
     def test_seekable(self):
-        """
-        File.seekable() should be available on Python 3.
-        """
-        with tempfile.TemporaryFile() as temp:
-            temp.write(b"contents\n")
-            test_file = File(temp, name="something.txt")
-            if six.PY2:
-                self.assertFalse(hasattr(test_file, 'seekable'))
-            if six.PY3:
-                self.assertTrue(hasattr(test_file, 'seekable'))
-                self.assertTrue(test_file.seekable())
+        with tempfile.TemporaryFile() as temp, File(temp, name='something.txt') as test_file:
+            self.assertTrue(test_file.seekable())
+        self.assertFalse(test_file.seekable())
+
+    def test_io_wrapper(self):
+        content = "vive l'été\n"
+        with tempfile.TemporaryFile() as temp, File(temp, name='something.txt') as test_file:
+            test_file.write(content.encode('utf-8'))
+            test_file.seek(0)
+            wrapper = TextIOWrapper(test_file, 'utf-8', newline='\n')
+            self.assertEqual(wrapper.read(), content)
+            # The following seek() call is required on Windows Python 2 when
+            # switching from reading to writing.
+            wrapper.seek(0, 2)
+            wrapper.write(content)
+            wrapper.seek(0)
+            self.assertEqual(wrapper.read(), content * 2)
+            test_file = wrapper.detach()
+            test_file.seek(0)
+            self.assertEqual(test_file.read(), (content * 2).encode('utf-8'))
 
 
 class NoNameFileTestCase(unittest.TestCase):
@@ -152,14 +173,14 @@ class ContentFileTestCase(unittest.TestCase):
 
     def test_content_file_custom_name(self):
         """
-        Test that the constructor of ContentFile accepts 'name' (#16590).
+        The constructor of ContentFile accepts 'name' (#16590).
         """
         name = "I can have a name too!"
         self.assertEqual(ContentFile(b"content", name=name).name, name)
 
     def test_content_file_input_type(self):
         """
-        Test that ContentFile can accept both bytes and unicode and that the
+        ContentFile can accept both bytes and unicode and that the
         retrieved content is of the same type.
         """
         self.assertIsInstance(ContentFile(b"content").read(), bytes)
@@ -171,7 +192,7 @@ class ContentFileTestCase(unittest.TestCase):
 
 class DimensionClosingBug(unittest.TestCase):
     """
-    Test that get_image_dimensions() properly closes files (#8817)
+    get_image_dimensions() properly closes files (#8817)
     """
     @unittest.skipUnless(Image, "Pillow not installed")
     def test_not_closing_of_files(self):
@@ -221,7 +242,7 @@ class DimensionClosingBug(unittest.TestCase):
 
 class InconsistentGetImageDimensionsBug(unittest.TestCase):
     """
-    Test that get_image_dimensions() works properly after various calls
+    get_image_dimensions() works properly after various calls
     using a file handler (#11158)
     """
     @unittest.skipUnless(Image, "Pillow not installed")

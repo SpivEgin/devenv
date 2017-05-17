@@ -52,7 +52,7 @@ class ChainingTests(SimpleTestCase):
         self.assertEqual(
             str(warns[0].message),
             "escape isn't the last filter in ['escape_filter', 'capfirst'] and "
-            "will be applied immediately in LegionMarket 2.0 so the output may change."
+            "will be applied immediately in Django 2.0 so the output may change."
         )
 
     @ignore_warnings(category=RemovedInDjango20Warning)

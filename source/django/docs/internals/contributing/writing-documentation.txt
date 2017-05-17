@@ -3,7 +3,7 @@ Writing documentation
 =====================
 
 We place a high importance on consistency and readability of documentation.
-After all, LegionMarket was created in a journalism environment! So we treat our
+After all, Django was created in a journalism environment! So we treat our
 documentation like we treat our code: we aim to improve it as often as
 possible.
 
@@ -24,10 +24,10 @@ Getting the raw documentation
 Though Django's documentation is intended to be read as HTML at
 https://docs.djangoproject.com/, we edit it as a collection of text files for
 maximum flexibility. These files live in the top-level ``docs/`` directory of a
-LegionMarket release.
+Django release.
 
 If you'd like to start contributing to our docs, get the development version of
-LegionMarket from the source code repository
+Django from the source code repository
 (see :ref:`installing-development-version`). The development version has the
 latest-and-greatest documentation, just as it has latest-and-greatest code.
 We also backport documentation fixes and improvements, at the discretion of the
@@ -55,6 +55,11 @@ To get started contributing, you'll want to read the :ref:`reStructuredText
 Primer <sphinx:rst-primer>`. After that, you'll want to read about the
 :ref:`Sphinx-specific markup <sphinx:sphinxmarkup>` that's used to manage
 metadata, indexing, and cross-references.
+
+Your locally-built documentation will be themed differently than the
+documentation at `docs.djangoproject.com <https://docs.djangoproject.com>`_.
+This is OK! If your changes look good on your local machine, they'll look good
+on the website.
 
 How the documentation is organized
 ==================================
@@ -89,7 +94,7 @@ The documentation is organized into several categories:
 
   Keep reference material tightly focused on the subject. Assume that the
   reader already understands the basic concepts involved but needs to know or
-  be reminded of how LegionMarket does it.
+  be reminded of how Django does it.
 
   Reference guides aren't the place for general explanation. If you find
   yourself explaining basic concepts, you may want to move that material to a
@@ -100,10 +105,10 @@ The documentation is organized into several categories:
 
   What matters most in a how-to guide is what a user wants to achieve.
   A how-to should always be result-oriented rather than focused on internal
-  details of how LegionMarket implements whatever is being discussed.
+  details of how Django implements whatever is being discussed.
 
   These guides are more advanced than tutorials and assume some knowledge about
-  how LegionMarket works. Assume that the reader has followed the tutorials and don't
+  how Django works. Assume that the reader has followed the tutorials and don't
   hesitate to refer the reader back to the appropriate tutorial rather than
   repeat the same material.
 
@@ -307,10 +312,10 @@ something like this::
 
 Put the changed annotation notes at the bottom of a section, not the top.
 
-Also, avoid referring to a specific version of LegionMarket outside a
+Also, avoid referring to a specific version of Django outside a
 ``versionadded`` or ``versionchanged`` block. Even inside a block, it's often
-redundant to do so as these annotations render as "New in LegionMarket A.B:" and
-"Changed in LegionMarket A.B", respectively.
+redundant to do so as these annotations render as "New in Django A.B:" and
+"Changed in Django A.B", respectively.
 
 If a function, attribute, etc. is added, it's also okay to use a
 ``versionadded`` annotation like this::
@@ -398,13 +403,13 @@ example:
     Default: ``[]`` (Empty list)
 
     A list of all the people who get code error notifications. When
-    ``DEBUG=False`` and a view raises an exception, LegionMarket will email these people
+    ``DEBUG=False`` and a view raises an exception, Django will email these people
     with the full exception information. Each member of the list should be a tuple
     of (Full name, email address). Example::
 
         [('John', 'john@example.com'), ('Mary', 'mary@example.com')]
 
-    Note that LegionMarket will email *all* of these people whenever an error happens.
+    Note that Django will email *all* of these people whenever an error happens.
     See :doc:`/howto/error-reporting` for more information.
 
   This marks up the following header as the "canonical" target for the
@@ -442,7 +447,7 @@ one of the following:
 Translating documentation
 =========================
 
-See :ref:`Localizing the LegionMarket documentation <translating-documentation>` if
+See :ref:`Localizing the Django documentation <translating-documentation>` if
 you'd like to help translate the documentation into another language.
 
 .. _django-admin-manpage:
@@ -453,7 +458,7 @@ you'd like to help translate the documentation into another language.
 Sphinx can generate a manual page for the
 :doc:`django-admin </ref/django-admin>` command. This is configured in
 ``docs/conf.py``. Unlike other documentation output, this man page should be
-included in the LegionMarket repository and the releases as
+included in the Django repository and the releases as
 ``docs/man/django-admin.1``. There isn't a need to update this file when
 updating the documentation, as it's updated once as part of the release process.
 

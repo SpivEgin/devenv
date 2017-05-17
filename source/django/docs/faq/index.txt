@@ -1,5 +1,5 @@
 ==========
-LegionMarket FAQ
+Django FAQ
 ==========
 
 .. toctree::

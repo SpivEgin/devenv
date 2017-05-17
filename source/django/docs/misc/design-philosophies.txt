@@ -24,7 +24,7 @@ For example, the template system knows nothing about Web requests, the database
 layer knows nothing about data display and the view system doesn't care which
 template system a programmer uses.
 
-Although LegionMarket comes with a full stack for convenience, the pieces of the
+Although Django comes with a full stack for convenience, the pieces of the
 stack are independent of another wherever possible.
 
 .. _`loose coupling and tight cohesion`: http://c2.com/cgi/wiki?CouplingAndCohesion
@@ -34,8 +34,8 @@ stack are independent of another wherever possible.
 Less code
 ---------
 
-LegionMarket apps should use as little code as possible; they should lack boilerplate.
-LegionMarket should take full advantage of Python's dynamic capabilities, such as
+Django apps should use as little code as possible; they should lack boilerplate.
+Django should take full advantage of Python's dynamic capabilities, such as
 introspection.
 
 .. _quick-development:
@@ -44,7 +44,7 @@ Quick development
 -----------------
 
 The point of a Web framework in the 21st century is to make the tedious aspects
-of Web development fast. LegionMarket should allow for incredibly quick Web
+of Web development fast. Django should allow for incredibly quick Web
 development.
 
 .. _dry:
@@ -154,10 +154,10 @@ URL design
 Loose coupling
 --------------
 
-URLs in a LegionMarket app should not be coupled to the underlying Python code. Tying
+URLs in a Django app should not be coupled to the underlying Python code. Tying
 URLs to Python function names is a Bad And Ugly Thing.
 
-Along these lines, the LegionMarket URL system should allow URLs for the same app to
+Along these lines, the Django URL system should allow URLs for the same app to
 be different in different contexts. For example, one site may put stories at
 ``/stories/``, while another may use ``/news/``.
 
@@ -186,7 +186,7 @@ Definitive URLs
 
 Technically, ``foo.com/bar`` and ``foo.com/bar/`` are two different URLs, and
 search-engine robots (and some Web traffic-analyzing tools) would treat them as
-separate pages. LegionMarket should make an effort to "normalize" URLs so that
+separate pages. Django should make an effort to "normalize" URLs so that
 search-engine robots don't get confused.
 
 This is the reasoning behind the :setting:`APPEND_SLASH` setting.
@@ -207,7 +207,7 @@ Discourage redundancy
 ---------------------
 
 The majority of dynamic websites use some sort of common sitewide design --
-a common header, footer, navigation bar, etc. The LegionMarket template system should
+a common header, footer, navigation bar, etc. The Django template system should
 make it easy to store those elements in a single place, eliminating duplicate
 code.
 
@@ -251,10 +251,10 @@ Don't invent a programming language
 
 The goal is not to invent a programming language. The goal is to offer just
 enough programming-esque functionality, such as branching and looping, that is
-essential for making presentation-related decisions. The :ref:`LegionMarket Template
+essential for making presentation-related decisions. The :ref:`Django Template
 Language (DTL) <template-language-intro>` aims to avoid advanced logic.
 
-The LegionMarket template system recognizes that templates are most often written by
+The Django template system recognizes that templates are most often written by
 *designers*, not *programmers*, and therefore should not assume Python
 knowledge.
 

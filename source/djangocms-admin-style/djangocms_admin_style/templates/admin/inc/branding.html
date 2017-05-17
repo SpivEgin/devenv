@@ -1,12 +1,12 @@
-{% load admin_style_tags i18n %}
+{% load admin_style_tags i18n static %}
 {% load static from staticfiles %}
 <div id="header-logo">
-    <a class="icon-logo" href="/"><span>LegionMarket</span></a>
+   <img class="brand-logo" src={% static "cms/fonts/src/logo.svg"  %} alt="Legion Market" height="40" /></a>
 </div>
-<h1>{{ site_header|default:_('LegionMarket Administration') }}</h1>
+<h1>{{ site_header|default:_('TLM Administration') }}</h1>
 <ul id="site-name" class="toolbar-item toolbar-item-navigation">
     <li>
-        <a class="menu-item" href="">{{ site_header|default:_('LegionMarket Administration') }}</a>
+        <a class="menu-item" href="">{{ site_header|default:_('TLM Administration') }}</a>
         <ul class="submenu">
             {% if user.is_active and user.is_staff %}
                 {% url 'django-admindocs-docroot' as docsroot %}

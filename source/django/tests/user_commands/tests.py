@@ -45,7 +45,7 @@ class CommandTests(SimpleTestCase):
             self.assertEqual(translation.get_language(), 'fr')
 
     def test_explode(self):
-        """ Test that an unknown command raises CommandError """
+        """ An unknown command raises CommandError """
         with self.assertRaises(CommandError):
             management.call_command(('explode',))
 
@@ -55,8 +55,12 @@ class CommandTests(SimpleTestCase):
         """
         with self.assertRaises(CommandError):
             management.call_command('dance', example="raise")
-        with captured_stderr() as stderr, self.assertRaises(SystemExit):
-            management.ManagementUtility(['manage.py', 'dance', '--example=raise']).execute()
+        dance.Command.requires_system_checks = False
+        try:
+            with captured_stderr() as stderr, self.assertRaises(SystemExit):
+                management.ManagementUtility(['manage.py', 'dance', '--example=raise']).execute()
+        finally:
+            dance.Command.requires_system_checks = True
         self.assertIn("CommandError", stderr.getvalue())
 
     def test_deactivate_locale_set(self):
@@ -86,7 +90,7 @@ class CommandTests(SimpleTestCase):
 
     def test_discover_commands_in_eggs(self):
         """
-        Test that management commands can also be loaded from Python eggs.
+        Management commands can also be loaded from Python eggs.
         """
         egg_dir = '%s/eggs' % os.path.dirname(upath(__file__))
         egg_name = '%s/basic.egg' % egg_dir
@@ -146,7 +150,7 @@ class CommandTests(SimpleTestCase):
         self.counter = 0
 
         def patched_check(self_, **kwargs):
-            self.counter = self.counter + 1
+            self.counter += 1
 
         saved_check = BaseCommand.check
         BaseCommand.check = patched_check

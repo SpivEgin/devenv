@@ -31,7 +31,7 @@ class Admin2(admin.AdminSite):
         ] + super(Admin2, self).get_urls()
 
     def my_view(self, request):
-        return HttpResponse("LegionMarket is a magical pony!")
+        return HttpResponse("TLM is a magical pony!")
 
     def password_change(self, request, extra_context=None):
         return super(Admin2, self).password_change(request, {'spam': 'eggs'})

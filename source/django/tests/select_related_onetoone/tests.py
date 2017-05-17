@@ -4,8 +4,9 @@ from django.core.exceptions import FieldError
 from django.test import SimpleTestCase, TestCase
 
 from .models import (
-    AdvancedUserStat, Child1, Child2, Child3, Child4, Image, Parent1, Parent2,
-    Product, StatDetails, User, UserProfile, UserStat, UserStatResult,
+    AdvancedUserStat, Child1, Child2, Child3, Child4, Image, LinkedList,
+    Parent1, Parent2, Product, StatDetails, User, UserProfile, UserStat,
+    UserStatResult,
 )
 
 
@@ -87,12 +88,12 @@ class ReverseSelectRelatedTestCase(TestCase):
 
     def test_nullable_relation(self):
         im = Image.objects.create(name="imag1")
-        p1 = Product.objects.create(name="LegionMarket Plushie", image=im)
-        p2 = Product.objects.create(name="Talking LegionMarket Plushie")
+        p1 = Product.objects.create(name="TLM Plushie", image=im)
+        p2 = Product.objects.create(name="Talking Django Plushie")
 
         with self.assertNumQueries(1):
             result = sorted(Product.objects.select_related("image"), key=lambda x: x.name)
-            self.assertEqual([p.name for p in result], ["LegionMarket Plushie", "Talking LegionMarket Plushie"])
+            self.assertEqual([p.name for p in result], ["TLM Plushie", "Talking Django Plushie"])
 
             self.assertEqual(p1.image, im)
             # Check for ticket #13839
@@ -206,6 +207,13 @@ class ReverseSelectRelatedTestCase(TestCase):
         with self.assertNumQueries(0):
             self.assertEqual(p.child1.name1, 'n1')
             self.assertEqual(p.child1.child4.name1, 'n1')
+
+    def test_self_relation(self):
+        item1 = LinkedList.objects.create(name='item1')
+        LinkedList.objects.create(name='item2', previous_item=item1)
+        with self.assertNumQueries(1):
+            item1_db = LinkedList.objects.select_related('next_item').get(name='item1')
+            self.assertEqual(item1_db.next_item.name, 'item2')
 
 
 class ReverseSelectRelatedValidationTests(SimpleTestCase):

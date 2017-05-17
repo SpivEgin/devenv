@@ -33,16 +33,20 @@ class HandlerTests(SimpleTestCase):
         self.assertIsNotNone(handler._request_middleware)
 
     def test_bad_path_info(self):
-        """Tests for bug #15672 ('request' referenced before assignment)"""
+        """
+        A non-UTF-8 path populates PATH_INFO with an URL-encoded path and
+        produces a 404.
+        """
         environ = RequestFactory().get('/').environ
         environ['PATH_INFO'] = b'\xed' if six.PY2 else '\xed'
         handler = WSGIHandler()
         response = handler(environ, lambda *a, **k: None)
-        self.assertEqual(response.status_code, 400)
+        # The path of the request will be encoded to '/%ED'.
+        self.assertEqual(response.status_code, 404)
 
     def test_non_ascii_query_string(self):
         """
-        Test that non-ASCII query strings are properly decoded (#20530, #22996).
+        Non-ASCII query strings are properly decoded (#20530, #22996).
         """
         environ = RequestFactory().get('/').environ
         raw_query_strings = [
@@ -67,7 +71,7 @@ class HandlerTests(SimpleTestCase):
             self.assertListEqual(got, ['café', 'café', 'caf\ufffd', 'café'])
 
     def test_non_ascii_cookie(self):
-        """Test that non-ASCII cookies set in JavaScript are properly decoded (#20557)."""
+        """Non-ASCII cookies set in JavaScript are properly decoded (#20557)."""
         environ = RequestFactory().get('/').environ
         raw_cookie = 'want="café"'
         if six.PY3:
@@ -106,7 +110,7 @@ class HandlerTests(SimpleTestCase):
         self.assertEqual(response.status_code, 400)
 
 
-@override_settings(ROOT_URLCONF='handlers.urls')
+@override_settings(ROOT_URLCONF='handlers.urls', MIDDLEWARE=[])
 class TransactionsPerRequestTests(TransactionTestCase):
 
     available_apps = []

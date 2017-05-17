@@ -7,7 +7,7 @@
 # Matas Dailyda <matas@dailyda.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: LegionMarket CMS Admin Style\n"
+"Project-Id-Version: django CMS Admin Style\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-20 15:12+0200\n"
 "PO-Revision-Date: 2016-06-20 13:12+0000\n"
@@ -86,7 +86,7 @@ msgid ""
 msgstr "Ar tikrai norite pašalinti pasirinktus %(objects_name)s? Visi sekantys objektai ir susiję vienetai bus pašalinti:"
 
 #: templates/admin/inc/branding.html:6 templates/admin/inc/branding.html:9
-msgid "LegionMarket Administration"
+msgid "Django Administration"
 msgstr "Django administravimas"
 
 #: templates/admin/inc/branding.html:15

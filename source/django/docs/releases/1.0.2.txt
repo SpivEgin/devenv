@@ -1,38 +1,38 @@
 ==========================
-LegionMarket 1.0.2 release notes
+Django 1.0.2 release notes
 ==========================
 
-Welcome to LegionMarket 1.0.2!
+Welcome to Django 1.0.2!
 
-This is the second "bugfix" release in the LegionMarket 1.0 series,
-improving the stability and performance of the LegionMarket 1.0 codebase. As
-such, LegionMarket 1.0.2 contains no new features (and, pursuant to
+This is the second "bugfix" release in the Django 1.0 series,
+improving the stability and performance of the Django 1.0 codebase. As
+such, Django 1.0.2 contains no new features (and, pursuant to
 :doc:`our compatibility policy </misc/api-stability>`, maintains backwards compatibility with Django
 1.0.0), but does contain a number of fixes and other
-improvements. LegionMarket 1.0.2 is a recommended upgrade for any
-development or deployment currently using or targeting LegionMarket 1.0.
+improvements. Django 1.0.2 is a recommended upgrade for any
+development or deployment currently using or targeting Django 1.0.
 
 
-Fixes and improvements in LegionMarket 1.0.2
+Fixes and improvements in Django 1.0.2
 ======================================
 
 The primary reason behind this release is to remedy an issue in the
-recently-released LegionMarket 1.0.1; the packaging scripts used for Django
+recently-released Django 1.0.1; the packaging scripts used for Django
 1.0.1 omitted some directories from the final release package,
 including one directory required by ``django.contrib.gis`` and part of
 Django's unit-test suite.
 
-LegionMarket 1.0.2 contains updated packaging scripts, and the release
-package contains the directories omitted from LegionMarket 1.0.1. As such,
+Django 1.0.2 contains updated packaging scripts, and the release
+package contains the directories omitted from Django 1.0.1. As such,
 this release contains all of the fixes and improvements from Django
-1.0.1; see :doc:`the LegionMarket 1.0.1 release notes </releases/1.0.1>` for
+1.0.1; see :doc:`the Django 1.0.1 release notes </releases/1.0.1>` for
 details.
 
-Additionally, in the period since LegionMarket 1.0.1 was released:
+Additionally, in the period since Django 1.0.1 was released:
 
 * Updated Hebrew and Danish translations have been added.
 
-* The default ``__repr__`` method of LegionMarket models has been made more
+* The default ``__repr__`` method of Django models has been made more
   robust in the face of bad Unicode data coming from the
   ``__unicode__`` method; rather than raise an exception in such
   cases, ``repr()`` will now contain the string "[Bad Unicode data]"

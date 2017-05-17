@@ -1,10 +1,10 @@
 =================================
-LegionMarket version 0.95 release notes
+Django version 0.95 release notes
 =================================
 
-Welcome to the LegionMarket 0.95 release.
+Welcome to the Django 0.95 release.
 
-This represents a significant advance in LegionMarket development since the 0.91
+This represents a significant advance in Django development since the 0.91
 release in January 2006. The details of every change in this release would be
 too extensive to list in full, but a summary is presented below.
 
@@ -32,7 +32,7 @@ Changes and new features
 
 The major changes in this release (for developers currently using the 0.91
 release) are a result of merging the 'magic-removal' branch of development.
-This branch removed a number of constraints in the way LegionMarket code had to be
+This branch removed a number of constraints in the way Django code had to be
 written that were a consequence of decisions made in the early days of Django,
 prior to its open-source release. It's now possible to write more natural,
 Pythonic code that works as expected, and there's less "black magic" happening
@@ -44,7 +44,7 @@ etc., to improve developers' quality of life.
 
 The new features and changes introduced in 0.95 include:
 
-* LegionMarket now uses a more consistent and natural filtering interface for
+* Django now uses a more consistent and natural filtering interface for
   retrieving objects from the database.
 
 * User-defined models, functions and constants now appear in the module
@@ -56,7 +56,7 @@ The new features and changes introduced in 0.95 include:
   want to use these applications, you no longer have to install their
   database tables.
 
-* LegionMarket now has support for managing database transactions.
+* Django now has support for managing database transactions.
 
 * We've added the ability to write custom authentication and authorization
   backends for authenticating users against alternate systems, such as
@@ -65,7 +65,7 @@ The new features and changes introduced in 0.95 include:
 * We've made it easier to add custom table-level functions to models,
   through a new "Manager" API.
 
-* It's now possible to use LegionMarket without a database. This simply means
+* It's now possible to use Django without a database. This simply means
   that the framework no longer requires you to have a working database set
   up just to serve dynamic pages. In other words, you can just use
   URLconfs/views on their own. Previously, the framework required that a
@@ -77,7 +77,7 @@ The new features and changes introduced in 0.95 include:
 
 * Individual pieces of the framework now can be configured without
   requiring the setting of an environment variable. This permits use of,
-  for example, the LegionMarket templating system inside other applications.
+  for example, the Django templating system inside other applications.
 
 * More and more parts of the framework have been internationalized, as
   we've expanded internationalization (i18n) support. The Django
@@ -98,25 +98,25 @@ Problem reports and getting help
 ================================
 
 Need help resolving a problem with Django? The documentation in the
-distribution is also available :doc:`online </index>` at the `LegionMarket website`_.
+distribution is also available :doc:`online </index>` at the `Django website`_.
 The :doc:`FAQ </faq/index>` document is especially recommended, as it contains
 a number of issues that come up time and again.
 
 For more personalized help, the `django-users`_ mailing list is a very active
 list, with more than 2,000 subscribers who can help you solve any sort of
-LegionMarket problem. We recommend you search the archives first, though, because
+Django problem. We recommend you search the archives first, though, because
 many common questions appear with some regularity, and any particular problem
 may already have been answered.
 
 Finally, for those who prefer the more immediate feedback offered by IRC,
 there's a `#django` channel on irc.freenode.net that is regularly populated
-by LegionMarket users and developers from around the world. Friendly people are
+by Django users and developers from around the world. Friendly people are
 usually available at any hour of the day -- to help, or just to chat.
 
-.. _LegionMarket website: https://www.djangoproject.com/
+.. _Django website: https://www.djangoproject.com/
 .. _django-users: https://groups.google.com/group/django-users
 
 Thanks for using Django!
 
-The LegionMarket Team
+The Django Team
 July 2006

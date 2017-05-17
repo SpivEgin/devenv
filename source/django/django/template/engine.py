@@ -27,6 +27,8 @@ class Engine(object):
             loaders = ['django.template.loaders.filesystem.Loader']
             if app_dirs:
                 loaders += ['django.template.loaders.app_directories.Loader']
+            if not debug:
+                loaders = [('django.template.loaders.cached.Loader', loaders)]
         else:
             if app_dirs:
                 raise ImproperlyConfigured(
@@ -172,7 +174,7 @@ class Engine(object):
             t = self.select_template(template_name)
         else:
             t = self.get_template(template_name)
-        # LegionMarket < 1.8 accepted a Context in `context` even though that's
+        # Django < 1.8 accepted a Context in `context` even though that's
         # unintended. Preserve this ability but don't rewrap `context`.
         if isinstance(context, Context):
             return t.render(context)

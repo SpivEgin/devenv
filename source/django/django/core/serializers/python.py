@@ -84,7 +84,7 @@ class Serializer(base.Serializer):
 
 def Deserializer(object_list, **options):
     """
-    Deserialize simple Python objects back into LegionMarket ORM instances.
+    Deserialize simple Python objects back into Django ORM instances.
 
     It's expected that you pass the Python objects themselves (instead of a
     stream or a string) to the constructor

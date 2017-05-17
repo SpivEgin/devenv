@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.4.8 release notes
+Django 1.4.8 release notes
 ==========================
 
 *September 14, 2013*
 
-LegionMarket 1.4.8 fixes two security issues present in previous LegionMarket releases in
+Django 1.4.8 fixes two security issues present in previous Django releases in
 the 1.4 series.
 
 Denial-of-service via password hashers

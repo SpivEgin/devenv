@@ -30,9 +30,9 @@ datetime_re = re.compile(
 standard_duration_re = re.compile(
     r'^'
     r'(?:(?P<days>-?\d+) (days?, )?)?'
-    r'((?:(?P<hours>\d+):)(?=\d+:\d+))?'
-    r'(?:(?P<minutes>\d+):)?'
-    r'(?P<seconds>\d+)'
+    r'((?:(?P<hours>-?\d+):)(?=\d+:\d+))?'
+    r'(?:(?P<minutes>-?\d+):)?'
+    r'(?P<seconds>-?\d+)'
     r'(?:\.(?P<microseconds>\d{1,6})\d{0,6})?'
     r'$'
 )
@@ -40,7 +40,8 @@ standard_duration_re = re.compile(
 # Support the sections of ISO 8601 date representation that are accepted by
 # timedelta
 iso8601_duration_re = re.compile(
-    r'^P'
+    r'^(?P<sign>[-+]?)'
+    r'P'
     r'(?:(?P<days>\d+(.\d+)?)D)?'
     r'(?:T'
     r'(?:(?P<hours>\d+(.\d+)?)H)?'
@@ -112,7 +113,7 @@ def parse_datetime(value):
 def parse_duration(value):
     """Parses a duration string and returns a datetime.timedelta.
 
-    The preferred format for durations in LegionMarket is '%d %H:%M:%S.%f'.
+    The preferred format for durations in Django is '%d %H:%M:%S.%f'.
 
     Also supports ISO 8601 representation.
     """
@@ -121,7 +122,10 @@ def parse_duration(value):
         match = iso8601_duration_re.match(value)
     if match:
         kw = match.groupdict()
+        sign = -1 if kw.pop('sign', '+') == '-' else 1
         if kw.get('microseconds'):
             kw['microseconds'] = kw['microseconds'].ljust(6, '0')
+        if kw.get('seconds') and kw.get('microseconds') and kw['seconds'].startswith('-'):
+            kw['microseconds'] = '-' + kw['microseconds']
         kw = {k: float(v) for k, v in six.iteritems(kw) if v is not None}
-        return datetime.timedelta(**kw)
+        return sign * datetime.timedelta(**kw)

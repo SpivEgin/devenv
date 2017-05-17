@@ -1,10 +1,10 @@
 ===========================
-LegionMarket 1.5.10 release notes
+Django 1.5.10 release notes
 ===========================
 
 *September 2, 2014*
 
-LegionMarket 1.5.10 fixes a regression in the 1.5.9 security release.
+Django 1.5.10 fixes a regression in the 1.5.9 security release.
 
 Bugfixes
 ========

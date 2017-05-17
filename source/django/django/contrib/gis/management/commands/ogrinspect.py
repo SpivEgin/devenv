@@ -33,7 +33,7 @@ class ListOptionAction(argparse.Action):
 class Command(BaseCommand):
     help = (
         'Inspects the given OGR-compatible data source (e.g., a shapefile) and outputs\n'
-        'a GeoLegionMarket model with the given model name. For example:\n'
+        'a GeoDjango model with the given model name. For example:\n'
         ' ./manage.py ogrinspect zipcode.shp Zipcode'
     )
 
@@ -98,8 +98,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data_source, model_name = options.pop('data_source'), options.pop('model_name')
-        if not gdal.HAS_GDAL:
-            raise CommandError('GDAL is required to inspect geospatial data sources.')
 
         # Getting the OGR DataSource from the string parameter.
         try:

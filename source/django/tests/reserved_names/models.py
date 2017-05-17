@@ -2,7 +2,7 @@
 Using SQL reserved names
 
 Need to use a reserved SQL name as a column name or table name? Need to include
-a hyphen in a column or table name? No problem. LegionMarket quotes names
+a hyphen in a column or table name? No problem. Django quotes names
 appropriately behind the scenes, so your database won't complain about
 reserved-name usage.
 """

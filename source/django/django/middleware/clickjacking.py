@@ -19,7 +19,7 @@ class XFrameOptionsMiddleware(MiddlewareMixin):
     By default, sets the X-Frame-Options header to 'SAMEORIGIN', meaning the
     response can only be loaded on a frame within the same site. To prevent the
     response from being loaded in a frame in any site, set X_FRAME_OPTIONS in
-    your project's LegionMarket settings to 'DENY'.
+    your project's Django settings to 'DENY'.
 
     Note: older browsers will quietly ignore this header, thus other
     clickjacking protection techniques should be used if protection in those

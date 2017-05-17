@@ -30,7 +30,7 @@ class CreateError(Exception):
 
 class UpdateError(Exception):
     """
-    Occurs if LegionMarket tries to update a session that was deleted.
+    Occurs if Django tries to update a session that was deleted.
     """
     pass
 
@@ -306,7 +306,7 @@ class SessionBase(object):
         """
         Creates a new session key, while retaining the current session data.
         """
-        data = self._session_cache
+        data = self._session
         key = self.session_key
         self.create()
         self._session_cache = data

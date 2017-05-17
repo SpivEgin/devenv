@@ -12,7 +12,6 @@ from django.contrib.auth.hashers import (
 )
 from django.test import SimpleTestCase, mock
 from django.test.utils import override_settings
-from django.utils import six
 from django.utils.encoding import force_bytes
 
 try:
@@ -57,7 +56,7 @@ class TestUtilsHashPass(SimpleTestCase):
 
     def test_pbkdf2(self):
         encoded = make_password('lètmein', 'seasalt', 'pbkdf2_sha256')
-        self.assertEqual(encoded, 'pbkdf2_sha256$30000$seasalt$VrX+V8drCGo68wlvy6rfu8i1d1pfkdeXA4LJkRGJodY=')
+        self.assertEqual(encoded, 'pbkdf2_sha256$36000$seasalt$mEUPPFJkT/xtwDU8rB7Q+puHRZnR07WRjerTkt/3HI0=')
         self.assertTrue(is_password_usable(encoded))
         self.assertTrue(check_password('lètmein', encoded))
         self.assertFalse(check_password('lètmeinz', encoded))
@@ -161,7 +160,7 @@ class TestUtilsHashPass(SimpleTestCase):
         self.assertFalse(check_password('lètmeinz', encoded))
         self.assertEqual(identify_hasher(encoded).algorithm, "bcrypt_sha256")
 
-        # Verify that password truncation no longer works
+        # password truncation no longer works
         password = (
             'VSK0UYV6FFQVZ0KG88DYN9WADAADZO1CTSIVDJUNZSUML6IBX7LN7ZS3R5'
             'JGB3RGZ7VI7G7DJQ9NI8BQFSRPTG6UWTTVESA5ZPUN'
@@ -210,7 +209,7 @@ class TestUtilsHashPass(SimpleTestCase):
             def setter(password):
                 state['upgraded'] = True
 
-            # Check that no upgrade is triggered.
+            # No upgrade is triggered.
             self.assertTrue(check_password('letmein', encoded, setter, 'bcrypt'))
             self.assertFalse(state['upgraded'])
 
@@ -281,13 +280,13 @@ class TestUtilsHashPass(SimpleTestCase):
     def test_low_level_pbkdf2(self):
         hasher = PBKDF2PasswordHasher()
         encoded = hasher.encode('lètmein', 'seasalt2')
-        self.assertEqual(encoded, 'pbkdf2_sha256$30000$seasalt2$a75qzbogeVhNFeMqhdgyyoqGKpIzYUo651sq57RERew=')
+        self.assertEqual(encoded, 'pbkdf2_sha256$36000$seasalt2$QkIBVCvGmTmyjPJ5yox2y/jQB8isvgUNK98FxOU1UYo=')
         self.assertTrue(hasher.verify('lètmein', encoded))
 
     def test_low_level_pbkdf2_sha1(self):
         hasher = PBKDF2SHA1PasswordHasher()
         encoded = hasher.encode('lètmein', 'seasalt2')
-        self.assertEqual(encoded, 'pbkdf2_sha1$30000$seasalt2$pMzU1zNPcydf6wjnJFbiVKwgULc=')
+        self.assertEqual(encoded, 'pbkdf2_sha1$36000$seasalt2$GoU+9AubJ/xRkO0WD1Xf3WPxWfE=')
         self.assertTrue(hasher.verify('lètmein', encoded))
 
     @override_settings(
@@ -353,7 +352,7 @@ class TestUtilsHashPass(SimpleTestCase):
             def setter(password):
                 state['upgraded'] = True
 
-            # Check that no upgrade is triggered
+            # No upgrade is triggered
             self.assertTrue(check_password('letmein', encoded, setter))
             self.assertFalse(state['upgraded'])
 
@@ -401,7 +400,7 @@ class TestUtilsHashPass(SimpleTestCase):
             algo, iterations, salt, hash = encoded.split('$', 3)
             self.assertEqual(iterations, '1')
 
-            # Check that no upgrade is triggered
+            # No upgrade is triggered
             self.assertTrue(check_password('letmein', encoded, setter))
             self.assertFalse(state['upgraded'])
 
@@ -436,7 +435,7 @@ class TestUtilsHashPass(SimpleTestCase):
         PlainHasher = type(str('PlainHasher'), (BasePasswordHasher,), {'algorithm': 'plain', 'library': 'plain'})
         # Python 3 adds quotes around module name
         msg = "Couldn't load 'PlainHasher' algorithm library: No module named '?plain'?"
-        with six.assertRaisesRegex(self, ValueError, msg):
+        with self.assertRaisesRegex(ValueError, msg):
             PlainHasher()._load_library()
 
 
@@ -513,7 +512,7 @@ class TestUtilsHashPassArgon2(SimpleTestCase):
             def setter(password):
                 state['upgraded'] = True
 
-            # Check that no upgrade is triggered.
+            # No upgrade is triggered.
             self.assertTrue(check_password('letmein', encoded, setter, 'argon2'))
             self.assertFalse(state['upgraded'])
 

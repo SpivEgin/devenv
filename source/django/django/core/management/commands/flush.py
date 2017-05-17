@@ -22,7 +22,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--noinput', '--no-input',
             action='store_false', dest='interactive', default=True,
-            help='Tells LegionMarket to NOT prompt the user for input of any kind.',
+            help='Tells Django to NOT prompt the user for input of any kind.',
         )
         parser.add_argument(
             '--database', action='store', dest='database', default=DEFAULT_DB_ALIAS,

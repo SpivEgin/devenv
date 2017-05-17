@@ -63,13 +63,13 @@ example::
     >>> from myapp.forms import ArticleForm
     >>> ArticleFormSet = formset_factory(ArticleForm, extra=2)
     >>> formset = ArticleFormSet(initial=[
-    ...     {'title': 'LegionMarket is now open source',
+    ...     {'title': 'Django is now open source',
     ...      'pub_date': datetime.date.today(),}
     ... ])
 
     >>> for form in formset:
     ...     print(form.as_table())
-    <tr><th><label for="id_form-0-title">Title:</label></th><td><input type="text" name="form-0-title" value="LegionMarket is now open source" id="id_form-0-title" /></td></tr>
+    <tr><th><label for="id_form-0-title">Title:</label></th><td><input type="text" name="form-0-title" value="TLM is now open source" id="id_form-0-title" /></td></tr>
     <tr><th><label for="id_form-0-pub_date">Pub date:</label></th><td><input type="text" name="form-0-pub_date" value="2008-05-12" id="id_form-0-pub_date" /></td></tr>
     <tr><th><label for="id_form-1-title">Title:</label></th><td><input type="text" name="form-1-title" id="id_form-1-title" /></td></tr>
     <tr><th><label for="id_form-1-pub_date">Pub date:</label></th><td><input type="text" name="form-1-pub_date" id="id_form-1-pub_date" /></td></tr>
@@ -304,7 +304,7 @@ method on the formset.
 Validating the number of forms in a formset
 ===========================================
 
-LegionMarket provides a couple ways to validate the minimum or maximum number of
+Django provides a couple ways to validate the minimum or maximum number of
 submitted forms. Applications which need more customizable validation of the
 number of forms should use custom formset validation.
 
@@ -577,11 +577,6 @@ argument - the index of the form in the formset. The index is ``None`` for the
     ...         kwargs = super(BaseArticleFormSet, self).get_form_kwargs(index)
     ...         kwargs['custom_kwarg'] = index
     ...         return kwargs
-
-
-.. versionadded:: 1.9
-
-    The ``form_kwargs`` argument was added.
 
 Using a formset in views and templates
 ======================================

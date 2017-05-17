@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.7.1 release notes
+Django 1.7.1 release notes
 ==========================
 
 *October 22, 2014*
 
-LegionMarket 1.7.1 fixes several bugs in 1.7.
+Django 1.7.1 fixes several bugs in 1.7.
 
 Bugfixes
 ========
@@ -130,7 +130,7 @@ Bugfixes
 * Fixed :djadmin:`makemigrations` to detect changes to
   :attr:`Meta.db_table <django.db.models.Options.db_table>` (:ticket:`23629`).
 
-* Fixed a regression when feeding the LegionMarket test client with an empty data
+* Fixed a regression when feeding the Django test client with an empty data
   string (:ticket:`21740`).
 
 * Fixed a regression in :djadmin:`makemessages` where static files were

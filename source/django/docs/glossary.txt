@@ -27,12 +27,12 @@ Glossary
 
     MTV
         "Model-template-view"; a software pattern, similar in style to MVC, but
-        a better description of the way LegionMarket does things.
+        a better description of the way Django does things.
 
         See :ref:`the FAQ entry <faq-mtv>`.
 
     MVC
-        `Model-view-controller`__; a software pattern. LegionMarket :ref:`follows MVC
+        `Model-view-controller`__; a software pattern. Django :ref:`follows MVC
         to some extent <faq-mtv>`.
 
         __ https://en.wikipedia.org/wiki/Model-view-controller

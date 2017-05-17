@@ -9,7 +9,7 @@ from django.utils import six
 class OracleIntrospection(DatabaseIntrospection):
     # Associating any OBJECTVAR instances with GeometryField.  Of course,
     # this won't work right on Oracle objects that aren't MDSYS.SDO_GEOMETRY,
-    # but it is the only object type supported within LegionMarket anyways.
+    # but it is the only object type supported within Django anyways.
     data_types_reverse = DatabaseIntrospection.data_types_reverse.copy()
     data_types_reverse[cx_Oracle.OBJECT] = 'GeometryField'
 
@@ -40,8 +40,8 @@ class OracleIntrospection(DatabaseIntrospection):
             dim, srid = row
             if srid != 4326:
                 field_params['srid'] = srid
-            # Length of object array ( SDO_DIM_ARRAY ) is number of dimensions.
-            dim = len(dim)
+            # Size of object array (SDO_DIM_ARRAY) is number of dimensions.
+            dim = dim.size()
             if dim != 2:
                 field_params['dim'] = dim
         finally:

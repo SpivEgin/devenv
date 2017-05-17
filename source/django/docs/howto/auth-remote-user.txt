@@ -4,7 +4,7 @@ Authentication using ``REMOTE_USER``
 
 This document describes how to make use of external authentication sources
 (where the Web server sets the ``REMOTE_USER`` environment variable) in your
-LegionMarket applications.  This type of authentication solution is typically seen on
+Django applications.  This type of authentication solution is typically seen on
 intranet sites, with single sign-on solutions such as IIS and Integrated
 Windows Authentication or Apache and `mod_authnz_ldap`_, `CAS`_, `Cosign`_,
 `WebAuth`_, `mod_auth_sspi`_, etc.
@@ -18,7 +18,7 @@ Windows Authentication or Apache and `mod_authnz_ldap`_, `CAS`_, `Cosign`_,
 When the Web server takes care of authentication it typically sets the
 ``REMOTE_USER`` environment variable for use in the underlying application.  In
 Django, ``REMOTE_USER`` is made available in the :attr:`request.META
-<django.http.HttpRequest.META>` attribute.  LegionMarket can be configured to make
+<django.http.HttpRequest.META>` attribute.  Django can be configured to make
 use of the ``REMOTE_USER`` value using the ``RemoteUserMiddleware``
 or ``PersistentRemoteUserMiddleware``, and
 :class:`~django.contrib.auth.backends.RemoteUserBackend` classes found in
@@ -112,8 +112,6 @@ override one or more of its attributes and methods.
 
 Using ``REMOTE_USER`` on login pages only
 =========================================
-
-.. versionadded:: 1.9
 
 The ``RemoteUserMiddleware`` authentication middleware assumes that the HTTP
 request header ``REMOTE_USER`` is present with all authenticated requests. That

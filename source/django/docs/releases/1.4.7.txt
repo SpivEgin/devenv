@@ -1,16 +1,16 @@
 ==========================
-LegionMarket 1.4.7 release notes
+Django 1.4.7 release notes
 ==========================
 
 *September 10, 2013*
 
-LegionMarket 1.4.7 fixes one security issue present in previous LegionMarket releases in
+Django 1.4.7 fixes one security issue present in previous Django releases in
 the 1.4 series.
 
 Directory traversal vulnerability in ``ssi`` template tag
 =========================================================
 
-In previous versions of LegionMarket it was possible to bypass the
+In previous versions of Django it was possible to bypass the
 ``ALLOWED_INCLUDE_ROOTS`` setting used for security with the ``ssi``
 template tag by specifying a relative path that starts with one of the allowed
 roots. For example, if ``ALLOWED_INCLUDE_ROOTS = ("/var/www",)`` the following

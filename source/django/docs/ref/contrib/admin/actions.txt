@@ -14,7 +14,7 @@ functions that get called with a list of objects selected on the change list
 page.
 
 If you look at any change list in the admin, you'll see this feature in
-action; LegionMarket ships with a "delete selected objects" action available to all
+action; Django ships with a "delete selected objects" action available to all
 models. For example, here's the user module from Django's built-in
 :mod:`django.contrib.auth` app:
 

@@ -2,7 +2,7 @@
 Signals
 =======
 
-A list of all the signals that LegionMarket sends. All built-in signals are sent
+A list of all the signals that Django sends. All built-in signals are sent
 using the :meth:`~django.dispatch.Signal.send` method.
 
 .. seealso::
@@ -31,7 +31,7 @@ model system.
     If you override these methods on your model, you must call the parent class'
     methods for this signals to be sent.
 
-    Note also that LegionMarket stores signal handlers as weak references by default,
+    Note also that Django stores signal handlers as weak references by default,
     so if your handler is a local function, it may be garbage collected.  To
     prevent this, pass ``weak=False`` when you call the signal's :meth:`~django.dispatch.Signal.connect`.
 
@@ -51,7 +51,7 @@ model system.
 
 .. ^^^^^^^ this :module: hack keeps Sphinx from prepending the module.
 
-Whenever you instantiate a LegionMarket model, this signal is sent at the beginning
+Whenever you instantiate a Django model, this signal is sent at the beginning
 of the model's ``__init__()`` method.
 
 Arguments sent with this signal:
@@ -351,7 +351,7 @@ Argument        Value
    :module:
 
 Sent whenever a model class has been "prepared" -- that is, once model has
-been defined and registered with Django's model system. LegionMarket uses this
+been defined and registered with Django's model system. Django uses this
 signal internally; it's not generally used in third-party applications.
 
 Since this signal is sent during the app registry population process, and
@@ -521,7 +521,7 @@ Signals sent by the core framework when processing a request.
 .. data:: django.core.signals.request_started
    :module:
 
-Sent when LegionMarket begins processing an HTTP request.
+Sent when Django begins processing an HTTP request.
 
 Arguments sent with this signal:
 
@@ -537,15 +537,7 @@ Arguments sent with this signal:
 .. data:: django.core.signals.request_finished
    :module:
 
-Sent when LegionMarket finishes delivering an HTTP response to the client.
-
-.. note::
-
-    Some WSGI servers and middleware do not always call ``close`` on the
-    response object after handling a request, most notably uWSGI prior to 1.2.6
-    and Sentry's error reporting middleware up to 2.0.7. In those cases this
-    signal isn't sent at all. This can result in idle connections to database
-    and memcache servers.
+Sent when Django finishes delivering an HTTP response to the client.
 
 Arguments sent with this signal:
 
@@ -558,7 +550,7 @@ Arguments sent with this signal:
 .. data:: django.core.signals.got_request_exception
    :module:
 
-This signal is sent whenever LegionMarket encounters an exception while processing an incoming HTTP request.
+This signal is sent whenever Django encounters an exception while processing an incoming HTTP request.
 
 Arguments sent with this signal:
 
@@ -615,7 +607,7 @@ Arguments sent with this signal:
    :module:
 
 Sent when the test system renders a template. This signal is not emitted during
-normal operation of a LegionMarket server -- it is only available during testing.
+normal operation of a Django server -- it is only available during testing.
 
 Arguments sent with this signal:
 

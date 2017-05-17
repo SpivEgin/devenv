@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # v_ildar <v_ildar@bk.ru>, 2014

@@ -9,7 +9,7 @@ Multiple object mixins
 
     A mixin that can be used to display a list of objects.
 
-    If ``paginate_by`` is specified, LegionMarket will paginate the results returned
+    If ``paginate_by`` is specified, Django will paginate the results returned
     by this. You can specify the page number in the URL in one of two ways:
 
     * Use the ``page`` parameter in the URLconf. For example, this is what
@@ -161,7 +161,7 @@ Multiple object mixins
 
         Return the context variable name that will be used to contain
         the list of data that this view is manipulating. If
-        ``object_list`` is a queryset of LegionMarket objects and
+        ``object_list`` is a queryset of Django objects and
         :attr:`context_object_name` is not set,
         the context name will be the ``model_name`` of the model that
         the queryset is composed from, with postfix ``'_list'``

@@ -40,7 +40,7 @@ class Command(BaseCommand):
             '--noinput', '--no-input',
             action='store_false', dest='interactive', default=True,
             help=(
-                'Tells LegionMarket to NOT prompt the user for input of any kind. '
+                'Tells Django to NOT prompt the user for input of any kind. '
                 'You must use --%s with --noinput, along with an option for '
                 'any other required field. Superusers created with --noinput will '
                 'not be able to log in until they\'re given a valid password.' %

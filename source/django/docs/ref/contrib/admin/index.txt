@@ -1,11 +1,11 @@
 =====================
-The LegionMarket admin site
+The Django admin site
 =====================
 
 .. module:: django.contrib.admin
    :synopsis: Django's admin site.
 
-One of the most powerful parts of LegionMarket is the automatic admin interface. It
+One of the most powerful parts of Django is the automatic admin interface. It
 reads metadata from your models to provide a quick, model-centric interface
 where trusted users can manage content on your site. The admin's recommended
 use is limited to an organization's internal management tool. It's not intended
@@ -56,7 +56,7 @@ For reference, here are the requirements:
 
 7. Hook the ``AdminSite`` instance into your URLconf.
 
-After you've taken these steps, you'll be able to use your LegionMarket admin site
+After you've taken these steps, you'll be able to use your Django admin site
 by visiting the URL you hooked it into (``/admin/``, by default). If you need
 to create a user to login with, you can use the :djadmin:`createsuperuser`
 command.
@@ -146,13 +146,13 @@ Discovery of admin files
 ------------------------
 
 When you put ``'django.contrib.admin'`` in your :setting:`INSTALLED_APPS`
-setting, LegionMarket automatically looks for an ``admin`` module in each
+setting, Django automatically looks for an ``admin`` module in each
 application and imports it.
 
 .. class:: apps.AdminConfig
 
     This is the default :class:`~django.apps.AppConfig` class for the admin.
-    It calls :func:`~django.contrib.admin.autodiscover()` when LegionMarket starts.
+    It calls :func:`~django.contrib.admin.autodiscover()` when Django starts.
 
 .. class:: apps.SimpleAdminConfig
 
@@ -165,7 +165,7 @@ application and imports it.
     application. Such modules are expected to register models with the admin.
 
     Typically you won't need to call this function directly as
-    :class:`~django.contrib.admin.apps.AdminConfig` calls it when LegionMarket starts.
+    :class:`~django.contrib.admin.apps.AdminConfig` calls it when Django starts.
 
 If you are using a custom ``AdminSite``, it is common to import all of the
 ``ModelAdmin`` subclasses into your code and register them to the custom
@@ -213,9 +213,18 @@ subclass::
 
         date_hierarchy = 'pub_date'
 
+    You can also specify a field on a related model using the ``__`` lookup,
+    for example::
+
+        date_hierarchy = 'author__pub_date'
+
     This will intelligently populate itself based on available data,
     e.g. if all the dates are in one month, it'll show the day-level
     drill-down only.
+
+    .. versionchanged:: 1.11
+
+        The ability to reference fields on related models was added.
 
     .. note::
 
@@ -225,8 +234,6 @@ subclass::
         enabled (:setting:`USE_TZ = True <USE_TZ>`).
 
 .. attribute:: ModelAdmin.empty_value_display
-
-    .. versionadded:: 1.9
 
     This attribute overrides the default display value for record's fields that
     are empty (``None``, empty string, etc.). The default value is ``-`` (a
@@ -318,7 +325,7 @@ subclass::
         as described in the next section.
 
     If neither ``fields`` nor :attr:`~ModelAdmin.fieldsets` options are present,
-    LegionMarket will default to displaying each field that isn't an ``AutoField`` and
+    Django will default to displaying each field that isn't an ``AutoField`` and
     has ``editable=True``, in a single fieldset, in the same order as the fields
     are defined in the model.
 
@@ -356,7 +363,7 @@ subclass::
     .. image:: _images/fieldsets.png
 
     If neither ``fieldsets`` nor :attr:`~ModelAdmin.fields` options are present,
-    LegionMarket will default to displaying each field that isn't an ``AutoField`` and
+    Django will default to displaying each field that isn't an ``AutoField`` and
     has ``editable=True``, in a single fieldset, in the same order as the fields
     are defined in the model.
 
@@ -586,7 +593,7 @@ subclass::
 
     A few special cases to note about ``list_display``:
 
-    * If the field is a ``ForeignKey``, LegionMarket will display the
+    * If the field is a ``ForeignKey``, Django will display the
       ``__str__()`` (``__unicode__()`` on Python 2) of the related object.
 
     * ``ManyToManyField`` fields aren't supported, because that would
@@ -600,7 +607,7 @@ subclass::
       ``False``.
 
     * If the string given is a method of the model, ``ModelAdmin`` or a
-      callable, LegionMarket will HTML-escape the output by default. To escape
+      callable, Django will HTML-escape the output by default. To escape
       user input and allow your own unescaped tags, use
       :func:`~django.utils.html.format_html`.
 
@@ -639,7 +646,7 @@ subclass::
       title by adding a ``short_description`` attribute to the callable.
 
     * If the value of a field is ``None``, an empty string, or an iterable
-      without elements, LegionMarket will display ``-`` (a dash). You can override
+      without elements, Django will display ``-`` (a dash). You can override
       this with :attr:`AdminSite.empty_value_display`::
 
           from django.contrib import admin
@@ -661,12 +668,8 @@ subclass::
 
               birth_date_view.empty_value_display = 'unknown'
 
-      .. versionadded:: 1.9
-
-          The ability to customize ``empty_value_display`` was added.
-
     * If the string given is a method of the model, ``ModelAdmin`` or a
-      callable that returns True or False LegionMarket will display a pretty
+      callable that returns True or False Django will display a pretty
       "on" or "off" icon if you give the method a ``boolean`` attribute
       whose value is ``True``.
 
@@ -693,7 +696,7 @@ subclass::
           list_display = ('__str__', 'some_other_field')
 
     * Usually, elements of ``list_display`` that aren't actual database
-      fields can't be used in sorting (because LegionMarket does all the sorting
+      fields can't be used in sorting (because Django does all the sorting
       at the database level).
 
       However, if an element of ``list_display`` represents a certain
@@ -722,7 +725,7 @@ subclass::
         class PersonAdmin(admin.ModelAdmin):
             list_display = ('first_name', 'colored_first_name')
 
-      The above will tell LegionMarket to order by the ``first_name`` field when
+      The above will tell Django to order by the ``first_name`` field when
       trying to sort by ``colored_first_name`` in the admin.
 
       To indicate descending order with ``admin_order_field`` you can use a
@@ -772,7 +775,7 @@ subclass::
       the HTML output, in the form of ``column-<field_name>`` on each ``<th>``
       element. This can be used to set column widths in a CSS file for example.
 
-    * LegionMarket will try to interpret every element of ``list_display`` in this
+    * Django will try to interpret every element of ``list_display`` in this
       order:
 
       * A field of the model.
@@ -798,7 +801,7 @@ subclass::
       ``list_display``) whose columns you want converted to links.
 
       You can specify one or many fields. As long as the fields appear in
-      ``list_display``, LegionMarket doesn't care how many (or how few) fields are
+      ``list_display``, Django doesn't care how many (or how few) fields are
       linked. The only requirement is that if you want to use
       ``list_display_links`` in this fashion, you must define ``list_display``.
 
@@ -978,7 +981,7 @@ subclass::
         class FilterWithCustomTemplate(admin.SimpleListFilter):
             template = "custom_template.html"
 
-    See the default template provided by LegionMarket (``admin/filter.html``) for
+    See the default template provided by Django (``admin/filter.html``) for
     a concrete example.
 
 .. attribute:: ModelAdmin.list_max_show_all
@@ -995,7 +998,7 @@ subclass::
 
 .. attribute:: ModelAdmin.list_select_related
 
-    Set ``list_select_related`` to tell LegionMarket to use
+    Set ``list_select_related`` to tell Django to use
     :meth:`~django.db.models.query.QuerySet.select_related` in retrieving
     the list of objects on the admin change list page. This can save you a
     bunch of database queries.
@@ -1004,11 +1007,11 @@ subclass::
     ``False``.
 
     When value is ``True``, ``select_related()`` will always be called. When
-    value is set to ``False``, LegionMarket will look at ``list_display`` and call
+    value is set to ``False``, Django will look at ``list_display`` and call
     ``select_related()`` if any ``ForeignKey`` is present.
 
     If you need more fine-grained control, use a tuple (or list) as value for
-    ``list_select_related``. Empty tuple will prevent LegionMarket from calling
+    ``list_select_related``. Empty tuple will prevent Django from calling
     ``select_related`` at all. Any other tuple will be passed directly to
     ``select_related`` as parameters. For example::
 
@@ -1023,10 +1026,10 @@ subclass::
 .. attribute:: ModelAdmin.ordering
 
     Set ``ordering`` to specify how lists of objects should be ordered in the
-    LegionMarket admin views. This should be a list or tuple in the same format as a
+    Django admin views. This should be a list or tuple in the same format as a
     model's :attr:`~django.db.models.Options.ordering` parameter.
 
-    If this isn't provided, the LegionMarket admin will use the model's default
+    If this isn't provided, the Django admin will use the model's default
     ordering.
 
     If you need to specify a dynamic order (for example depending on user or
@@ -1056,7 +1059,7 @@ subclass::
     slug (e.g. substituting dashes for spaces).
 
     ``prepopulated_fields`` doesn't accept ``DateTimeField``, ``ForeignKey``,
-    nor ``ManyToManyField`` fields.
+    ``OneToOneField``, and ``ManyToManyField`` fields.
 
 .. attribute:: ModelAdmin.preserve_filters
 
@@ -1068,7 +1071,7 @@ subclass::
 
     By default, Django's admin uses a select-box interface (<select>) for
     fields that are ``ForeignKey`` or have ``choices`` set. If a field is
-    present in ``radio_fields``, LegionMarket will use a radio-button interface
+    present in ``radio_fields``, Django will use a radio-button interface
     instead. Assuming ``group`` is a ``ForeignKey`` on the ``Person`` model::
 
         class PersonAdmin(admin.ModelAdmin):
@@ -1193,12 +1196,12 @@ subclass::
 
         search_fields = ['user__email']
 
-    When somebody does a search in the admin search box, LegionMarket splits the
+    When somebody does a search in the admin search box, Django splits the
     search query into words and returns all objects that contain each of the
     words, case insensitive, where each word must be in at least one of
     ``search_fields``. For example, if ``search_fields`` is set to
     ``['first_name', 'last_name']`` and a user searches for ``john lennon``,
-    LegionMarket will do the equivalent of this SQL ``WHERE`` clause::
+    Django will do the equivalent of this SQL ``WHERE`` clause::
 
         WHERE (first_name ILIKE '%john%' OR last_name ILIKE '%john%')
         AND (first_name ILIKE '%lennon%' OR last_name ILIKE '%lennon%')
@@ -1210,7 +1213,7 @@ subclass::
         Use the '^' operator to match starting at the beginning of the
         field. For example, if ``search_fields`` is set to
         ``['^first_name', '^last_name']`` and a user searches for
-        ``john lennon``, LegionMarket will do the equivalent of this SQL ``WHERE``
+        ``john lennon``, Django will do the equivalent of this SQL ``WHERE``
         clause::
 
             WHERE (first_name ILIKE 'john%' OR last_name ILIKE 'john%')
@@ -1226,7 +1229,7 @@ subclass::
         Use the '=' operator for case-insensitive exact matching. For
         example, if ``search_fields`` is set to
         ``['=first_name', '=last_name']`` and a user searches for
-        ``john lennon``, LegionMarket will do the equivalent of this SQL
+        ``john lennon``, Django will do the equivalent of this SQL
         ``WHERE`` clause::
 
             WHERE (first_name ILIKE 'john' OR last_name ILIKE 'john')
@@ -1319,6 +1322,12 @@ templates used by the :class:`ModelAdmin` views:
 
     Path to a custom template, used by :meth:`history_view`.
 
+.. attribute:: ModelAdmin.popup_response_template
+
+    .. versionadded:: 1.11
+
+    Path to a custom template, used by :meth:`response_add`,
+    :meth:`response_change`, and :meth:`response_delete`.
 
 .. _model-admin-methods:
 
@@ -1465,6 +1474,14 @@ templates used by the :class:`ModelAdmin` views:
     names on the changelist that will be linked to the change view, as described
     in the :attr:`ModelAdmin.list_display_links` section.
 
+.. method:: ModelAdmin.get_exclude(request, obj=None)
+
+    .. versionadded:: 1.11
+
+    The ``get_exclude`` method is given the ``HttpRequest`` and the ``obj``
+    being edited (or ``None`` on an add form) and is expected to return a list
+    of fields, as described in :attr:`ModelAdmin.exclude`.
+
 .. method:: ModelAdmin.get_fields(request, obj=None)
 
     The ``get_fields`` method is given the ``HttpRequest`` and the ``obj``
@@ -1485,8 +1502,6 @@ templates used by the :class:`ModelAdmin` views:
     :attr:`~ModelAdmin.list_filter` attribute.
 
 .. method:: ModelAdmin.get_list_select_related(request)
-
-    .. versionadded:: 1.9
 
     The ``get_list_select_related`` method is given the ``HttpRequest`` and
     should return a boolean or list as :attr:`ModelAdmin.list_select_related`
@@ -1570,7 +1585,7 @@ templates used by the :class:`ModelAdmin` views:
       if the page retrieves data from the database, and caching middleware is
       active, the page could show outdated information.
 
-    Since this is usually not what you want, LegionMarket provides a convenience
+    Since this is usually not what you want, Django provides a convenience
     wrapper to check permissions and mark the view as non-cacheable. This
     wrapper is ``AdminSite.admin_view()`` (i.e. ``self.admin_site.admin_view``
     inside a ``ModelAdmin`` instance); use it like so::
@@ -1596,8 +1611,6 @@ templates used by the :class:`ModelAdmin` views:
     ``AdminSite.admin_view()``::
 
         url(r'^my_view/$', self.admin_site.admin_view(self.my_view, cacheable=True))
-
-    .. versionadded:: 1.9
 
     ``ModelAdmin`` views have ``model_admin`` attributes. Other
     ``AdminSite`` views have ``admin_site`` attributes.
@@ -1859,29 +1872,29 @@ Other methods
 
 .. method:: ModelAdmin.add_view(request, form_url='', extra_context=None)
 
-    LegionMarket view for the model instance addition page. See note below.
+    Django view for the model instance addition page. See note below.
 
 .. method:: ModelAdmin.change_view(request, object_id, form_url='', extra_context=None)
 
-    LegionMarket view for the model instance editing page. See note below.
+    Django view for the model instance editing page. See note below.
 
 .. method:: ModelAdmin.changelist_view(request, extra_context=None)
 
-    LegionMarket view for the model instances change list/actions page. See note
+    Django view for the model instances change list/actions page. See note
     below.
 
 .. method:: ModelAdmin.delete_view(request, object_id, extra_context=None)
 
-    LegionMarket view for the model instance(s) deletion confirmation page. See note
+    Django view for the model instance(s) deletion confirmation page. See note
     below.
 
 .. method:: ModelAdmin.history_view(request, object_id, extra_context=None)
 
-    LegionMarket view for the page that shows the modification history for a given
+    Django view for the page that shows the modification history for a given
     model instance.
 
 Unlike the hook-type ``ModelAdmin`` methods detailed in the previous section,
-these five methods are in reality designed to be invoked as LegionMarket views from
+these five methods are in reality designed to be invoked as Django views from
 the admin application URL dispatching handler to render the pages that deal
 with model instances CRUD operations. As a result, completely overriding these
 methods will significantly change the behavior of the admin application.
@@ -1938,18 +1951,12 @@ definitions on forms <form-asset-paths>`.
 jQuery
 ~~~~~~
 
-LegionMarket admin JavaScript makes use of the `jQuery`_ library.
+Django admin JavaScript makes use of the `jQuery`_ library.
 
 To avoid conflicts with user-supplied scripts or libraries, Django's jQuery
 (version 2.2.3) is namespaced as ``django.jQuery``. If you want to use jQuery
 in your own admin JavaScript without including a second copy, you can use the
 ``django.jQuery`` object on changelist and add/edit views.
-
-.. versionchanged:: 1.9
-
-    The embedded jQuery was upgraded from 1.11.2 to 2.1.4. This drops
-    support for Internet Explorer 8 and below. You can restore support by
-    :ref:`including your own version of jQuery 1.X <admin-browser-support-19>`.
 
 .. versionchanged:: 1.10
 
@@ -1961,7 +1968,7 @@ a specific need. For example, if you require the jQuery library to be in the
 global namespace (for example when using third-party jQuery plugins) or if you
 need a newer version of jQuery, you will have to include your own copy.
 
-LegionMarket provides both uncompressed and 'minified' versions of jQuery, as
+Django provides both uncompressed and 'minified' versions of jQuery, as
 ``jquery.js`` and ``jquery.min.js`` respectively.
 
 :class:`ModelAdmin` and :class:`InlineModelAdmin` have a ``media`` property
@@ -2033,7 +2040,7 @@ information.
                 BookInline,
             ]
 
-    LegionMarket provides two subclasses of ``InlineModelAdmin`` and they are:
+    Django provides two subclasses of ``InlineModelAdmin`` and they are:
 
     * :class:`~django.contrib.admin.TabularInline`
     * :class:`~django.contrib.admin.StackedInline`
@@ -2306,11 +2313,11 @@ There are two features worth noting in this example.
 
 Firstly - the ``MembershipInline`` class references ``Group.members.through``.
 The ``through`` attribute is a reference to the model that manages the
-many-to-many relation. This model is automatically created by LegionMarket when you
+many-to-many relation. This model is automatically created by Django when you
 define a many-to-many field.
 
 Secondly, the ``GroupAdmin`` must manually exclude the ``members`` field.
-LegionMarket displays an admin widget for a many-to-many field on the model that
+Django displays an admin widget for a many-to-many field on the model that
 defines the relation (in this case, ``Group``). If you want to use an inline
 model to represent the many-to-many relationship, you must tell Django's admin
 to *not* display this widget - otherwise you will end up with two widgets on
@@ -2519,6 +2526,11 @@ app or per model. The following can:
 * ``change_list.html``
 * ``delete_confirmation.html``
 * ``object_history.html``
+* ``popup_response.html``
+
+.. versionchanged:: 1.11
+
+    The ability to override the ``popup_response.html`` template was added.
 
 For those templates that cannot be overridden in this way, you may still
 override them for your entire project. Just place the new version in your
@@ -2546,7 +2558,7 @@ creating your own ``AdminSite`` instance (see below), and changing the
 
 .. class:: AdminSite(name='admin')
 
-    A LegionMarket administrative site is represented by an instance of
+    A Django administrative site is represented by an instance of
     ``django.contrib.admin.sites.AdminSite``; by default, an instance of
     this class is created as ``django.contrib.admin.site`` and you can
     register your models and ``ModelAdmin`` instances with it.
@@ -2568,12 +2580,12 @@ Templates can override or extend base admin templates as described in
 .. attribute:: AdminSite.site_header
 
     The text to put at the top of each admin page, as an ``<h1>`` (a string).
-    By default, this is "LegionMarket administration".
+    By default, this is "TLM administration".
 
 .. attribute:: AdminSite.site_title
 
     The text to put at the end of each admin page's ``<title>`` (a string). By
-    default, this is "LegionMarket site admin".
+    default, this is "TLM site admin".
 
 .. attribute:: AdminSite.site_url
 
@@ -2604,8 +2616,6 @@ Templates can override or extend base admin templates as described in
     Path to a custom template that will be used by the admin site app index view.
 
 .. attribute:: AdminSite.empty_value_display
-
-    .. versionadded:: 1.9
 
     The string to use for displaying empty values in the admin site's change
     list. Defaults to a dash. The value can also be overridden on a per
@@ -2668,10 +2678,6 @@ Templates can override or extend base admin templates as described in
       * ``admin_url``: admin changelist URL for the model
       * ``add_url``: admin URL to add a new model instance
 
-    .. versionchanged:: 1.9
-
-        The ``available_apps`` variable was added.
-
 .. method:: AdminSite.has_permission(request)
 
     Returns ``True`` if the user for the given ``HttpRequest`` has permission
@@ -2695,7 +2701,7 @@ Templates can override or extend base admin templates as described in
 Hooking ``AdminSite`` instances into your URLconf
 -------------------------------------------------
 
-The last step in setting up the LegionMarket admin is to hook your ``AdminSite``
+The last step in setting up the Django admin is to hook your ``AdminSite``
 instance into your URLconf. Do this by pointing a given URL at the
 ``AdminSite.urls`` method. It is not necessary to use
 :func:`~django.conf.urls.include()`.
@@ -2710,11 +2716,6 @@ In this example, we register the default ``AdminSite`` instance
     urlpatterns = [
         url(r'^admin/', admin.site.urls),
     ]
-
-.. versionchanged:: 1.9
-
-    In previous versions, you would pass ``admin.site.urls`` to
-    :func:`~django.conf.urls.include()`.
 
 .. _customizing-adminsite:
 
@@ -2807,18 +2808,34 @@ a pattern for your new view.
 
 .. _auth_password_reset:
 
-Adding a password-reset feature
+Adding a password reset feature
 -------------------------------
 
-You can add a password-reset feature to the admin site by adding a few lines to
+You can add a password reset feature to the admin site by adding a few lines to
 your URLconf. Specifically, add these four patterns::
 
     from django.contrib.auth import views as auth_views
 
-    url(r'^admin/password_reset/$', auth_views.password_reset, name='admin_password_reset'),
-    url(r'^admin/password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
-    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', auth_views.password_reset_confirm, name='password_reset_confirm'),
-    url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
+    url(
+        r'^admin/password_reset/$',
+        auth_views.PasswordResetView.as_view(),
+        name='admin_password_reset',
+    ),
+    url(
+        r'^admin/password_reset/done/$',
+        auth_views.PasswordResetDoneView.as_view(),
+        name='password_reset_done',
+    ),
+    url(
+        r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
+        auth_views.PasswordResetConfirmView.as_view(),
+        name='password_reset_confirm',
+    ),
+    url(
+        r'^reset/done/$',
+        auth_views.PasswordResetCompleteView.as_view(),
+        name='password_reset_complete',
+    ),
 
 (This assumes you've added the admin at ``admin/`` and requires that you put
 the URLs starting with ``^admin/`` before the line that includes the admin app
@@ -2876,7 +2893,7 @@ password box.
 .. attribute:: LogEntry.change_message
 
     The detailed description of the modification. In the case of an edit, for
-    example, the message contains a list of the edited fields. The LegionMarket admin
+    example, the message contains a list of the edited fields. The Django admin
     site formats this content as a JSON structure, so that
     :meth:`get_change_message` can recompose a message translated in the current
     user language. Custom code might set this as a plain string though. You are
@@ -2901,7 +2918,7 @@ password box.
     .. versionadded:: 1.10
 
     Formats and translates :attr:`change_message` into the current user
-    language. Messages created before LegionMarket 1.10 will always be displayed in
+    language. Messages created before Django 1.10 will always be displayed in
     the language in which they were logged.
 
 .. currentmodule:: django.contrib.admin
@@ -2974,7 +2991,7 @@ if you specifically wanted the admin view from the admin instance named
 For more details, see the documentation on :ref:`reversing namespaced URLs
 <topics-http-reversing-url-namespaces>`.
 
-To allow easier reversing of the admin urls in templates, LegionMarket provides an
+To allow easier reversing of the admin urls in templates, Django provides an
 ``admin_urlname`` filter which takes an action as argument:
 
 .. code-block:: html+django

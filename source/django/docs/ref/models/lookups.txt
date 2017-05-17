@@ -7,7 +7,7 @@ Lookup API reference
 
 .. currentmodule:: django.db.models
 
-This document has the API references of lookups, the LegionMarket API for building
+This document has the API references of lookups, the Django API for building
 the ``WHERE`` clause of a database query. To learn how to *use* lookups, see
 :doc:`/topics/db/queries`; to learn how to *create* new lookups, see
 :doc:`/howto/custom-lookups`.
@@ -16,8 +16,8 @@ The lookup API has two components: a :class:`~lookups.RegisterLookupMixin` class
 that registers lookups, and the :ref:`Query Expression API <query-expression>`, a
 set of methods that a class has to implement to be registrable as a lookup.
 
-LegionMarket has two base classes that follow the query expression API and from where
-all LegionMarket builtin lookups are derived:
+Django has two base classes that follow the query expression API and from where
+all Django builtin lookups are derived:
 
 * :class:`Lookup`: to lookup a field (e.g. the ``exact`` of ``field_name__exact``)
 * :class:`Transform`: to transform a field
@@ -33,10 +33,10 @@ A lookup expression consists of three parts:
 Registration API
 ================
 
-LegionMarket uses :class:`~lookups.RegisterLookupMixin` to give a class the interface to
+Django uses :class:`~lookups.RegisterLookupMixin` to give a class the interface to
 register lookups on itself. The two prominent examples are
 :class:`~django.db.models.Field`, the base class of all model fields, and
-``Aggregate``, the base class of all LegionMarket aggregates.
+``Aggregate``, the base class of all Django aggregates.
 
 .. class:: lookups.RegisterLookupMixin
 
@@ -49,10 +49,6 @@ register lookups on itself. The two prominent examples are
         lookup on ``DateField``. It overrides a lookup that already exists with
         the same name. ``lookup_name`` will be used for this lookup if
         provided, otherwise ``lookup.lookup_name`` will be used.
-
-        .. versionchanged:: 1.9
-
-            The ``lookup_name`` parameter was added.
 
     .. method:: get_lookup(lookup_name)
 
@@ -83,7 +79,7 @@ field references, aggregates, and ``Transform`` are examples that follow this
 API. A class is said to follow the query expression API when it implements the
 following methods:
 
-.. method:: as_sql(self, compiler, connection)
+.. method:: as_sql(compiler, connection)
 
     Responsible for producing the query string and parameters for the expression.
     The ``compiler`` is an ``SQLCompiler`` object, which has a ``compile()``
@@ -99,10 +95,10 @@ following methods:
     override the generation of the SQL string. See :meth:`Func.as_sql` for
     example usage.
 
-.. method:: as_vendorname(self, compiler, connection)
+.. method:: as_vendorname(compiler, connection)
 
     Works like ``as_sql()`` method. When an expression is compiled by
-    ``compiler.compile()``, LegionMarket will first try to call ``as_vendorname()``,
+    ``compiler.compile()``, Django will first try to call ``as_vendorname()``,
     where ``vendorname`` is the vendor name of the backend used for executing
     the query. The ``vendorname`` is one of ``postgresql``, ``oracle``,
     ``sqlite``, or ``mysql`` for Django's built-in backends.
@@ -139,10 +135,6 @@ following methods:
     a specialized :ref:`Func() expression <func-expressions>` that only accepts
     one argument.  It can also be used on the right hand side of a filter or
     directly as an annotation.
-
-    .. versionchanged:: 1.9
-
-        ``Transform`` is now a subclass of ``Func``.
 
     .. attribute:: bilateral
 

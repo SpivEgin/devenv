@@ -5,7 +5,7 @@ Performing raw SQL queries
 .. currentmodule:: django.db.models
 
 When the :doc:`model query APIs </topics/db/queries>` don't go far enough, you
-can fall back to writing raw SQL. LegionMarket gives you two ways of performing raw
+can fall back to writing raw SQL. Django gives you two ways of performing raw
 SQL queries: you can use :meth:`Manager.raw()` to `perform raw queries and
 return model instances`__, or you can avoid the model layer entirely and
 `execute custom SQL directly`__.
@@ -58,7 +58,7 @@ options that make it very powerful.
 
     Where did the name of the ``Person`` table come from in that example?
 
-    By default, LegionMarket figures out a database table name by joining the
+    By default, Django figures out a database table name by joining the
     model's "app label" -- the name you used in ``manage.py startapp`` -- to
     the model's class name, with an underscore between them. In the example
     we've assumed that the ``Person`` model lives in an app named ``myapp``,
@@ -71,7 +71,7 @@ options that make it very powerful.
 .. warning::
 
     No checking is done on the SQL statement that is passed in to ``.raw()``.
-    LegionMarket expects that the statement will return a set of rows from the
+    Django expects that the statement will return a set of rows from the
     database, but does nothing to enforce that. If the query does not
     return rows, a (possibly cryptic) error will result.
 
@@ -167,7 +167,7 @@ queries. Only the first names were retrieved by the raw() query -- the
 last names were both retrieved on demand when they were printed.
 
 There is only one field that you can't leave out - the primary key
-field. LegionMarket uses the primary key to identify model instances, so it
+field. Django uses the primary key to identify model instances, so it
 must always be included in a raw query. An ``InvalidQuery`` exception
 will be raised if you forget to include the primary key.
 
@@ -330,7 +330,7 @@ If you're not familiar with the Python DB-API, note that the SQL statement in
 parameters directly within the SQL. If you use this technique, the underlying
 database library will automatically escape your parameters as necessary.
 
-Also note that LegionMarket expects the ``"%s"`` placeholder, *not* the ``"?"``
+Also note that Django expects the ``"%s"`` placeholder, *not* the ``"?"``
 placeholder, which is used by the SQLite Python bindings. This is for the sake
 of consistency and sanity.
 

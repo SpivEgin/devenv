@@ -1,5 +1,5 @@
 """
-LegionMarket validation and HTML form handling.
+Django validation and HTML form handling.
 """
 
 from django.core.exceptions import ValidationError  # NOQA

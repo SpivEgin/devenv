@@ -1,5 +1,5 @@
 ========================================
-The LegionMarket admin documentation generator
+The Django admin documentation generator
 ========================================
 
 .. module:: django.contrib.admindocs
@@ -10,7 +10,7 @@ The LegionMarket admin documentation generator
 Django's :mod:`~django.contrib.admindocs` app pulls documentation from the
 docstrings of models, views, template tags, and template filters for any app in
 :setting:`INSTALLED_APPS` and makes that documentation available from the
-:mod:`LegionMarket admin <django.contrib.admin>`.
+:mod:`Django admin <django.contrib.admin>`.
 
 Overview
 ========
@@ -38,7 +38,7 @@ The following special markup can be used in your docstrings to easily create
 hyperlinks to other components:
 
 =================   =======================
-LegionMarket Component    reStructuredText roles
+Django Component    reStructuredText roles
 =================   =======================
 Models              ``:model:`app_label.ModelName```
 Views               ``:view:`app_label.view_name```
@@ -54,12 +54,6 @@ The **models** section of the ``admindocs`` page describes each model in the
 system along with all the fields and methods available on it. Relationships
 to other models appear as hyperlinks. Descriptions are pulled from ``help_text``
 attributes on fields or from docstrings on model methods.
-
-.. versionchanged:: 1.9
-
-    The **models** section of the ``admindocs`` now describes methods that take
-    arguments as well. In previous versions it was restricted to methods
-    without arguments.
 
 A model with useful documentation might look like this::
 
@@ -118,7 +112,7 @@ Template tags and filters reference
 ===================================
 
 The **tags** and **filters** ``admindocs`` sections describe all the tags and
-filters that come with LegionMarket (in fact, the :ref:`built-in tag reference
+filters that come with Django (in fact, the :ref:`built-in tag reference
 <ref-templates-builtins-tags>` and :ref:`built-in filter reference
 <ref-templates-builtins-filters>` documentation come directly from those
 pages). Any tags or filters that you create or are added by a third-party app
@@ -147,6 +141,6 @@ Documentation for this page
     that page.
 
 Using this bookmarklet requires that ``XViewMiddleware`` is installed and that
-you are logged into the :mod:`LegionMarket admin <django.contrib.admin>` as a
+you are logged into the :mod:`Django admin <django.contrib.admin>` as a
 :class:`~django.contrib.auth.models.User` with
 :attr:`~django.contrib.auth.models.User.is_staff` set to ``True``.

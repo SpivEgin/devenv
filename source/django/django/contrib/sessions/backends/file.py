@@ -38,7 +38,7 @@ class SessionStore(SessionBase):
                 raise ImproperlyConfigured(
                     "The session storage path %r doesn't exist. Please set your"
                     " SESSION_FILE_PATH setting to an existing directory in which"
-                    " LegionMarket can store session data." % storage_path)
+                    " Django can store session data." % storage_path)
 
             cls._storage_path = storage_path
             return storage_path

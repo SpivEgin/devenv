@@ -36,7 +36,7 @@ class ForceEscapeTests(SimpleTestCase):
         self.assertEqual(output, "x&amp;amp;y")
 
     # Because the result of force_escape is "safe", an additional
-    # escape filter has no effect (to be changed in LegionMarket 2.0).
+    # escape filter has no effect (to be changed in Django 2.0).
     @ignore_warnings(category=RemovedInDjango20Warning)
     @setup({'force-escape05': '{% autoescape off %}{{ a|force_escape|escape }}{% endautoescape %}'})
     def test_force_escape05(self):

@@ -5,13 +5,13 @@ Writing custom ``django-admin`` commands
 .. module:: django.core.management
 
 Applications can register their own actions with ``manage.py``. For example,
-you might want to add a ``manage.py`` action for a LegionMarket app that you're
+you might want to add a ``manage.py`` action for a Django app that you're
 distributing. In this document, we will be building a custom ``closepoll``
 command for the ``polls`` application from the
 :doc:`tutorial</intro/tutorial01>`.
 
 To do this, just add a ``management/commands`` directory to the application.
-LegionMarket will register a ``manage.py`` command for each Python module in that
+Django will register a ``manage.py`` command for each Python module in that
 directory whose name doesn't begin with an underscore. For example::
 
     polls/
@@ -134,7 +134,7 @@ Management commands and locales
 ===============================
 
 By default, the :meth:`BaseCommand.execute` method deactivates translations
-because some commands shipped with LegionMarket perform several tasks (for example,
+because some commands shipped with Django perform several tasks (for example,
 user-facing content rendering and database population) that require a
 project-neutral string language.
 
@@ -148,7 +148,6 @@ support code::
 
     class Command(BaseCommand):
         ...
-        can_import_settings = True
 
         def handle(self, *args, **options):
 
@@ -165,7 +164,7 @@ support code::
             translation.deactivate()
 
 Another need might be that your command simply should use the locale set in
-settings and LegionMarket should be kept from deactivating it. You can achieve
+settings and Django should be kept from deactivating it. You can achieve
 it by using the :data:`BaseCommand.leave_locale_alone` option.
 
 When working on the scenarios described above though, take into account that
@@ -174,7 +173,7 @@ non-uniform locales, so you might need to:
 
 * Make sure the :setting:`USE_I18N` setting is always ``True`` when running
   the command (this is a good example of the potential problems stemming
-  from a dynamic runtime environment that LegionMarket commands avoid offhand by
+  from a dynamic runtime environment that Django commands avoid offhand by
   deactivating translations).
 
 * Review the code of your command and the code it calls for behavioral
@@ -208,13 +207,6 @@ Attributes
 All attributes can be set in your derived class and can be used in
 :class:`BaseCommand`’s :ref:`subclasses<ref-basecommand-subclasses>`.
 
-.. attribute:: BaseCommand.can_import_settings
-
-    A boolean indicating whether the command needs to be able to
-    import LegionMarket settings; if ``True``, ``execute()`` will verify
-    that this is possible before proceeding. Default value is
-    ``True``.
-
 .. attribute:: BaseCommand.help
 
     A short description of the command, which will be printed in the
@@ -243,7 +235,7 @@ All attributes can be set in your derived class and can be used in
 
 .. attribute:: BaseCommand.requires_system_checks
 
-    A boolean; if ``True``, the entire LegionMarket project will be checked for
+    A boolean; if ``True``, the entire Django project will be checked for
     potential problems prior to executing the command. Default value is ``True``.
 
 .. attribute:: BaseCommand.leave_locale_alone
@@ -260,11 +252,6 @@ All attributes can be set in your derived class and can be used in
     making the locale differ from the de facto default 'en-us' might cause
     unintended effects. See the `Management commands and locales`_ section
     above for further details.
-
-    This option can't be ``False`` when the
-    :data:`~BaseCommand.can_import_settings` option is set to ``False`` too
-    because attempting to set the locale needs access to settings. This
-    condition will generate a :exc:`CommandError`.
 
 .. attribute:: BaseCommand.style
 
@@ -305,7 +292,7 @@ the :meth:`~BaseCommand.handle` method must be implemented.
 
 .. method:: BaseCommand.get_version()
 
-    Returns the LegionMarket version, which should be correct for all built-in Django
+    Returns the Django version, which should be correct for all built-in Django
     commands. User-supplied commands can override this method to return their
     own version.
 
@@ -329,7 +316,7 @@ the :meth:`~BaseCommand.handle` method must be implemented.
 
 .. method:: BaseCommand.check(app_configs=None, tags=None, display_num_errors=False)
 
-    Uses the system check framework to inspect the entire LegionMarket project for
+    Uses the system check framework to inspect the entire Django project for
     potential problems. Serious problems are raised as a :exc:`CommandError`;
     warnings are output to stderr; minor notifications are output to stdout.
 

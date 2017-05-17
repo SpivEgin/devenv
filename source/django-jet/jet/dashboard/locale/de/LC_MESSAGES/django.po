@@ -39,19 +39,19 @@ msgid "Recent Actions"
 msgstr ""
 
 msgid "Latest TLM News"
-msgstr "Aktuelle The Legion Market Neuigkeiten"
+msgstr "Aktuelle TLM Neuigkeiten"
 
 msgid "Support"
 msgstr ""
 
-msgid "The Legion Market documentation"
-msgstr "The Legion Market Dokumentation"
+msgid "TLM documentation"
+msgstr "TLM Dokumentation"
 
-msgid "The Legion Market \"django-users\" mailing list"
-msgstr "The Legion Market \"django-users\" Mailingliste"
+msgid "TLM \"django-users\" mailing list"
+msgstr "TLM \"django-users\" Mailingliste"
 
-msgid "The Legion Market irc channel"
-msgstr "The Legion Market IRC Kanal"
+msgid "TLM irc channel"
+msgstr "TLM IRC Kanal"
 
 msgid "Application models"
 msgstr "Anwendungsmodelle"

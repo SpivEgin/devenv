@@ -60,7 +60,7 @@ class SitesFrameworkTests(TestCase):
 
     @override_settings(ALLOWED_HOSTS=['example.com'])
     def test_get_current_site(self):
-        # Test that the correct Site object is returned
+        # The correct Site object is returned
         request = HttpRequest()
         request.META = {
             "SERVER_NAME": "example.com",
@@ -70,7 +70,7 @@ class SitesFrameworkTests(TestCase):
         self.assertIsInstance(site, Site)
         self.assertEqual(site.id, settings.SITE_ID)
 
-        # Test that an exception is raised if the sites framework is installed
+        # An exception is raised if the sites framework is installed
         # but there is no matching Site
         site.delete()
         with self.assertRaises(ObjectDoesNotExist):
@@ -92,6 +92,19 @@ class SitesFrameworkTests(TestCase):
         del settings.SITE_ID
         site = get_current_site(request)
         self.assertEqual(site.name, "example.com")
+
+    @override_settings(SITE_ID='', ALLOWED_HOSTS=['example.com'])
+    def test_get_current_site_host_with_trailing_dot(self):
+        """
+        The site is matched if the name in the request has a trailing dot.
+        """
+        request = HttpRequest()
+        request.META = {
+            'SERVER_NAME': 'example.com.',
+            'SERVER_PORT': '80',
+        }
+        site = get_current_site(request)
+        self.assertEqual(site.name, 'example.com')
 
     @override_settings(SITE_ID='', ALLOWED_HOSTS=['example.com', 'example.net'])
     def test_get_current_site_no_site_id_and_handle_port_fallback(self):
@@ -142,6 +155,7 @@ class SitesFrameworkTests(TestCase):
         with self.assertRaises(ValidationError):
             site.full_clean()
 
+    @override_settings(ALLOWED_HOSTS=['example.com'])
     def test_clear_site_cache(self):
         request = HttpRequest()
         request.META = {
@@ -162,7 +176,7 @@ class SitesFrameworkTests(TestCase):
         clear_site_cache(Site, instance=self.site, using='default')
         self.assertEqual(models.SITE_CACHE, {})
 
-    @override_settings(SITE_ID='')
+    @override_settings(SITE_ID='', ALLOWED_HOSTS=['example2.com'])
     def test_clear_site_cache_domain(self):
         site = Site.objects.create(name='example2.com', domain='example2.com')
         request = HttpRequest()
@@ -191,6 +205,7 @@ class SitesFrameworkTests(TestCase):
         self.assertEqual(Site.objects.get_by_natural_key(self.site.domain), self.site)
         self.assertEqual(self.site.natural_key(), (self.site.domain,))
 
+    @override_settings(ALLOWED_HOSTS=['example.com'])
     def test_requestsite_save_notimplemented_msg(self):
         # Test response msg for RequestSite.save NotImplementedError
         request = HttpRequest()
@@ -201,6 +216,7 @@ class SitesFrameworkTests(TestCase):
         with self.assertRaisesMessage(NotImplementedError, msg):
             RequestSite(request).save()
 
+    @override_settings(ALLOWED_HOSTS=['example.com'])
     def test_requestsite_delete_notimplemented_msg(self):
         # Test response msg for RequestSite.delete NotImplementedError
         request = HttpRequest()
@@ -262,9 +278,9 @@ class CreateDefaultSiteTests(TestCase):
         #17415 - Another site can be created right after the default one.
 
         On some backends the sequence needs to be reset after saving with an
-        explicit ID. Test that there isn't a sequence collisions by saving
-        another site. This test is only meaningful with databases that use
-        sequences for automatic primary keys such as PostgreSQL and Oracle.
+        explicit ID. There shouldn't be a sequence collisions by saving another
+        site. This test is only meaningful with databases that use sequences
+        for automatic primary keys such as PostgreSQL and Oracle.
         """
         create_default_site(self.app_config, verbosity=0)
         Site(domain='example2.com', name='example2.com').save()
@@ -306,7 +322,7 @@ class CreateDefaultSiteTests(TestCase):
 class MiddlewareTest(TestCase):
 
     def test_old_style_request(self):
-        """ Makes sure that the request has correct `site` attribute. """
+        """The request has correct `site` attribute."""
         middleware = CurrentSiteMiddleware()
         request = HttpRequest()
         middleware.process_request(request)

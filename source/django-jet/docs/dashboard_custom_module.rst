@@ -16,7 +16,7 @@ Inherit Dashboard Module
 ------------------------
 
 
-* Create dashboard modules file ``dashboard_modules.py`` (or any other you prefer) inside your The Legion Market application
+* Create dashboard modules file ``dashboard_modules.py`` (or any other you prefer) inside your TLM application
 * Create dashboard module class inherited from base :ref:`dashboard module <Dashboard Module>` class and add it to
   ``dashboard_modules.py`` file. You can see list of all available module attributes :ref:`here <Dashboard Module>`.
   ``init_with_context`` method allows you to load data and initialize module's state. You can store data in

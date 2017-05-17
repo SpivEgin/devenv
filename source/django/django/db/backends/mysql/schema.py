@@ -9,6 +9,10 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
     sql_alter_column_null = "MODIFY %(column)s %(type)s NULL"
     sql_alter_column_not_null = "MODIFY %(column)s %(type)s NOT NULL"
     sql_alter_column_type = "MODIFY %(column)s %(type)s"
+
+    # No 'CASCADE' which works as a no-op in MySQL but is undocumented
+    sql_delete_column = "ALTER TABLE %(table)s DROP COLUMN %(column)s"
+
     sql_rename_column = "ALTER TABLE %(table)s CHANGE %(old_column)s %(new_column)s %(type)s"
 
     sql_delete_unique = "ALTER TABLE %(table)s DROP INDEX %(name)s"
@@ -27,8 +31,8 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
 
     def skip_default(self, field):
         """
-        MySQL doesn't accept default values for TEXT and BLOB types, and
-        implicitly treats these columns as nullable.
+        MySQL doesn't accept default values for some data types and implicitly
+        treats these columns as nullable.
         """
         db_type = field.db_type(self.connection)
         return (
@@ -36,6 +40,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
             db_type.lower() in {
                 'tinyblob', 'blob', 'mediumblob', 'longblob',
                 'tinytext', 'text', 'mediumtext', 'longtext',
+                'json',
             }
         )
 
@@ -71,7 +76,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         MySQL can remove an implicit FK index on a field when that field is
         covered by another index like a unique_together. "covered" here means
         that the more complex index starts like the simpler one.
-        http://bugs.mysql.com/bug.php?id=37910 / LegionMarket ticket #24757
+        http://bugs.mysql.com/bug.php?id=37910 / Django ticket #24757
         We check here before removing the [unique|index]_together if we have to
         recreate a FK index.
         """

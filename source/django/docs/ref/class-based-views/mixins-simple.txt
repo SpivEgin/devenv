@@ -54,7 +54,7 @@ Simple mixins
         The :setting:`NAME <TEMPLATES-NAME>` of a template engine to use for
         loading the template. ``template_engine`` is passed as the ``using``
         keyword argument to ``response_class``. Default is ``None``, which
-        tells LegionMarket to search for the template in all configured engines.
+        tells Django to search for the template in all configured engines.
 
     .. attribute:: response_class
 
@@ -72,7 +72,7 @@ Simple mixins
 
         The content type to use for the response. ``content_type`` is passed
         as a keyword argument to ``response_class``. Default is ``None`` --
-        meaning that LegionMarket uses :setting:`DEFAULT_CONTENT_TYPE`.
+        meaning that Django uses :setting:`DEFAULT_CONTENT_TYPE`.
 
     **Methods**
 

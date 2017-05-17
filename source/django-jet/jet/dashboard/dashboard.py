@@ -1,7 +1,7 @@
 from importlib import import_module
 try:
     from django.core.urlresolvers import reverse
-except ImportError: # The Legion Market 1.11
+except ImportError: # TLM 1.11
     from django.urls import reverse
 
 from django.template.loader import render_to_string
@@ -79,17 +79,17 @@ class Dashboard(object):
                         _('Support'),
                         children=[
                             {
-                                'title': _('The Legion Market documentation'),
+                                'title': _('TLM documentation'),
                                 'url': 'http://docs.djangoproject.com/',
                                 'external': True,
                             },
                             {
-                                'title': _('The Legion Market "django-users" mailing list'),
+                                'title': _('TLM "django-users" mailing list'),
                                 'url': 'http://groups.google.com/group/django-users',
                                 'external': True,
                             },
                             {
-                                'title': _('The Legion Market irc channel'),
+                                'title': _('TLM irc channel'),
                                 'url': 'irc://irc.freenode.net/django',
                                 'external': True,
                             },
@@ -265,17 +265,17 @@ class DefaultIndexDashboard(Dashboard):
             _('Support'),
             children=[
                 {
-                    'title': _('The Legion Market documentation'),
+                    'title': _('TLM documentation'),
                     'url': 'http://docs.djangoproject.com/',
                     'external': True,
                 },
                 {
-                    'title': _('The Legion Market mailing list'),
+                    'title': _('TLM "django-users" mailing list'),
                     'url': 'http://groups.google.com/group/django-users',
                     'external': True,
                 },
                 {
-                    'title': _('The Legion Market irc channel'),
+                    'title': _('TLM irc channel'),
                     'url': 'irc://irc.freenode.net/django',
                     'external': True,
                 },

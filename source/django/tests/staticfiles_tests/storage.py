@@ -10,7 +10,8 @@ from django.utils import timezone
 
 class DummyStorage(storage.Storage):
     """
-    A storage class that implements get_modified_time().
+    A storage class that implements get_modified_time() but raises
+    NotImplementedError for path().
     """
     def _save(self, name, content):
         return 'dummy'
@@ -22,7 +23,7 @@ class DummyStorage(storage.Storage):
         pass
 
     def get_modified_time(self, name):
-        return datetime.datetime(1970, 1, 1, tzinfo=timezone.utc)
+        return datetime(1970, 1, 1, tzinfo=timezone.utc)
 
 
 class PathNotImplementedStorage(storage.Storage):
@@ -48,12 +49,11 @@ class PathNotImplementedStorage(storage.Storage):
 
     def delete(self, name):
         name = self._path(name)
-        if os.path.exists(name):
-            try:
-                os.remove(name)
-            except OSError as e:
-                if e.errno != errno.ENOENT:
-                    raise
+        try:
+            os.remove(name)
+        except OSError as e:
+            if e.errno != errno.ENOENT:
+                raise
 
     def path(self, name):
         raise NotImplementedError
@@ -65,6 +65,11 @@ class NeverCopyRemoteStorage(PathNotImplementedStorage):
     """
     def get_modified_time(self, name):
         return datetime.now() + timedelta(days=30)
+
+
+class QueryStringStorage(storage.Storage):
+    def url(self, path):
+        return path + '?a=b&c=d'
 
 
 class SimpleCachedStaticFilesStorage(CachedStaticFilesStorage):

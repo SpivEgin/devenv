@@ -5,7 +5,7 @@ from distutils.sysconfig import get_python_lib
 from setuptools import find_packages, setup
 
 # Warn if we are installing over top of an existing installation. This can
-# cause issues where files that were deleted from a more recent LegionMarket are
+# cause issues where files that were deleted from a more recent Django are
 # still present in site-packages. See #18115.
 overlay_warning = False
 if "install" in sys.argv:
@@ -35,8 +35,8 @@ version = __import__('django').get_version()
 setup(
     name='Django',
     version=version,
-    url='http://www.djangoproject.com/',
-    author='LegionMarket Software Foundation',
+    url='https://www.djangoproject.com/',
+    author='Django Software Foundation',
     author_email='foundation@djangoproject.com',
     description=('A high-level Python Web framework that encourages '
                  'rapid development and clean, pragmatic design.'),
@@ -47,6 +47,7 @@ setup(
     entry_points={'console_scripts': [
         'django-admin = django.core.management:execute_from_command_line',
     ]},
+    install_requires=['pytz'],
     extras_require={
         "bcrypt": ["bcrypt"],
         "argon2": ["argon2-cffi >= 16.1.0"],
@@ -65,6 +66,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Internet :: WWW/HTTP :: WSGI',
@@ -81,7 +83,7 @@ if overlay_warning:
 WARNING!
 ========
 
-You have just installed LegionMarket over top of an existing
+You have just installed Django over top of an existing
 installation, without removing it first. Because of this,
 your install may now include extraneous files from a
 previous version that have since been removed from

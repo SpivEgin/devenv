@@ -5,16 +5,14 @@ import os
 import unittest
 from copy import copy
 from decimal import Decimal
-from unittest import skipUnless
 
 from django.conf import settings
-from django.contrib.gis.gdal import HAS_GDAL
 from django.contrib.gis.geos import HAS_GEOS
 from django.db import connection
-from django.test import TestCase, override_settings, skipUnlessDBFeature
+from django.test import TestCase, override_settings
 from django.utils._os import upath
 
-if HAS_GEOS and HAS_GDAL:
+if HAS_GEOS:
     from django.contrib.gis.utils.layermapping import (
         LayerMapping, LayerMapError, InvalidDecimal, InvalidString,
         MissingForeignKey,
@@ -39,8 +37,6 @@ NUMS = [1, 2, 1, 19, 1]  # Number of polygons for each.
 STATES = ['Texas', 'Texas', 'Texas', 'Hawaii', 'Colorado']
 
 
-@skipUnless(HAS_GDAL, "LayerMapTest needs GDAL support")
-@skipUnlessDBFeature("gis_enabled")
 class LayerMapTest(TestCase):
 
     def test_init(self):
@@ -306,7 +302,7 @@ class LayerMapTest(TestCase):
             lm.save(silent=True, strict=True)
 
     def test_textfield(self):
-        "Tests that String content fits also in a TextField"
+        "String content fits also in a TextField"
         mapping = copy(city_mapping)
         mapping['name_txt'] = 'Name'
         lm = LayerMapping(City, city_shp, mapping)
@@ -337,8 +333,6 @@ class OtherRouter(object):
         return True
 
 
-@skipUnless(HAS_GDAL, "LayerMapRouterTest needs GDAL support")
-@skipUnlessDBFeature("gis_enabled")
 @override_settings(DATABASE_ROUTERS=[OtherRouter()])
 class LayerMapRouterTest(TestCase):
 

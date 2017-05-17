@@ -4,7 +4,7 @@ Writing code
 
 So you'd like to write some code to improve Django. Awesome! Browse the
 following sections to find out how to give your code patches the best
-chances to be included in LegionMarket core:
+chances to be included in Django core:
 
 .. toctree::
    :maxdepth: 1

@@ -1,14 +1,14 @@
 ======================
-GeoLegionMarket Installation
+GeoDjango Installation
 ======================
 
 .. highlight:: console
 
 Overview
 ========
-In general, GeoLegionMarket installation requires:
+In general, GeoDjango installation requires:
 
-1. :ref:`Python and LegionMarket <django>`
+1. :ref:`Python and Django <django>`
 2. :ref:`spatial_database`
 3. :doc:`geolibs`
 
@@ -16,12 +16,12 @@ Details for each of the requirements and installation instructions
 are provided in the sections below. In addition, platform-specific
 instructions are available for:
 
-* :ref:`macosx`
+* :ref:`macos`
 * :ref:`windows`
 
 .. admonition:: Use the Source
 
-    Because GeoLegionMarket takes advantage of the latest in the open source geospatial
+    Because GeoDjango takes advantage of the latest in the open source geospatial
     software technology, recent versions of the libraries are necessary.
     If binary packages aren't available for your platform, installation from
     source may be required. When compiling the libraries from source, please
@@ -35,7 +35,7 @@ Requirements
 Python and Django
 -----------------
 
-Because GeoLegionMarket is included with Django, please refer to Django's
+Because GeoDjango is included with Django, please refer to Django's
 :ref:`installation instructions <installing-official-release>` for details on
 how to install.
 
@@ -51,17 +51,17 @@ PostgreSQL (with PostGIS), MySQL (mostly with MyISAM engine), Oracle, and SQLite
     PostGIS is recommended, because it is the most mature and feature-rich
     open source spatial database.
 
-The geospatial libraries required for a GeoLegionMarket installation depends
+The geospatial libraries required for a GeoDjango installation depends
 on the spatial database used.  The following lists the library requirements,
 supported versions, and any notes for each of the supported database backends:
 
 ==================  ==============================  ==================  =========================================
 Database            Library Requirements            Supported Versions  Notes
 ==================  ==============================  ==================  =========================================
-PostgreSQL          GEOS, PROJ.4, PostGIS           9.2+                Requires PostGIS.
-MySQL               GEOS                            5.5+                Not OGC-compliant; :ref:`limited functionality <mysql-spatial-limitations>`.
-Oracle              GEOS                            11.2+               XE not supported.
-SQLite              GEOS, GDAL, PROJ.4, SpatiaLite  3.6.+               Requires SpatiaLite 3.0+, pysqlite2 2.5+
+PostgreSQL          GEOS, GDAL, PROJ.4, PostGIS     9.3+                Requires PostGIS.
+MySQL               GEOS, GDAL                      5.5+                Not OGC-compliant; :ref:`limited functionality <mysql-spatial-limitations>`.
+Oracle              GEOS, GDAL                      11.2+               XE not supported.
+SQLite              GEOS, GDAL, PROJ.4, SpatiaLite  3.6.+               Requires SpatiaLite 4.0+, pysqlite2 2.5+
 ==================  ==============================  ==================  =========================================
 
 See also `this comparison matrix`__ on the OSGeo Wiki for
@@ -92,7 +92,7 @@ Database installation
 Add ``django.contrib.gis`` to :setting:`INSTALLED_APPS`
 -------------------------------------------------------
 
-Like other LegionMarket contrib applications, you will *only* need to add
+Like other Django contrib applications, you will *only* need to add
 :mod:`django.contrib.gis` to :setting:`INSTALLED_APPS` in your settings.
 This is so that the ``gis`` templates can be located -- if not done, then
 features such as the geographic admin or KML sitemaps will not function properly.
@@ -107,7 +107,7 @@ community!  You can:
   -- while you may not get an immediate response, someone will attempt to answer
   your question as soon as they see it.
 * Ask your question on the `GeoDjango`__ mailing list.
-* File a ticket on the `LegionMarket trac`__ if you think there's a bug.  Make
+* File a ticket on the `Django trac`__ if you think there's a bug.  Make
   sure to provide a complete description of the problem, versions used,
   and specify the component as "GIS".
 
@@ -119,7 +119,7 @@ __ https://code.djangoproject.com/newticket
 Library environment settings
 ----------------------------
 
-By far, the most common problem when installing GeoLegionMarket is that the
+By far, the most common problem when installing GeoDjango is that the
 external shared libraries (e.g., for GEOS and GDAL) cannot be located. [#]_
 Typically, the cause of this problem is that the operating system isn't aware
 of the directory where the libraries built from source were installed.
@@ -162,7 +162,7 @@ modifying the system library path::
 Install ``binutils``
 ~~~~~~~~~~~~~~~~~~~~
 
-GeoLegionMarket uses the ``find_library`` function (from the ``ctypes.util`` Python
+GeoDjango uses the ``find_library`` function (from the ``ctypes.util`` Python
 module) to discover libraries.  The ``find_library`` routine uses a program
 called ``objdump`` (part of the ``binutils`` package) to verify a shared
 library on GNU/Linux systems.  Thus, if ``binutils`` is not installed on your
@@ -181,12 +181,12 @@ Similarly, on Red Hat and CentOS systems::
 Platform-specific instructions
 ==============================
 
-.. _macosx:
+.. _macos:
 
-Mac OS X
---------
+macOS
+-----
 
-Because of the variety of packaging systems available for OS X, users have
+Because of the variety of packaging systems available for macOS, users have
 several different options for installing GeoDjango. These options are:
 
 * :ref:`postgresapp` (easiest and recommended)
@@ -197,17 +197,17 @@ several different options for installing GeoDjango. These options are:
 * :ref:`build_from_source`
 
 This section also includes instructions for installing an upgraded version
-of :ref:`macosx_python` from packages provided by the Python Software
+of :ref:`macos_python` from packages provided by the Python Software
 Foundation, however, this is not required.
 
-.. _macosx_python:
+.. _macos_python:
 
 Python
 ~~~~~~
 
-Although OS X comes with Python installed, users can use `framework
+Although macOS comes with Python installed, users can use `framework
 installers`__ provided by the Python Software Foundation.  An advantage to
-using the installer is that OS X's Python will remain "pristine" for internal
+using the installer is that macOS's Python will remain "pristine" for internal
 operating system use.
 
 __ https://www.python.org/ftp/python/
@@ -246,9 +246,9 @@ Homebrew
 ~~~~~~~~
 
 `Homebrew`__ provides "recipes" for building binaries and packages from source.
-It provides recipes for the GeoLegionMarket prerequisites on Macintosh computers
-running OS X. Because Homebrew still builds the software from source, the
-`Apple Developer Tools`_ are required.
+It provides recipes for the GeoDjango prerequisites on Macintosh computers
+running macOS. Because Homebrew still builds the software from source, `Xcode`_
+is required.
 
 Summary::
 
@@ -258,7 +258,7 @@ Summary::
     $ brew install libgeoip
 
 __ http://brew.sh/
-.. _Apple Developer Tools: https://developer.apple.com/technologies/tools/
+.. _Xcode: https://developer.apple.com/xcode/
 
 .. _kyngchaos:
 
@@ -266,14 +266,14 @@ KyngChaos packages
 ~~~~~~~~~~~~~~~~~~
 
 William Kyngesburye provides a number of `geospatial library binary packages`__
-that make it simple to get GeoLegionMarket installed on OS X without compiling
-them from source.  However, the `Apple Developer Tools`_ are still necessary
-for compiling the Python database adapters :ref:`psycopg2_kyngchaos` (for PostGIS)
-and `pysqlite2 <https://pypi.python.org/pypi/pysqlite>`_ (for SpatiaLite).
+that make it simple to get GeoDjango installed on macOS without compiling
+them from source.  However, `Xcode`_ is still necessary for compiling the
+Python database adapters :ref:`psycopg2_kyngchaos` (for PostGIS) and
+`pysqlite2 <https://pypi.python.org/pypi/pysqlite>`_ (for SpatiaLite).
 
 .. note::
 
-    SpatiaLite users should consult the :ref:`spatialite_macosx` section
+    SpatiaLite users should consult the :ref:`spatialite_macos` section
     after installing the packages for additional instructions.
 
 Download the framework packages for:
@@ -323,7 +323,7 @@ described above, ``psycopg2`` may be installed using the following command::
 Fink
 ^^^^
 
-`Kurt Schwehr`__ has been gracious enough to create GeoLegionMarket packages for users
+`Kurt Schwehr`__ has been gracious enough to create GeoDjango packages for users
 of the `Fink`__ package system. `Different packages are available`__ (starting
 with ``django-gis``), depending on which version of Python you want to use.
 
@@ -336,9 +336,9 @@ __ http://pdb.finkproject.org/pdb/browse.php?summary=django-gis
 MacPorts
 ~~~~~~~~
 
-`MacPorts`__ may be used to install GeoLegionMarket prerequisites on Macintosh
-computers running OS X.  Because MacPorts still builds the software from source,
-the `Apple Developer Tools`_ are required.
+`MacPorts`__ may be used to install GeoDjango prerequisites on computers
+running macOS.  Because MacPorts still builds the software from source,
+`Xcode`_ is required.
 
 Summary::
 
@@ -369,7 +369,7 @@ Windows
 -------
 
 Proceed through the following sections sequentially in order to install
-GeoLegionMarket on Windows.
+GeoDjango on Windows.
 
 Python
 ~~~~~~
@@ -445,7 +445,7 @@ The `OSGeo4W installer`_ makes it simple to install the PROJ.4, GDAL, and GEOS
 libraries required by GeoDjango.  First, download the `OSGeo4W installer`_,
 and run it.  Select :menuselection:`Express Web-GIS Install` and click next.
 In the 'Select Packages' list, ensure that GDAL is selected; MapServer and
-Apache are also enabled by default, but are not required by GeoLegionMarket and
+Apache are also enabled by default, but are not required by GeoDjango and
 may be unchecked safely.  After clicking next, the packages will be
 automatically downloaded and installed, after which you may exit the
 installer.
@@ -487,13 +487,13 @@ script, :download:`geodjango_setup.bat`.
     then you will need to modify the ``OSGEO4W_ROOT`` and/or ``PYTHON_ROOT``
     variables accordingly.
 
-Install LegionMarket and set up database
+Install Django and set up database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Finally, :ref:`install LegionMarket <installing-official-release>` on your system.
+Finally, :ref:`install Django <installing-official-release>` on your system.
 
 .. rubric:: Footnotes
-.. [#] GeoLegionMarket uses the :func:`~ctypes.util.find_library` routine from
+.. [#] GeoDjango uses the :func:`~ctypes.util.find_library` routine from
        ``ctypes.util`` to locate shared libraries.
 .. [#] The ``psycopg2`` Windows installers are packaged and maintained by
        `Jason Erickson <http://www.stickpeople.com/projects/python/win-psycopg/>`_.

@@ -26,5 +26,5 @@ python setup.py build && python setup.py install
 
 pip3 uninstall -y django
 cd /c//Source/CMS/devenv/source/django
-yarn install
+npm install
 python setup.py build && python setup.py install

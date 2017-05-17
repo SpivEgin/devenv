@@ -9,7 +9,7 @@ with the interactive prompt, but also because objects' representations are used
 throughout Django's automatically-generated admin.
 
 Normally,  you should write ``__unicode__()`` method, since this will work for
-all field types (and LegionMarket will automatically provide an appropriate
+all field types (and Django will automatically provide an appropriate
 ``__str__()`` method). However, you can write a ``__str__()`` method directly,
 if you prefer. You must be careful to encode the results correctly, though.
 """

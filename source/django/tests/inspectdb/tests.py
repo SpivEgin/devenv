@@ -24,7 +24,7 @@ class InspectDBTestCase(TestCase):
                      stdout=out)
         error_message = "inspectdb has examined a table that should have been filtered out."
         # contrib.contenttypes is one of the apps always installed when running
-        # the LegionMarket test suite, check that one of its tables hasn't been
+        # the Django test suite, check that one of its tables hasn't been
         # inspected
         self.assertNotIn("class DjangoContentType(models.Model):", out.getvalue(), msg=error_message)
 
@@ -42,9 +42,7 @@ class InspectDBTestCase(TestCase):
     def make_field_type_asserter(self):
         """Call inspectdb and return a function to validate a field type in its output"""
         out = StringIO()
-        call_command('inspectdb',
-                     table_name_filter=lambda tn: tn.startswith('inspectdb_columntypes'),
-                     stdout=out)
+        call_command('inspectdb', 'inspectdb_columntypes', stdout=out)
         output = out.getvalue()
 
         def assertFieldType(name, definition):
@@ -54,42 +52,36 @@ class InspectDBTestCase(TestCase):
         return assertFieldType
 
     def test_field_types(self):
-        """Test introspection of various LegionMarket field types"""
+        """Test introspection of various Django field types"""
         assertFieldType = self.make_field_type_asserter()
 
         # Inspecting Oracle DB doesn't produce correct results (#19884):
-        # - it gets max_length wrong: it returns a number of bytes.
         # - it reports fields as blank=True when they aren't.
-        if (connection.features.can_introspect_max_length and
-                not connection.features.interprets_empty_strings_as_nulls):
+        if not connection.features.interprets_empty_strings_as_nulls:
             assertFieldType('char_field', "models.CharField(max_length=10)")
             assertFieldType('null_char_field', "models.CharField(max_length=10, blank=True, null=True)")
             assertFieldType('comma_separated_int_field', "models.CharField(max_length=99)")
-        assertFieldType('date_field', "models.DateField()")
-        assertFieldType('date_time_field', "models.DateTimeField()")
-        if (connection.features.can_introspect_max_length and
-                not connection.features.interprets_empty_strings_as_nulls):
             assertFieldType('email_field', "models.CharField(max_length=254)")
             assertFieldType('file_field', "models.CharField(max_length=100)")
             assertFieldType('file_path_field', "models.CharField(max_length=100)")
-        if connection.features.can_introspect_ip_address_field:
-            assertFieldType('gen_ip_adress_field', "models.GenericIPAddressField()")
-        elif (connection.features.can_introspect_max_length and
-                not connection.features.interprets_empty_strings_as_nulls):
-            assertFieldType('gen_ip_adress_field', "models.CharField(max_length=39)")
-        if (connection.features.can_introspect_max_length and
-                not connection.features.interprets_empty_strings_as_nulls):
             assertFieldType('slug_field', "models.CharField(max_length=50)")
-        if not connection.features.interprets_empty_strings_as_nulls:
             assertFieldType('text_field', "models.TextField()")
+            assertFieldType('url_field', "models.CharField(max_length=200)")
+        assertFieldType('date_field', "models.DateField()")
+        assertFieldType('date_time_field', "models.DateTimeField()")
+        if connection.features.can_introspect_ip_address_field:
+            assertFieldType('gen_ip_address_field', "models.GenericIPAddressField()")
+        elif not connection.features.interprets_empty_strings_as_nulls:
+            assertFieldType('gen_ip_address_field', "models.CharField(max_length=39)")
         if connection.features.can_introspect_time_field:
             assertFieldType('time_field', "models.TimeField()")
-        if (connection.features.can_introspect_max_length and
-                not connection.features.interprets_empty_strings_as_nulls):
-            assertFieldType('url_field', "models.CharField(max_length=200)")
+        if connection.features.has_native_uuid_field:
+            assertFieldType('uuid_field', "models.UUIDField()")
+        elif not connection.features.interprets_empty_strings_as_nulls:
+            assertFieldType('uuid_field', "models.CharField(max_length=32)")
 
     def test_number_field_types(self):
-        """Test introspection of various LegionMarket field types"""
+        """Test introspection of various Django field types"""
         assertFieldType = self.make_field_type_asserter()
 
         if not connection.features.can_introspect_autofield:
@@ -179,11 +171,7 @@ class InspectDBTestCase(TestCase):
     def test_digits_column_name_introspection(self):
         """Introspection of column names consist/start with digits (#16536/#17676)"""
         out = StringIO()
-        # Lets limit the introspection to tables created for models of this
-        # application
-        call_command('inspectdb',
-                     table_name_filter=lambda tn: tn.startswith('inspectdb_'),
-                     stdout=out)
+        call_command('inspectdb', 'inspectdb_digitsincolumnname', stdout=out)
         output = out.getvalue()
         error_message = "inspectdb generated a model field name which is a number"
         self.assertNotIn("    123 = models.CharField", output, msg=error_message)
@@ -203,7 +191,7 @@ class InspectDBTestCase(TestCase):
         """
         out = StringIO()
         call_command('inspectdb',
-                     table_name_filter=lambda tn: tn.startswith('inspectdb_'),
+                     table_name_filter=lambda tn: tn.startswith('inspectdb_special'),
                      stdout=out)
         output = out.getvalue()
         base_name = 'Field' if not connection.features.uppercases_column_names else 'field'
@@ -225,26 +213,22 @@ class InspectDBTestCase(TestCase):
         """
         out = StringIO()
         call_command('inspectdb',
-                     table_name_filter=lambda tn: tn.startswith('inspectdb_'),
+                     table_name_filter=lambda tn: tn.startswith('inspectdb_special'),
                      stdout=out)
         output = out.getvalue()
         self.assertIn("class InspectdbSpecialTableName(models.Model):", output)
 
     def test_managed_models(self):
-        """Test that by default the command generates models with `Meta.managed = False` (#14305)"""
+        """By default the command generates models with `Meta.managed = False` (#14305)"""
         out = StringIO()
-        call_command('inspectdb',
-                     table_name_filter=lambda tn: tn.startswith('inspectdb_columntypes'),
-                     stdout=out)
+        call_command('inspectdb', 'inspectdb_columntypes', stdout=out)
         output = out.getvalue()
         self.longMessage = False
         self.assertIn("        managed = False", output, msg='inspectdb should generate unmanaged models.')
 
     def test_unique_together_meta(self):
         out = StringIO()
-        call_command('inspectdb',
-                     table_name_filter=lambda tn: tn.startswith('inspectdb_uniquetogether'),
-                     stdout=out)
+        call_command('inspectdb', 'inspectdb_uniquetogether', stdout=out)
         output = out.getvalue()
         unique_re = re.compile(r'.*unique_together = \((.+),\).*')
         unique_together_match = re.findall(unique_re, output)
@@ -272,9 +256,7 @@ class InspectDBTestCase(TestCase):
                 'text': 'myfields.TextField',
                 'bigint': 'BigIntegerField',
             }
-            call_command('inspectdb',
-                         table_name_filter=lambda tn: tn.startswith('inspectdb_columntypes'),
-                         stdout=out)
+            call_command('inspectdb', 'inspectdb_columntypes', stdout=out)
             output = out.getvalue()
             self.assertIn("text_field = myfields.TextField()", output)
             self.assertIn("big_int_field = models.BigIntegerField()", output)

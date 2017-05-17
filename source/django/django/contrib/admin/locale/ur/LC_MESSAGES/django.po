@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Mansoorulhaq Mansoor <mnsrknp@gmail.com>, 2011
@@ -250,10 +250,10 @@ msgid ""
 "protected related objects: %(related_objects)s"
 msgstr ""
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "منتظم برائے جینگو سائٹ"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "انتظامیہ برائے جینگو سائٹ"
 
 msgid "Site administration"

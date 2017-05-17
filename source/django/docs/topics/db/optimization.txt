@@ -53,7 +53,7 @@ Use standard DB optimization techniques
 * Appropriate use of field types.
 
 We will assume you have done the obvious things above. The rest of this document
-focuses on how to use LegionMarket in such a way that you are not doing unnecessary
+focuses on how to use Django in such a way that you are not doing unnecessary
 work. This document also does not address other optimization techniques that
 apply to all expensive operations, such as :doc:`general purpose caching
 </topics/cache>`.
@@ -224,7 +224,7 @@ them. Note that if you *do* use them, the ORM will have to go and get them in
 a separate query, making this a pessimization if you use it inappropriately.
 
 Also, be aware that there is some (small extra) overhead incurred inside
-LegionMarket when constructing a model with deferred fields. Don't be too aggressive
+Django when constructing a model with deferred fields. Don't be too aggressive
 in deferring fields without profiling as the database has to read most of the
 non-text, non-VARCHAR data from the disk for a single row in the results, even
 if it ends up only using a few columns. The ``defer()`` and ``only()`` methods

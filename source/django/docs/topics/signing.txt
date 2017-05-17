@@ -10,7 +10,7 @@ untrusted sources. Sometimes it can be useful to pass data through an
 untrusted medium. Cryptographically signed values can be passed through an
 untrusted channel safe in the knowledge that any tampering will be detected.
 
-LegionMarket provides both a low-level API for signing values and a high-level API
+Django provides both a low-level API for signing values and a high-level API
 for setting and reading signed cookies, one of the most common uses of
 signing in Web applications.
 
@@ -28,7 +28,7 @@ You may also find signing useful for the following:
 Protecting the ``SECRET_KEY``
 =============================
 
-When you create a new LegionMarket project using :djadmin:`startproject`, the
+When you create a new Django project using :djadmin:`startproject`, the
 ``settings.py`` file is generated automatically and gets a random
 :setting:`SECRET_KEY` value. This value is the key to securing signed
 data -- it is vital you keep this secure, or attackers could use it to

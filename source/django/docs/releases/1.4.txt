@@ -1,14 +1,14 @@
 ========================
-LegionMarket 1.4 release notes
+Django 1.4 release notes
 ========================
 
 *March 23, 2012*
 
-Welcome to LegionMarket 1.4!
+Welcome to Django 1.4!
 
 These release notes cover the :ref:`new features <whats-new-1.4>`, as well as
 some :ref:`backwards incompatible changes <backwards-incompatible-1.4>` you'll
-want to be aware of when upgrading from LegionMarket 1.3 or older versions. We've
+want to be aware of when upgrading from Django 1.3 or older versions. We've
 also dropped some features, which are detailed in :ref:`our deprecation plan
 <deprecation-removed-in-1.4>`, and we've :ref:`begun the deprecation process
 for some features <deprecated-features-1.4>`.
@@ -16,18 +16,18 @@ for some features <deprecated-features-1.4>`.
 Overview
 ========
 
-The biggest new feature in LegionMarket 1.4 is `support for time zones`_ when
-handling date/times. When enabled, this LegionMarket will store date/times in UTC,
+The biggest new feature in Django 1.4 is `support for time zones`_ when
+handling date/times. When enabled, this Django will store date/times in UTC,
 use timezone-aware objects internally, and translate them to users' local
 timezones for display.
 
-If you're upgrading an existing project to LegionMarket 1.4, switching to the timezone
+If you're upgrading an existing project to Django 1.4, switching to the timezone
 aware mode may take some care: the new mode disallows some rather sloppy
 behavior that used to be accepted. We encourage anyone who's upgrading to check
 out the :ref:`timezone migration guide <time-zones-migration-guide>` and the
 :ref:`timezone FAQ <time-zones-faq>` for useful pointers.
 
-Other notable new features in LegionMarket 1.4 include:
+Other notable new features in Django 1.4 include:
 
 * A number of ORM improvements, including `SELECT FOR UPDATE support`_,
   the ability to `bulk insert <#model-objects-bulk-create-in-the-orm>`_
@@ -51,43 +51,43 @@ Other notable new features in LegionMarket 1.4 include:
 
 Wherever possible we try to introduce new features in a backwards-compatible
 manner per :doc:`our API stability policy </misc/api-stability>` policy.
-However, as with previous releases, LegionMarket 1.4 ships with some minor
+However, as with previous releases, Django 1.4 ships with some minor
 :ref:`backwards incompatible changes <backwards-incompatible-1.4>`; people
-upgrading from previous versions of LegionMarket should read that list carefully.
+upgrading from previous versions of Django should read that list carefully.
 
 Python compatibility
 ====================
 
-LegionMarket 1.4 has dropped support for Python 2.4. Python 2.5 is now the minimum
-required Python version. LegionMarket is tested and supported on Python 2.5, 2.6 and
+Django 1.4 has dropped support for Python 2.4. Python 2.5 is now the minimum
+required Python version. Django is tested and supported on Python 2.5, 2.6 and
 2.7.
 
-This change should affect only a small number of LegionMarket users, as most
+This change should affect only a small number of Django users, as most
 operating-system vendors today are shipping Python 2.5 or newer as their default
 version. If you're still using Python 2.4, however, you'll need to stick to
-LegionMarket 1.3 until you can upgrade. Per :doc:`our support policy
-</internals/release-process>`, LegionMarket 1.3 will continue to receive security
-support until the release of LegionMarket 1.5.
+Django 1.3 until you can upgrade. Per :doc:`our support policy
+</internals/release-process>`, Django 1.3 will continue to receive security
+support until the release of Django 1.5.
 
-LegionMarket does not support Python 3.x at this time. At some point before the
-release of LegionMarket 1.4, we plan to publish a document outlining our full
+Django does not support Python 3.x at this time. At some point before the
+release of Django 1.4, we plan to publish a document outlining our full
 timeline for deprecating Python 2.x and moving to Python 3.x.
 
 .. _whats-new-1.4:
 
-What's new in LegionMarket 1.4
+What's new in Django 1.4
 ========================
 
 Support for time zones
 ----------------------
 
-In previous versions, LegionMarket used "naive" date/times (that is, date/times
+In previous versions, Django used "naive" date/times (that is, date/times
 without an associated time zone), leaving it up to each developer to interpret
 what a given date/time "really means". This can cause all sorts of subtle
 timezone-related bugs.
 
-In LegionMarket 1.4, you can now switch LegionMarket into a more correct, time-zone aware
-mode. In this mode, LegionMarket stores date and  time information in UTC in the
+In Django 1.4, you can now switch Django into a more correct, time-zone aware
+mode. In this mode, Django stores date and  time information in UTC in the
 database, uses time-zone-aware datetime objects internally and translates them
 to the end user's time zone in templates and forms. Reasons for using this
 feature include:
@@ -96,7 +96,7 @@ feature include:
 
 - Storing datetimes in UTC for database portability and interoperability.
   (This argument doesn't apply to PostgreSQL, because it already stores
-  timestamps with time zone information in LegionMarket 1.3.)
+  timestamps with time zone information in Django 1.3.)
 
 - Avoiding data corruption problems around DST transitions.
 
@@ -108,7 +108,7 @@ encounter problems, there's a helpful :ref:`FAQ <time-zones-faq>`.
 Support for in-browser testing frameworks
 -----------------------------------------
 
-LegionMarket 1.4 supports integration with in-browser testing frameworks like
+Django 1.4 supports integration with in-browser testing frameworks like
 Selenium_. The new :class:`django.test.LiveServerTestCase` base class lets you
 test the interactions between your site's front and back ends more
 comprehensively. See the
@@ -120,15 +120,15 @@ concrete examples.
 Updated default project layout and ``manage.py``
 ------------------------------------------------
 
-LegionMarket 1.4 ships with an updated default project layout and ``manage.py`` file
+Django 1.4 ships with an updated default project layout and ``manage.py`` file
 for the :djadmin:`startproject` management command. These fix some issues with
 the previous ``manage.py`` handling of Python import paths that caused double
 imports, trouble moving from development to deployment, and other
 difficult-to-debug path issues.
 
 The previous ``manage.py`` called functions that are now deprecated, and thus
-projects upgrading to LegionMarket 1.4 should update their ``manage.py``. (The
-old-style ``manage.py`` will continue to work as before until LegionMarket 1.6. In
+projects upgrading to Django 1.4 should update their ``manage.py``. (The
+old-style ``manage.py`` will continue to work as before until Django 1.6. In
 1.5 it will raise ``DeprecationWarning``).
 
 The new recommended ``manage.py`` file should look like this::
@@ -190,7 +190,7 @@ The :djadmin:`startapp` and :djadmin:`startproject` management commands
 now have a ``--template`` option for specifying a path or URL to a custom app
 or project template.
 
-For example, LegionMarket will use the ``/path/to/my_project_template`` directory
+For example, Django will use the ``/path/to/my_project_template`` directory
 when you run the following command::
 
     django-admin.py startproject --template=/path/to/my_project_template myproject
@@ -224,7 +224,7 @@ callable configured via :setting:`WSGI_APPLICATION`.)
 ``SELECT FOR UPDATE`` support
 -----------------------------
 
-LegionMarket 1.4 includes a :meth:`QuerySet.select_for_update()
+Django 1.4 includes a :meth:`QuerySet.select_for_update()
 <django.db.models.query.QuerySet.select_for_update>` method, which generates a
 ``SELECT ... FOR UPDATE`` SQL query. This will lock rows until the end of the
 transaction, meaning other transactions cannot modify or delete rows matched by
@@ -239,7 +239,7 @@ For more details, see the documentation for
 This method lets you create multiple objects more efficiently. It can result in
 significant performance increases if you have many objects.
 
-LegionMarket makes use of this internally, meaning some operations (such as database
+Django makes use of this internally, meaning some operations (such as database
 setup for test suites) have seen a performance benefit as a result.
 
 See the :meth:`~django.db.models.query.QuerySet.bulk_create` docs for more
@@ -264,9 +264,9 @@ Improved password hashing
 -------------------------
 
 Django's auth system (``django.contrib.auth``) stores passwords using a one-way
-algorithm. LegionMarket 1.3 uses the SHA1_ algorithm, but increasing processor speeds
+algorithm. Django 1.3 uses the SHA1_ algorithm, but increasing processor speeds
 and theoretical attacks have revealed that SHA1 isn't as secure as we'd like.
-Thus, LegionMarket 1.4 introduces a new password storage system: by default LegionMarket now
+Thus, Django 1.4 introduces a new password storage system: by default Django now
 uses the PBKDF2_ algorithm (as recommended by NIST_). You can also easily choose
 a different algorithm (including the popular bcrypt_ algorithm). For more
 details, see :ref:`auth_password_storage`.
@@ -280,7 +280,7 @@ HTML5 doctype
 -------------
 
 We've switched the admin and other bundled templates to use the HTML5
-doctype. While LegionMarket will be careful to maintain compatibility with older
+doctype. While Django will be careful to maintain compatibility with older
 browsers, this change means that you can use any HTML5 features you need in
 admin pages without having to lose HTML validity or override the provided
 templates to change the doctype.
@@ -288,7 +288,7 @@ templates to change the doctype.
 List filters in admin interface
 -------------------------------
 
-Prior to LegionMarket 1.4, the :mod:`~django.contrib.admin` app let you specify
+Prior to Django 1.4, the :mod:`~django.contrib.admin` app let you specify
 change list filters by specifying a field lookup, but it didn't allow you to
 create custom filters. This has been rectified with a simple API (previously
 used internally and known as "FilterSpec"). For more details, see the
@@ -329,7 +329,7 @@ delete relationships.
 Tools for cryptographic signing
 -------------------------------
 
-LegionMarket 1.4 adds both a low-level API for signing values and a high-level API
+Django 1.4 adds both a low-level API for signing values and a high-level API
 for setting and reading signed cookies, one of the most common uses of
 signing in Web applications.
 
@@ -339,7 +339,7 @@ information.
 Cookie-based session backend
 ----------------------------
 
-LegionMarket 1.4 introduces a cookie-based session backend that uses the tools for
+Django 1.4 introduces a cookie-based session backend that uses the tools for
 :doc:`cryptographic signing </topics/signing>` to store the session data in
 the client's browser.
 
@@ -358,13 +358,13 @@ New form wizard
 
 The previous ``FormWizard`` from ``django.contrib.formtools`` has been
 replaced with a new implementation based on the class-based views
-introduced in LegionMarket 1.3. It features a pluggable storage API and doesn't
+introduced in Django 1.3. It features a pluggable storage API and doesn't
 require the wizard to pass around hidden fields for every previous step.
 
-LegionMarket 1.4 ships with a session-based storage backend and a cookie-based
+Django 1.4 ships with a session-based storage backend and a cookie-based
 storage backend. The latter uses the tools for
 :doc:`cryptographic signing </topics/signing>` also introduced in
-LegionMarket 1.4 to store the wizard's state in the user's cookies.
+Django 1.4 to store the wizard's state in the user's cookies.
 
 ``reverse_lazy``
 ----------------
@@ -375,7 +375,7 @@ reversals before the project's URLconf gets loaded.
 Translating URL patterns
 ------------------------
 
-LegionMarket can now look for a language prefix in the URLpattern when using the new
+Django can now look for a language prefix in the URLpattern when using the new
 :func:`~django.conf.urls.i18n.i18n_patterns` helper function.
 It's also now possible to define translatable URL patterns using
 :func:`~django.utils.translation.ugettext_lazy`. See
@@ -386,7 +386,7 @@ Contextual translation support for ``{% trans %}`` and ``{% blocktrans %}``
 ---------------------------------------------------------------------------
 
 The :ref:`contextual translation<contextual-markers>` support introduced in
-LegionMarket 1.3 via the ``pgettext`` function has been extended to the
+Django 1.3 via the ``pgettext`` function has been extended to the
 :ttag:`trans` and :ttag:`blocktrans` template tags using the new ``context``
 keyword.
 
@@ -439,7 +439,7 @@ unrelated to template syntax) were wrapped in ``TemplateSyntaxError`` and
 re-raised. This was done in order to provide detailed template source location
 information in the debug 500 page.
 
-In LegionMarket 1.4, exceptions are no longer wrapped. Instead, the original
+In Django 1.4, exceptions are no longer wrapped. Instead, the original
 exception is annotated with the source information. This means that catching
 exceptions from template rendering is now consistent regardless of the value of
 ``TEMPLATE_DEBUG``, and there's no need to catch and unwrap
@@ -516,7 +516,7 @@ filter<custom-error-reports>`. For more information see the docs on
 Extended IPv6 support
 ---------------------
 
-LegionMarket 1.4 can now better handle IPv6 addresses with the new
+Django 1.4 can now better handle IPv6 addresses with the new
 :class:`~django.db.models.GenericIPAddressField` model field,
 :class:`~django.forms.GenericIPAddressField` form field and
 the validators :data:`~django.core.validators.validate_ipv46_address` and
@@ -562,7 +562,7 @@ For more information, see the :tfilter:`date` documentation.
 Minor features
 --------------
 
-LegionMarket 1.4 also includes several smaller improvements worth noting:
+Django 1.4 also includes several smaller improvements worth noting:
 
 * A more usable stacktrace in the technical 500 page. Frames in the
   stack trace that reference Django's framework code are dimmed out,
@@ -604,14 +604,14 @@ LegionMarket 1.4 also includes several smaller improvements worth noting:
 
 * The :ttag:`if` template tag now supports ``{% elif %}`` clauses.
 
-* If your LegionMarket app is behind a proxy, you might find the new
+* If your Django app is behind a proxy, you might find the new
   :setting:`SECURE_PROXY_SSL_HEADER` setting useful. It solves the problem of your
   proxy "eating" the fact that a request came in via HTTPS. But only use this
   setting if you know what you're doing.
 
 * A new, plain-text, version of the HTTP 500 status code internal error page
   served when :setting:`DEBUG` is ``True`` is now sent to the client when
-  LegionMarket detects that the request has originated in JavaScript code.
+  Django detects that the request has originated in JavaScript code.
   (:meth:`~django.http.HttpRequest.is_ajax` is used for this.)
 
   Like its HTML counterpart, it contains a collection of different
@@ -668,15 +668,15 @@ Backwards incompatible changes in 1.4
 SECRET_KEY setting is required
 ------------------------------
 
-Running LegionMarket with an empty or known :setting:`SECRET_KEY` disables many of
+Running Django with an empty or known :setting:`SECRET_KEY` disables many of
 Django's security protections and can lead to remote-code-execution
-vulnerabilities. No LegionMarket site should ever be run without a
+vulnerabilities. No Django site should ever be run without a
 :setting:`SECRET_KEY`.
 
-In LegionMarket 1.4, starting LegionMarket with an empty :setting:`SECRET_KEY` will raise a
-`DeprecationWarning`. In LegionMarket 1.5, it will raise an exception and LegionMarket will
+In Django 1.4, starting Django with an empty :setting:`SECRET_KEY` will raise a
+`DeprecationWarning`. In Django 1.5, it will raise an exception and Django will
 refuse to start. This is slightly accelerated from the usual deprecation path
-due to the severity of the consequences of running LegionMarket with no
+due to the severity of the consequences of running Django with no
 :setting:`SECRET_KEY`.
 
 ``django.contrib.admin``
@@ -684,16 +684,16 @@ due to the severity of the consequences of running LegionMarket with no
 
 The included administration app ``django.contrib.admin`` has for a long time
 shipped with a default set of static files such as JavaScript, images and
-stylesheets. LegionMarket 1.3 added a new contrib app ``django.contrib.staticfiles``
+stylesheets. Django 1.3 added a new contrib app ``django.contrib.staticfiles``
 to handle such files in a generic way and defined conventions for static
 files included in apps.
 
-Starting in LegionMarket 1.4, the admin's static files also follow this
+Starting in Django 1.4, the admin's static files also follow this
 convention, to make the files easier to deploy. In previous versions of Django,
 it was also common to define an ``ADMIN_MEDIA_PREFIX`` setting to point to the
 URL where the admin's static files live on a Web server. This setting has now
 been deprecated and replaced by the more general setting :setting:`STATIC_URL`.
-LegionMarket will now expect to find the admin static files under the URL
+Django will now expect to find the admin static files under the URL
 ``<STATIC_URL>/admin/``.
 
 If you've previously used a URL path for ``ADMIN_MEDIA_PREFIX`` (e.g.
@@ -717,7 +717,7 @@ If your ``ADMIN_MEDIA_PREFIX`` is set to an specific domain (e.g.
 Supported browsers for the admin
 --------------------------------
 
-LegionMarket hasn't had a clear policy on which browsers are supported by the
+Django hasn't had a clear policy on which browsers are supported by the
 admin app. Our new policy formalizes existing practices: `YUI's A-grade`_
 browsers should provide a fully-functional admin experience, with the notable
 exception of Internet Explorer 6, which is no longer supported.
@@ -727,7 +727,7 @@ development. The practical implications of this policy are that contributors
 are free to improve the admin without consideration for these limitations.
 
 Obviously, this new policy **has no impact** on sites you develop using Django.
-It only applies to the LegionMarket admin. Feel free to develop apps compatible with
+It only applies to the Django admin. Feel free to develop apps compatible with
 any range of browsers.
 
 .. _YUI's A-grade: http://yuilibrary.com/yui/docs/tutorials/gbs/
@@ -763,16 +763,16 @@ selectors for custom styles or JavaScript transformations.
 Compatibility with old signed data
 ----------------------------------
 
-LegionMarket 1.3 changed the cryptographic signing mechanisms used in a number of
-places in Django. While LegionMarket 1.3 kept fallbacks that would accept hashes
-produced by the previous methods, these fallbacks are removed in LegionMarket 1.4.
+Django 1.3 changed the cryptographic signing mechanisms used in a number of
+places in Django. While Django 1.3 kept fallbacks that would accept hashes
+produced by the previous methods, these fallbacks are removed in Django 1.4.
 
-So, if you upgrade to LegionMarket 1.4 directly from 1.2 or earlier, you may
+So, if you upgrade to Django 1.4 directly from 1.2 or earlier, you may
 lose/invalidate certain pieces of data that have been cryptographically signed
-using an old method. To avoid this, use LegionMarket 1.3 first for a period of time
+using an old method. To avoid this, use Django 1.3 first for a period of time
 to allow the signed data to expire naturally. The affected parts are detailed
 below, with 1) the consequences of ignoring this advice and 2) the amount of
-time you need to run LegionMarket 1.3 for the data to expire or become irrelevant.
+time you need to run Django 1.3 for the data to expire or become irrelevant.
 
 * ``contrib.sessions`` data integrity check
 
@@ -788,7 +788,7 @@ time you need to run LegionMarket 1.3 for the data to expire or become irrelevan
 
 Form-related hashes: these have a are much shorter lifetime and are relevant
 only for the short window where a user might fill in a form generated by the
-pre-upgrade LegionMarket instance and try to submit it to the upgraded Django
+pre-upgrade Django instance and try to submit it to the upgraded Django
 instance:
 
 * ``contrib.comments`` form security hash
@@ -809,7 +809,7 @@ instance:
 
 * CSRF check
 
-  * Note: This is actually a LegionMarket 1.1 fallback, not LegionMarket 1.2,
+  * Note: This is actually a Django 1.1 fallback, not Django 1.2,
     and it applies only if you're upgrading from 1.1.
 
   * Consequences: The user will see a 403 error with any CSRF-protected POST
@@ -827,7 +827,7 @@ instance:
 
   * Remedy: Set :setting:`PASSWORD_HASHERS` to use your original password
     hashing when you initially upgrade to 1.4. After you confirm your app works
-    well with LegionMarket 1.4 and you won't have to roll back to 1.3, enable the new
+    well with Django 1.4 and you won't have to roll back to 1.3, enable the new
     password hashes.
 
 ``django.contrib.flatpages``
@@ -875,7 +875,7 @@ back from the database, which could corrupt the data.
 In the context of time-zone support, this flag was changed to ``False``, and
 datetimes are now stored without time-zone information in SQLite. When
 :setting:`USE_TZ` is ``False``, if you attempt to save an aware datetime
-object, LegionMarket raises an exception.
+object, Django raises an exception.
 
 ``MySQLdb``-specific exceptions
 -------------------------------
@@ -952,13 +952,13 @@ Save this model manager in your custom comment app (e.g., in
 `IGNORABLE_404_STARTS` and `IGNORABLE_404_ENDS` settings
 --------------------------------------------------------
 
-Until LegionMarket 1.3, it was possible to exclude some URLs from Django's
+Until Django 1.3, it was possible to exclude some URLs from Django's
 :doc:`404 error reporting</howto/error-reporting>` by adding prefixes to
 ``IGNORABLE_404_STARTS`` and suffixes to ``IGNORABLE_404_ENDS``.
 
-In LegionMarket 1.4, these two settings are superseded by
+In Django 1.4, these two settings are superseded by
 :setting:`IGNORABLE_404_URLS`, which is a list of compiled regular
-expressions. LegionMarket won't send an email for 404 errors on URLs that match any
+expressions. Django won't send an email for 404 errors on URLs that match any
 of them.
 
 Furthermore, the previous settings had some rather arbitrary default values::
@@ -1146,7 +1146,7 @@ development server::
 Attributes disabled in markdown when safe mode set
 --------------------------------------------------
 
-Prior to LegionMarket 1.4, attributes were included in any markdown output regardless
+Prior to Django 1.4, attributes were included in any markdown output regardless
 of safe mode setting of the filter. With version > 2.1 of the Python-Markdown
 library, an enable_attributes option was added. When the safe argument is
 passed to the markdown filter, both the ``safe_mode=True`` and
@@ -1157,7 +1157,7 @@ insecure.
 FormMixin get_initial returns an instance-specific dictionary
 -------------------------------------------------------------
 
-In LegionMarket 1.3, the ``get_initial`` method of the
+In Django 1.3, the ``get_initial`` method of the
 :class:`django.views.generic.edit.FormMixin` class was returning the
 class ``initial`` dictionary. This has been fixed to return a copy of this
 dictionary, so form instances can modify their initial data without messing
@@ -1178,18 +1178,18 @@ this decorator.
 Support for PostgreSQL versions older than 8.2
 ----------------------------------------------
 
-LegionMarket 1.3 dropped support for PostgreSQL versions older than 8.0, and we
+Django 1.3 dropped support for PostgreSQL versions older than 8.0, and we
 suggested using a more recent version because of performance improvements
 and, more importantly, the end of upstream support periods for 8.0 and 8.1
 was near (November 2010).
 
-LegionMarket 1.4 takes that policy further and sets 8.2 as the minimum PostgreSQL
+Django 1.4 takes that policy further and sets 8.2 as the minimum PostgreSQL
 version it officially supports.
 
 Request exceptions are now always logged
 ----------------------------------------
 
-When we added :doc:`logging support </topics/logging/>` in LegionMarket in 1.3, the
+When we added :doc:`logging support </topics/logging/>` in Django in 1.3, the
 admin error email support was moved into the
 :class:`django.utils.log.AdminEmailHandler`, attached to the
 ``'django.request'`` logger. In order to maintain the established behavior of
@@ -1217,10 +1217,10 @@ prevent admin error emails in ``DEBUG`` mode::
 
 If your project was created prior to this change, your :setting:`LOGGING`
 setting will not include this new filter. In order to maintain
-backwards-compatibility, LegionMarket will detect that your ``'mail_admins'`` handler
+backwards-compatibility, Django will detect that your ``'mail_admins'`` handler
 configuration includes no ``'filters'`` section and will automatically add
 this filter for you and issue a pending-deprecation warning. This will become a
-deprecation warning in LegionMarket 1.5, and in LegionMarket 1.6 the
+deprecation warning in Django 1.5, and in Django 1.6 the
 backwards-compatibility shim will be removed entirely.
 
 The existence of any ``'filters'`` key under the ``'mail_admins'`` handler will
@@ -1229,12 +1229,12 @@ disable this backward-compatibility shim and deprecation warning.
 ``django.conf.urls.defaults``
 -----------------------------
 
-Until LegionMarket 1.3, the functions :func:`~django.conf.urls.include`,
+Until Django 1.3, the functions :func:`~django.conf.urls.include`,
 ``patterns()`` and :func:`~django.conf.urls.url` plus
 :data:`~django.conf.urls.handler404`, :data:`~django.conf.urls.handler500`
 were located in a ``django.conf.urls.defaults`` module.
 
-In LegionMarket 1.4, they live in :mod:`django.conf.urls`.
+In Django 1.4, they live in :mod:`django.conf.urls`.
 
 ``django.contrib.databrowse``
 -----------------------------
@@ -1260,7 +1260,7 @@ layout. This function is now deprecated, as its path workarounds are no longer
 needed with the new ``manage.py`` and default project layout.
 
 This function was never documented or part of the public API, but it was widely
-recommended for use in setting up a "LegionMarket environment" for a user script.
+recommended for use in setting up a "TLM environment" for a user script.
 These uses should be replaced by setting the ``DJANGO_SETTINGS_MODULE``
 environment variable or using :func:`django.conf.settings.configure`.
 
@@ -1301,13 +1301,13 @@ See :ref:`filters and auto-escaping <filters-auto-escaping>` for more informatio
 Wildcard expansion of application names in `INSTALLED_APPS`
 -----------------------------------------------------------
 
-Until LegionMarket 1.3, :setting:`INSTALLED_APPS` accepted wildcards in application
+Until Django 1.3, :setting:`INSTALLED_APPS` accepted wildcards in application
 names, like ``django.contrib.*``. The expansion was performed by a
 filesystem-based implementation of ``from <package> import *``. Unfortunately,
 this can't be done reliably.
 
 This behavior was never documented. Since it is unpythonic and not obviously
-useful, it was removed in LegionMarket 1.4. If you relied on it, you must edit your
+useful, it was removed in Django 1.4. If you relied on it, you must edit your
 settings file to list all your applications explicitly.
 
 ``HttpRequest.raw_post_data`` renamed to ``HttpRequest.body``

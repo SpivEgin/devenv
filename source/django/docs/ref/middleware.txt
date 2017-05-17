@@ -45,7 +45,7 @@ Adds a few conveniences for perfectionists:
   If :setting:`APPEND_SLASH` is ``True`` and the initial URL doesn't end
   with a slash, and it is not found in the URLconf, then a new URL is
   formed by appending a slash at the end. If this new URL is found in the
-  URLconf, then LegionMarket redirects the request to this new URL. Otherwise,
+  URLconf, then Django redirects the request to this new URL. Otherwise,
   the initial URL is processed as usual.
 
   For example, ``foo.com/bar`` will be redirected to ``foo.com/bar/`` if
@@ -62,9 +62,21 @@ Adds a few conveniences for perfectionists:
   normalize URLs.
 
 * Handles ETags based on the :setting:`USE_ETAGS` setting. If
-  :setting:`USE_ETAGS` is set to ``True``, LegionMarket will calculate an ETag
+  :setting:`USE_ETAGS` is set to ``True``, Django will calculate an ETag
   for each request by MD5-hashing the page content, and it'll take care of
   sending ``Not Modified`` responses, if appropriate.
+
+* Sets the ``Content-Length`` header for non-streaming responses.
+
+.. versionchanged:: 1.11
+
+    Older versions didn't set the ``Content-Length`` header.
+
+.. deprecated:: 1.11
+
+    The :setting:`USE_ETAGS` setting is deprecated in favor of using
+    :class:`~django.middleware.http.ConditionalGetMiddleware` for ETag
+    processing.
 
 .. attribute:: CommonMiddleware.response_redirect_class
 
@@ -102,7 +114,7 @@ appropriate response.
 * Any other exception is processed by :data:`~django.conf.urls.handler500`
   (or a more friendly debug page if :setting:`DEBUG=True <DEBUG>`).
 
-LegionMarket uses this middleware regardless of whether or not you include it in
+Django uses this middleware regardless of whether or not you include it in
 :setting:`MIDDLEWARE`, however, you may want to subclass if your own middleware
 needs to transform any of these exceptions into the appropriate responses.
 :class:`~django.middleware.locale.LocaleMiddleware` does this, for example.
@@ -143,6 +155,9 @@ It will NOT compress content if any of the following are true:
 * The request (the browser) hasn't sent an ``Accept-Encoding`` header
   containing ``gzip``.
 
+If the response has an ``ETag`` header, the ETag is made weak to comply with
+:rfc:`7232#section-2.1`.
+
 You can apply GZip compression to individual views using the
 :func:`~django.views.decorators.gzip.gzip_page()` decorator.
 
@@ -160,12 +175,16 @@ Conditional GET middleware
 
 .. class:: ConditionalGetMiddleware
 
-Handles conditional GET operations. If the response has a ``ETag`` or
+Handles conditional GET operations. If the response doesn't have an ``ETag``
+header, the middleware adds one if needed. If the response has a ``ETag`` or
 ``Last-Modified`` header, and the request has ``If-None-Match`` or
 ``If-Modified-Since``, the response is replaced by an
 :class:`~django.http.HttpResponseNotModified`.
 
-Also sets the ``Date`` and ``Content-Length`` response-headers.
+.. versionchanged:: 1.11
+
+    In older versions, the middleware set the ``Content-Length`` and ``Date``
+    headers and didn't set the ``ETag`` header.
 
 Locale middleware
 -----------------
@@ -208,8 +227,8 @@ Security middleware
     If your deployment situation allows, it's usually a good idea to have your
     front-end Web server perform the functionality provided by the
     ``SecurityMiddleware``. That way, if there are requests that aren't served
-    by LegionMarket (such as static media or user-uploaded files), they will have
-    the same protections as requests to your LegionMarket application.
+    by Django (such as static media or user-uploaded files), they will have
+    the same protections as requests to your Django application.
 
 .. class:: SecurityMiddleware
 
@@ -220,6 +239,7 @@ enabled or disabled with a setting.
 * :setting:`SECURE_BROWSER_XSS_FILTER`
 * :setting:`SECURE_CONTENT_TYPE_NOSNIFF`
 * :setting:`SECURE_HSTS_INCLUDE_SUBDOMAINS`
+* :setting:`SECURE_HSTS_PRELOAD`
 * :setting:`SECURE_HSTS_SECONDS`
 * :setting:`SECURE_REDIRECT_EXEMPT`
 * :setting:`SECURE_SSL_HOST`
@@ -254,6 +274,10 @@ to the ``Strict-Transport-Security`` header. This is recommended (assuming all
 subdomains are served exclusively using HTTPS), otherwise your site may still
 be vulnerable via an insecure connection to a subdomain.
 
+If you wish to submit your site to the `browser preload list`_, set the
+:setting:`SECURE_HSTS_PRELOAD` setting to ``True``. That appends the
+``preload`` directive to the ``Strict-Transport-Security`` header.
+
 .. warning::
     The HSTS policy applies to your entire domain, not just the URL of the
     response that you set the header on. Therefore, you should only use it if
@@ -267,10 +291,11 @@ be vulnerable via an insecure connection to a subdomain.
 .. note::
     If you are deployed behind a load-balancer or reverse-proxy server, and the
     ``Strict-Transport-Security`` header is not being added to your responses,
-    it may be because LegionMarket doesn't realize that it's on a secure connection;
+    it may be because Django doesn't realize that it's on a secure connection;
     you may need to set the :setting:`SECURE_PROXY_SSL_HEADER` setting.
 
 .. _"Strict-Transport-Security" header: https://en.wikipedia.org/wiki/Strict_Transport_Security
+.. _browser preload list: https://hstspreload.appspot.com/
 
 .. _x-content-type-options:
 
@@ -295,11 +320,11 @@ the ``X-Content-Type-Options: nosniff`` header.  ``SecurityMiddleware`` will
 do this for all responses if the :setting:`SECURE_CONTENT_TYPE_NOSNIFF` setting
 is ``True``.
 
-Note that in most deployment situations where LegionMarket isn't involved in serving
+Note that in most deployment situations where Django isn't involved in serving
 user-uploaded files, this setting won't help you. For example, if your
 :setting:`MEDIA_URL` is served directly by your front-end Web server (nginx,
 Apache, etc.) then you'd want to set this header there. On the other hand, if
-you are using LegionMarket to do something like require authorization in order to
+you are using Django to do something like require authorization in order to
 download files and you cannot set the header using your Web server, this
 setting will be useful.
 
@@ -361,7 +386,7 @@ in the :setting:`SECURE_REDIRECT_EXEMPT` setting.
 
 .. note::
     If you are deployed behind a load-balancer or reverse-proxy server and
-    LegionMarket can't seem to tell when a request actually is already secure, you
+    Django can't seem to tell when a request actually is already secure, you
     may need to set the :setting:`SECURE_PROXY_SSL_HEADER` setting.
 
 .. _nginx: http://nginx.org
@@ -407,8 +432,6 @@ Middleware for utilizing Web server provided authentication. See
 
 .. class:: PersistentRemoteUserMiddleware
 
-.. versionadded:: 1.9
-
 Middleware for utilizing Web server provided authentication when enabled only
 on the login page. See :ref:`persistent-remote-user-middleware-howto` for usage
 details.
@@ -441,7 +464,7 @@ Simple :doc:`clickjacking protection via the X-Frame-Options header </ref/clickj
 Middleware ordering
 ===================
 
-Here are some hints about the ordering of various LegionMarket middleware classes:
+Here are some hints about the ordering of various Django middleware classes:
 
 #. :class:`~django.middleware.security.SecurityMiddleware`
 
@@ -488,6 +511,9 @@ Here are some hints about the ordering of various LegionMarket middleware classe
 
    Before any view middleware that assumes that CSRF attacks have been dealt
    with.
+
+   It must come after ``SessionMiddleware`` if you're using
+   :setting:`CSRF_USE_SESSIONS`.
 
 #. :class:`~django.contrib.auth.middleware.AuthenticationMiddleware`
 

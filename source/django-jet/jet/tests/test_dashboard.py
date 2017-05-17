@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 try:
     from django.core.urlresolvers import reverse
-except ImportError: # The Legion Market 1.11
+except ImportError: # TLM 1.11
     from django.urls import reverse
 
 from django.test import TestCase, Client

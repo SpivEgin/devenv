@@ -54,13 +54,26 @@ class ContentTypesTests(TestCase):
         with self.assertNumQueries(0):
             ContentType.objects.get_by_natural_key('contenttypes', 'contenttype')
 
-    def test_get_for_models_empty_cache(self):
-        # Empty cache.
-        with self.assertNumQueries(1):
-            cts = ContentType.objects.get_for_models(ContentType, FooWithUrl)
+    def test_get_for_models_creation(self):
+        ContentType.objects.all().delete()
+        with self.assertNumQueries(4):
+            cts = ContentType.objects.get_for_models(ContentType, FooWithUrl, ProxyModel, ConcreteModel)
         self.assertEqual(cts, {
             ContentType: ContentType.objects.get_for_model(ContentType),
             FooWithUrl: ContentType.objects.get_for_model(FooWithUrl),
+            ProxyModel: ContentType.objects.get_for_model(ProxyModel),
+            ConcreteModel: ContentType.objects.get_for_model(ConcreteModel),
+        })
+
+    def test_get_for_models_empty_cache(self):
+        # Empty cache.
+        with self.assertNumQueries(1):
+            cts = ContentType.objects.get_for_models(ContentType, FooWithUrl, ProxyModel, ConcreteModel)
+        self.assertEqual(cts, {
+            ContentType: ContentType.objects.get_for_model(ContentType),
+            FooWithUrl: ContentType.objects.get_for_model(FooWithUrl),
+            ProxyModel: ContentType.objects.get_for_model(ProxyModel),
+            ConcreteModel: ContentType.objects.get_for_model(ConcreteModel),
         })
 
     def test_get_for_models_partial_cache(self):
@@ -166,11 +179,10 @@ class ContentTypesTests(TestCase):
     @override_settings(ALLOWED_HOSTS=['example.com'])
     def test_shortcut_view(self):
         """
-        Check that the shortcut view (used for the admin "view on site"
-        functionality) returns a complete URL regardless of whether the sites
-        framework is installed
+        The shortcut view (used for the admin "view on site" functionality)
+        returns a complete URL regardless of whether the sites framework is
+        installed.
         """
-
         request = HttpRequest()
         request.META = {
             "SERVER_NAME": "Example.com",
@@ -192,10 +204,9 @@ class ContentTypesTests(TestCase):
 
     def test_shortcut_view_without_get_absolute_url(self):
         """
-        Check that the shortcut view (used for the admin "view on site"
-        functionality) returns 404 when get_absolute_url is not defined.
+        The shortcut view (used for the admin "view on site" functionality)
+        returns 404 when get_absolute_url is not defined.
         """
-
         request = HttpRequest()
         request.META = {
             "SERVER_NAME": "Example.com",
@@ -209,9 +220,8 @@ class ContentTypesTests(TestCase):
 
     def test_shortcut_view_with_broken_get_absolute_url(self):
         """
-        Check that the shortcut view does not catch an AttributeError raised
-        by the model's get_absolute_url method.
-        Refs #8997.
+        The shortcut view does not catch an AttributeError raised by
+        the model's get_absolute_url() method (#8997).
         """
         request = HttpRequest()
         request.META = {
@@ -226,9 +236,9 @@ class ContentTypesTests(TestCase):
 
     def test_missing_model(self):
         """
-        Ensures that displaying content types in admin (or anywhere) doesn't
-        break on leftover content type records in the DB for which no model
-        is defined anymore.
+        Displaying content types in admin (or anywhere) doesn't break on
+        leftover content type records in the DB for which no model is defined
+        anymore.
         """
         ct = ContentType.objects.create(
             app_label='contenttypes',
@@ -238,7 +248,7 @@ class ContentTypesTests(TestCase):
         self.assertIsNone(ct.model_class())
 
         # Make sure stale ContentTypes can be fetched like any other object.
-        # Before LegionMarket 1.6 this caused a NoneType error in the caching mechanism.
+        # Before Django 1.6 this caused a NoneType error in the caching mechanism.
         # Instead, just return the ContentType object and let the app detect stale states.
         ct_fetched = ContentType.objects.get_for_id(ct.pk)
         self.assertIsNone(ct_fetched.model_class())

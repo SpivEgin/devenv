@@ -1,3 +1,5 @@
+import io
+
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import DEFAULT_DB_ALIAS, connections, migrations
@@ -31,7 +33,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             '--noinput', '--no-input', action='store_false', dest='interactive', default=True,
-            help='Tells LegionMarket to NOT prompt the user for input of any kind.',
+            help='Tells Django to NOT prompt the user for input of any kind.',
         )
 
     def handle(self, **options):
@@ -162,7 +164,7 @@ class Command(BaseCommand):
 
         # Write out the new migration file
         writer = MigrationWriter(new_migration)
-        with open(writer.path, "wb") as fh:
+        with io.open(writer.path, "w", encoding='utf-8') as fh:
             fh.write(writer.as_string())
 
         if self.verbosity > 0:

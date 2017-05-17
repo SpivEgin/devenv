@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # BouRock, 2015
@@ -81,7 +81,7 @@ msgid "WKT debugging window:"
 msgstr "WKT hata ayıklama penceresi:"
 
 msgid "Google Maps via GeoDjango"
-msgstr "GeoLegionMarket aracılığıyla Google Haritalar"
+msgstr "GeoDjango aracılığıyla Google Haritalar"
 
 msgid "Debugging window (serialized value)"
 msgstr "Hata ayıklama penceresi (serileştirilmiş değer)"

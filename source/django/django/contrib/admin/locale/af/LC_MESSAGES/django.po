@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Christopher Penkin <chris.penkin@gmail.com>, 2012
@@ -252,11 +252,11 @@ msgid ""
 "protected related objects: %(related_objects)s"
 msgstr ""
 
-msgid "LegionMarket site admin"
-msgstr "LegionMarket werf admin"
+msgid "TLM site admin"
+msgstr "TLM werf admin"
 
-msgid "LegionMarket administration"
-msgstr "LegionMarket administrasie"
+msgid "TLM administration"
+msgstr "TLM administrasie"
 
 msgid "Site administration"
 msgstr "Werf administrasie"

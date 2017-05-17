@@ -35,7 +35,7 @@ class ExtractingStringsWithPercentSigns(POFileAssertionMixin, FrenchTestCase):
     """
     Tests the extracted string found in the gettext catalog.
 
-    Ensures that percent signs are python formatted.
+    Percent signs are python formatted.
 
     These tests should all have an analogous translation tests below, ensuring
     the python formatting does not persist through to a rendered template.
@@ -153,5 +153,5 @@ class RenderingTemplatesWithPercentSigns(FrenchTestCase):
         )
         self.assertEqual(
             block_tpl.render(Context({"name": "Django"})),
-            'LegionMarket dit: 1 pour cent signe %, deux signes de pourcentage %%'
+            'Django dit: 1 pour cent signe %, deux signes de pourcentage %%'
         )

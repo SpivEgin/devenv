@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Daniel Ursache-Dogariu <contact@danniel.net>, 2011
@@ -264,10 +264,10 @@ msgstr ""
 "Ștergerea %(class_name)s %(instance)s ar necesita ștergerea următoarelor "
 "obiecte asociate protejate: %(related_objects)s"
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "Administrare site Django"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "Administrare Django"
 
 msgid "Site administration"

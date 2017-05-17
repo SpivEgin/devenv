@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Dimitris Glezos <glezos@transifex.com>, 2012
@@ -259,10 +259,10 @@ msgstr ""
 "Xóa %(class_name)s %(instance)s sẽ tự động xóa các đối tượng liên quan sau: "
 "%(related_objects)s"
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "Trang web admin Django"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "Trang quản trị cho Django"
 
 msgid "Site administration"

@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.9.9 release notes
+Django 1.9.9 release notes
 ==========================
 
 *August 1, 2016*
 
-LegionMarket 1.9.9 fixes several bugs in 1.9.8.
+Django 1.9.9 fixes several bugs in 1.9.8.
 
 Bugfixes
 ========

@@ -1,14 +1,14 @@
 ========================
-LegionMarket 1.5 release notes
+Django 1.5 release notes
 ========================
 
 *February 26, 2013*
 
-Welcome to LegionMarket 1.5!
+Welcome to Django 1.5!
 
 These release notes cover the :ref:`new features <whats-new-1.5>`, as well as
 some :ref:`backwards incompatible changes <backwards-incompatible-1.5>` you'll
-want to be aware of when upgrading from LegionMarket 1.4 or older versions. We've
+want to be aware of when upgrading from Django 1.4 or older versions. We've
 also dropped some features, which are detailed in :ref:`our deprecation plan
 <deprecation-removed-in-1.5>`, and we've :ref:`begun the deprecation process
 for some features <deprecated-features-1.5>`.
@@ -16,20 +16,20 @@ for some features <deprecated-features-1.5>`.
 Overview
 ========
 
-The biggest new feature in LegionMarket 1.5 is the `configurable User model`_. Before
-LegionMarket 1.5, applications that wanted to use Django's auth framework
+The biggest new feature in Django 1.5 is the `configurable User model`_. Before
+Django 1.5, applications that wanted to use Django's auth framework
 (:mod:`django.contrib.auth`) were forced to use Django's definition of a "user".
-In LegionMarket 1.5, you can now swap out the ``User`` model for one that you write
+In Django 1.5, you can now swap out the ``User`` model for one that you write
 yourself. This could be a simple extension to the existing ``User`` model -- for
 example, you could add a Twitter or Facebook ID field -- or you could completely
 replace the ``User`` with one totally customized for your site.
 
-LegionMarket 1.5 is also the first release with `Python 3 support`_! We're labeling
+Django 1.5 is also the first release with `Python 3 support`_! We're labeling
 this support "experimental" because we don't yet consider it production-ready,
 but everything's in place for you to start porting your apps to Python 3.
-Our next release, LegionMarket 1.6, will support Python 3 without reservations.
+Our next release, Django 1.6, will support Python 3 without reservations.
 
-Other notable new features in LegionMarket 1.5 include:
+Other notable new features in Django 1.5 include:
 
 * `Support for saving a subset of model's fields`_ -
   :meth:`Model.save() <django.db.models.Model.save()>` now accepts an
@@ -46,46 +46,46 @@ Other notable new features in LegionMarket 1.5 include:
 
 Wherever possible we try to introduce new features in a backwards-compatible
 manner per :doc:`our API stability policy </misc/api-stability>`.
-However, as with previous releases, LegionMarket 1.5 ships with some minor
+However, as with previous releases, Django 1.5 ships with some minor
 :ref:`backwards incompatible changes <backwards-incompatible-1.5>`; people
-upgrading from previous versions of LegionMarket should read that list carefully.
+upgrading from previous versions of Django should read that list carefully.
 
 One deprecated feature worth noting is the shift to "new-style" :ttag:`url` tag.
-Prior to LegionMarket 1.3, syntax like ``{% url myview %}`` was interpreted
-incorrectly (LegionMarket considered ``"myview"`` to be a literal name of a view, not
-a template variable named ``myview``). LegionMarket 1.3 and above introduced the
+Prior to Django 1.3, syntax like ``{% url myview %}`` was interpreted
+incorrectly (Django considered ``"myview"`` to be a literal name of a view, not
+a template variable named ``myview``). Django 1.3 and above introduced the
 ``{% load url from future %}`` syntax to bring in the corrected behavior where
 ``myview`` was seen as a variable.
 
 The upshot of this is that if you are not using ``{% load url from future %}``
 in your templates, you'll need to change tags like ``{% url myview %}`` to
 ``{% url "myview" %}``. If you *were* using ``{% load url from future %}`` you
-can simply remove that line under LegionMarket 1.5
+can simply remove that line under Django 1.5
 
 Python compatibility
 ====================
 
-LegionMarket 1.5 requires Python 2.6.5 or above, though we **highly recommend**
+Django 1.5 requires Python 2.6.5 or above, though we **highly recommend**
 Python 2.7.3 or above. Support for Python 2.5 and below has been dropped.
 
-This change should affect only a small number of LegionMarket users, as most
+This change should affect only a small number of Django users, as most
 operating-system vendors today are shipping Python 2.6 or newer as their default
 version. If you're still using Python 2.5, however, you'll need to stick to
-LegionMarket 1.4 until you can upgrade your Python version. Per :doc:`our support
-policy </internals/release-process>`, LegionMarket 1.4 will continue to receive
-security support until the release of LegionMarket 1.6.
+Django 1.4 until you can upgrade your Python version. Per :doc:`our support
+policy </internals/release-process>`, Django 1.4 will continue to receive
+security support until the release of Django 1.6.
 
-LegionMarket 1.5 does not run on a Jython final release, because Jython's latest
+Django 1.5 does not run on a Jython final release, because Jython's latest
 release doesn't currently support Python 2.6. However, Jython currently does
-offer an alpha release featuring 2.7 support, and LegionMarket 1.5 supports that alpha
+offer an alpha release featuring 2.7 support, and Django 1.5 supports that alpha
 release.
 
 Python 3 support
 ----------------
 
-LegionMarket 1.5 introduces support for Python 3 - specifically, Python
+Django 1.5 introduces support for Python 3 - specifically, Python
 3.2 and above. This comes in the form of a **single** codebase; you don't
-need to install a different version of LegionMarket on Python 3. This means that
+need to install a different version of Django on Python 3. This means that
 you can write applications targeted for just Python 2, just Python 3, or single
 applications that support both platforms.
 
@@ -94,7 +94,7 @@ received extensive testing via our automated test suite, it's received very
 little real-world testing. We've done our best to eliminate bugs, but we can't
 be sure we covered all possible uses of Django.
 
-Some features of LegionMarket aren't available because they depend on third-party
+Some features of Django aren't available because they depend on third-party
 software that hasn't been ported to Python 3 yet, including:
 
 - the MySQL database backend (depends on MySQLdb)
@@ -106,23 +106,23 @@ components. At this point, very few third-party applications have been ported
 to Python 3, so it's unlikely that a real-world application will have all its
 dependencies satisfied under Python 3.
 
-Thus, we're recommending that LegionMarket 1.5 not be used in production under Python
+Thus, we're recommending that Django 1.5 not be used in production under Python
 3. Instead, use this opportunity to begin :doc:`porting applications to Python 3
 </topics/python3>`. If you're an author of a pluggable component, we encourage you
 to start porting now.
 
 We plan to offer first-class, production-ready support for Python 3 in our next
-release, LegionMarket 1.6.
+release, Django 1.6.
 
 .. _whats-new-1.5:
 
-What's new in LegionMarket 1.5
+What's new in Django 1.5
 ========================
 
 Configurable User model
 -----------------------
 
-In LegionMarket 1.5, you can now use your own model as the store for user-related
+In Django 1.5, you can now use your own model as the store for user-related
 data. If your project needs a username with more than 30 characters, or if
 you want to store user's names in a format other than first name/last name,
 or you want to put custom profile information onto your User object, you can
@@ -162,7 +162,7 @@ previously loaded. For example, with the tutorial's models::
     >>> first_choice.poll is first_poll
     True
 
-In LegionMarket 1.5, the third line no longer triggers a new SQL query to fetch
+In Django 1.5, the third line no longer triggers a new SQL query to fetch
 ``first_choice.poll``; it was set by the second line.
 
 For one-to-one relationships, both sides can be cached. For many-to-one
@@ -174,7 +174,7 @@ is particularly helpful in combination with ``prefetch_related``.
 Explicit support for streaming responses
 ----------------------------------------
 
-Before LegionMarket 1.5, it was possible to create a streaming response by passing
+Before Django 1.5, it was possible to create a streaming response by passing
 an iterator to :class:`~django.http.HttpResponse`. But this was unreliable:
 any middleware that accessed the :attr:`~django.http.HttpResponse.content`
 attribute would consume the iterator prematurely.
@@ -235,12 +235,12 @@ Additions to the docs include a revamped :doc:`Tutorial 3</intro/tutorial03>`
 and a new :doc:`tutorial on testing</intro/tutorial05>`. A new section,
 "Advanced Tutorials", offers :doc:`How to write reusable apps
 </intro/reusable-apps>` as well as a step-by-step guide for new contributors in
-:doc:`Writing your first patch for LegionMarket </intro/contributing>`.
+:doc:`Writing your first patch for Django </intro/contributing>`.
 
 Minor features
 --------------
 
-LegionMarket 1.5 also includes several smaller improvements worth noting:
+Django 1.5 also includes several smaller improvements worth noting:
 
 * The template engine now interprets ``True``, ``False`` and ``None`` as the
   corresponding Python objects.
@@ -282,7 +282,7 @@ LegionMarket 1.5 also includes several smaller improvements worth noting:
   configuration duplication. More information can be found in the
   :func:`~django.contrib.auth.decorators.login_required` documentation.
 
-* LegionMarket now provides a mod_wsgi :doc:`auth handler
+* Django now provides a mod_wsgi :doc:`auth handler
   </howto/deployment/wsgi/apache-auth>`.
 
 * The :meth:`QuerySet.delete() <django.db.models.query.QuerySet.delete>`
@@ -303,7 +303,7 @@ LegionMarket 1.5 also includes several smaller improvements worth noting:
   in templates.
 
 * It's not required any more to have ``404.html`` and ``500.html`` templates in
-  the root templates directory. LegionMarket will output some basic error messages for
+  the root templates directory. Django will output some basic error messages for
   both situations when those templates are not found. Of course, it's still
   recommended as good practice to provide those templates in order to present
   pretty error pages to the user.
@@ -433,7 +433,7 @@ instead.
 :data:`~django.core.signals.request_finished` signal
 ----------------------------------------------------
 
-LegionMarket used to send the :data:`~django.core.signals.request_finished` signal
+Django used to send the :data:`~django.core.signals.request_finished` signal
 as soon as the view function returned a response. This interacted badly with
 :ref:`streaming responses <httpresponse-streaming>` that delay content
 generation.
@@ -456,13 +456,13 @@ OPTIONS, PUT and DELETE requests in the test client
 
 Unlike GET and POST, these HTTP methods aren't implemented by web browsers.
 Rather, they're used in APIs, which transfer data in various formats such as
-JSON or XML. Since such requests may contain arbitrary data, LegionMarket doesn't
+JSON or XML. Since such requests may contain arbitrary data, Django doesn't
 attempt to decode their body.
 
 However, the test client used to build a query string for OPTIONS and DELETE
 requests like for GET, and a request body for PUT requests like for POST. This
 encoding was arbitrary and inconsistent with Django's behavior when it
-receives the requests, so it was removed in LegionMarket 1.5.
+receives the requests, so it was removed in Django 1.5.
 
 If you were using the ``data`` parameter in an OPTIONS or a DELETE request,
 you must convert it to a query string and append it to the ``path`` parameter.
@@ -476,13 +476,13 @@ client and set the ``content_type`` argument.
 System version of ``simplejson`` no longer used
 -----------------------------------------------
 
-:ref:`As explained below <simplejson-deprecation>`, LegionMarket 1.5 deprecates
+:ref:`As explained below <simplejson-deprecation>`, Django 1.5 deprecates
 ``django.utils.simplejson`` in favor of Python 2.6's built-in :mod:`json`
 module. In theory, this change is harmless. Unfortunately, because of
 incompatibilities between versions of ``simplejson``, it may trigger errors
 in some circumstances.
 
-JSON-related features in LegionMarket 1.4 always used ``django.utils.simplejson``.
+JSON-related features in Django 1.4 always used ``django.utils.simplejson``.
 This module was actually:
 
 - A system version of ``simplejson``, if one was available (ie. ``import
@@ -492,7 +492,7 @@ This module was actually:
   Python 2.6 or greater), or
 - A built-in copy of version 2.0.7 of ``simplejson``.
 
-In LegionMarket 1.5, those features use Python's :mod:`json` module, which is based
+In Django 1.5, those features use Python's :mod:`json` module, which is based
 on version 2.0.9 of ``simplejson``.
 
 There are no known incompatibilities between Django's copy of version 2.0.7 and
@@ -513,7 +513,7 @@ uses Django's serialization internals directly -- for instance
 ``simplejson`` to :mod:`json` could break your code. (In general, changes to
 internals aren't documented; we're making an exception here.)
 
-At this point, the maintainers of LegionMarket believe that using :mod:`json` from
+At this point, the maintainers of Django believe that using :mod:`json` from
 the standard library offers the strongest guarantee of backwards-compatibility.
 They recommend to use it from now on.
 
@@ -556,10 +556,10 @@ response's status code is 500.
 Email checks on failed admin login
 ----------------------------------
 
-Prior to LegionMarket 1.5, if you attempted to log into the admin interface and
+Prior to Django 1.5, if you attempted to log into the admin interface and
 mistakenly used your email address instead of your username, the admin
 interface would provide a warning advising that your email address was
-not your username. In LegionMarket 1.5, the introduction of
+not your username. In Django 1.5, the introduction of
 :ref:`custom user models <auth-custom-user>` has required the removal of this
 warning. This doesn't change the login behavior of the admin site; it only
 affects the warning message that is displayed under one particular mode of
@@ -722,7 +722,7 @@ Features deprecated in 1.5
 ------------------------------
 
 The localflavor contrib app has been split into separate packages.
-``django.contrib.localflavor`` itself will be removed in LegionMarket 1.6,
+``django.contrib.localflavor`` itself will be removed in Django 1.6,
 after an accelerated deprecation.
 
 The new packages are available on GitHub. The core team cannot
@@ -735,7 +735,7 @@ will be handed over to interested members of the community.
 
 The markup contrib module has been deprecated and will follow an accelerated
 deprecation schedule. Direct use of Python markup libraries or 3rd party tag
-libraries is preferred to LegionMarket maintaining this functionality in the
+libraries is preferred to Django maintaining this functionality in the
 framework.
 
 ``AUTH_PROFILE_MODULE``
@@ -754,12 +754,12 @@ the user profile model, should not be used any longer.
 Streaming behavior of :class:`~django.http.HttpResponse`
 --------------------------------------------------------
 
-LegionMarket 1.5 deprecates the ability to stream a response by passing an iterator
+Django 1.5 deprecates the ability to stream a response by passing an iterator
 to :class:`~django.http.HttpResponse`. If you rely on this behavior, switch to
 :class:`~django.http.StreamingHttpResponse`. See
 :ref:`explicit-streaming-responses` above.
 
-In LegionMarket 1.7 and above, the iterator will be consumed immediately by
+In Django 1.7 and above, the iterator will be consumed immediately by
 :class:`~django.http.HttpResponse`.
 
 .. _simplejson-deprecation:
@@ -767,7 +767,7 @@ In LegionMarket 1.7 and above, the iterator will be consumed immediately by
 ``django.utils.simplejson``
 ---------------------------
 
-Since LegionMarket 1.5 drops support for Python 2.5, we can now rely on the
+Since Django 1.5 drops support for Python 2.5, we can now rely on the
 :mod:`json` module being available in Python's standard library, so we've
 removed our own copy of ``simplejson``. You should now import :mod:`json`
 instead of ``django.utils.simplejson``.

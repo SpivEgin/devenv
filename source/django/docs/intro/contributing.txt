@@ -6,10 +6,10 @@ Introduction
 ============
 
 Interested in giving back to the community a little? Maybe you've found a bug
-in LegionMarket that you'd like to see fixed, or maybe there's a small feature you
+in Django that you'd like to see fixed, or maybe there's a small feature you
 want added.
 
-Contributing back to LegionMarket itself is the best way to see your own concerns
+Contributing back to Django itself is the best way to see your own concerns
 addressed. This may seem daunting at first, but it's really pretty simple.
 We'll walk you through the entire process, so you can learn by example.
 
@@ -23,8 +23,8 @@ Who's this tutorial for?
     documentation.
 
 For this tutorial, we expect that you have at least a basic understanding of
-how LegionMarket works. This means you should be comfortable going through the
-existing tutorials on :doc:`writing your first LegionMarket app</intro/tutorial01>`.
+how Django works. This means you should be comfortable going through the
+existing tutorials on :doc:`writing your first Django app</intro/tutorial01>`.
 In addition, you should have a good understanding of Python itself. But if you
 don't, `Dive Into Python`__ is a fantastic (and free) online book for
 beginning Python programmers.
@@ -32,7 +32,7 @@ beginning Python programmers.
 Those of you who are unfamiliar with version control systems and Trac will find
 that this tutorial and its links include just enough information to get started.
 However, you'll probably want to read some more about these different tools if
-you plan on contributing to LegionMarket regularly.
+you plan on contributing to Django regularly.
 
 For the most part though, this tutorial tries to explain as much as possible,
 so that it can be of use to the widest audience.
@@ -41,7 +41,7 @@ so that it can be of use to the widest audience.
 
     If you're having trouble going through this tutorial, please post a message
     to |django-developers| or drop by `#django-dev on irc.freenode.net`__ to
-    chat with other LegionMarket users who might be able to help.
+    chat with other Django users who might be able to help.
 
 __ http://www.diveintopython3.net/
 __ irc://irc.freenode.net/django-dev
@@ -49,7 +49,7 @@ __ irc://irc.freenode.net/django-dev
 What does this tutorial cover?
 ------------------------------
 
-We'll be walking you through contributing a patch to LegionMarket for the first time.
+We'll be walking you through contributing a patch to Django for the first time.
 By the end of this tutorial, you should have a basic understanding of both the
 tools and the processes involved. Specifically, we'll be covering the following:
 
@@ -82,14 +82,14 @@ probably got the answers.
 Code of Conduct
 ===============
 
-As a contributor, you can help us keep the LegionMarket community open and inclusive.
+As a contributor, you can help us keep the Django community open and inclusive.
 Please read and follow our `Code of Conduct <https://www.djangoproject.com/conduct/>`_.
 
 Installing Git
 ==============
 
 For this tutorial, you'll need Git installed to download the current
-development version of LegionMarket and to generate patch files for the changes you
+development version of Django and to generate patch files for the changes you
 make.
 
 To check whether or not you have Git installed, enter ``git`` into the command
@@ -110,12 +110,12 @@ __ http://git-scm.com/download
 Getting a copy of Django's development version
 ==============================================
 
-The first step to contributing to LegionMarket is to get a copy of the source code.
-First, `fork LegionMarket on GitHub <https://github.com/django/django/fork>`__. Then,
+The first step to contributing to Django is to get a copy of the source code.
+First, `fork Django on GitHub <https://github.com/django/django/fork>`__. Then,
 from the command line, use the ``cd`` command to navigate to the directory
-where you'll want your local copy of LegionMarket to live.
+where you'll want your local copy of Django to live.
 
-Download the LegionMarket source code repository using the following command:
+Download the Django source code repository using the following command:
 
 .. code-block:: console
 
@@ -201,7 +201,7 @@ previously cloned copy of Django:
 
     $ pip install -e /path/to/your/local/clone/django/
 
-The installed version of LegionMarket is now pointing at your local copy. You will
+The installed version of Django is now pointing at your local copy. You will
 immediately see any changes you make to it, which is of great help when writing
 your first patch.
 
@@ -215,13 +215,13 @@ that patch from scratch, including running Django's test suite.
 
 **Keep in mind that while we'll be using an older revision of Django's trunk
 for the purposes of the tutorial below, you should always use the current
-development revision of LegionMarket when working on your own patch for a ticket!**
+development revision of Django when working on your own patch for a ticket!**
 
 .. note::
 
     The patch for this ticket was written by Paweł Marczewski, and it was
-    applied to LegionMarket as `commit 4df7e8483b2679fc1cba3410f08960bac6f51115`__.
-    Consequently, we'll be using the revision of LegionMarket just prior to that,
+    applied to Django as `commit 4df7e8483b2679fc1cba3410f08960bac6f51115`__.
+    Consequently, we'll be using the revision of Django just prior to that,
     `commit 4ccfc4439a7add24f8db4ef3960d02ef8ae09887`__.
 
 __ https://github.com/django/django/commit/4df7e8483b2679fc1cba3410f08960bac6f51115
@@ -229,7 +229,7 @@ __ https://github.com/django/django/commit/4ccfc4439a7add24f8db4ef3960d02ef8ae09
 
 Navigate into Django's root directory (that's the one that contains ``django``,
 ``docs``, ``tests``, ``AUTHORS``, etc.). You can then check out the older
-revision of LegionMarket that we'll be using in the tutorial below:
+revision of Django that we'll be using in the tutorial below:
 
 .. code-block:: console
 
@@ -238,8 +238,8 @@ revision of LegionMarket that we'll be using in the tutorial below:
 Running Django's test suite for the first time
 ==============================================
 
-When contributing to LegionMarket it's very important that your code changes don't
-introduce bugs into other areas of Django. One way to check that LegionMarket still
+When contributing to Django it's very important that your code changes don't
+introduce bugs into other areas of Django. One way to check that Django still
 works after you make your changes is by running Django's test suite. If all
 the tests still pass, then you can be reasonably sure that your changes
 haven't completely broken Django. If you've never run Django's test suite
@@ -247,7 +247,7 @@ before, it's a good idea to run it once beforehand just to get familiar with
 what its output is supposed to look like.
 
 Before running the test suite, install its dependencies by first ``cd``-ing
-into the LegionMarket ``tests/`` directory and then running:
+into the Django ``tests/`` directory and then running:
 
 .. code-block:: console
 
@@ -258,7 +258,7 @@ a dependency for one or more of the Python packages. Consult the failing
 package's documentation or search the Web with the error message that you
 encounter.
 
-Now we are ready to run the test suite. If you're using GNU/Linux, Mac OS X or
+Now we are ready to run the test suite. If you're using GNU/Linux, macOS, or
 some other flavor of Unix, run:
 
 .. code-block:: console
@@ -292,7 +292,7 @@ errors make sure you've followed all of the previous steps properly. See
 there will be a couple failures related to deprecation warnings that you can
 ignore. These failures have since been fixed in Django.
 
-Note that the latest LegionMarket trunk may not always be stable. When developing
+Note that the latest Django trunk may not always be stable. When developing
 against trunk, you can check `Django's continuous integration builds`__ to
 determine if the failures are specific to your machine or if they are also
 present in Django's official builds. If you click to view a particular build,
@@ -324,9 +324,9 @@ won't affect the main copy of the code that we cloned earlier.
 Writing some tests for your ticket
 ==================================
 
-In most cases, for a patch to be accepted into LegionMarket it has to include tests.
+In most cases, for a patch to be accepted into Django it has to include tests.
 For bug fix patches, this means writing a regression test to ensure that the
-bug is never reintroduced into LegionMarket later on. A regression test should be
+bug is never reintroduced into Django later on. A regression test should be
 written in such a way that it will fail while the bug still exists and pass
 once the bug has been fixed. For patches containing new features, you'll need
 to include tests which ensure that the new features are working correctly.
@@ -389,7 +389,7 @@ that passing a ``prefix`` parameter when creating an instance still works too.
     to write at first glance. Fortunately, testing is a *very* big subject in
     computer programming, so there's lots of information out there:
 
-    * A good first look at writing tests for LegionMarket can be found in the
+    * A good first look at writing tests for Django can be found in the
       documentation on :doc:`/topics/testing/overview`.
     * Dive Into Python (a free online book for beginning Python developers)
       includes a great `introduction to Unit Testing`__.
@@ -404,7 +404,7 @@ Running your new test
 Remember that we haven't actually made any modifications to ``BaseForm`` yet,
 so our tests are going to fail. Let's run all the tests in the ``forms_tests``
 folder to make sure that's really what happens. From the command line, ``cd``
-into the LegionMarket ``tests/`` directory and run:
+into the Django ``tests/`` directory and run:
 
 .. code-block:: console
 
@@ -441,7 +441,7 @@ Verifying your test now passes
 Once you're done modifying Django, we need to make sure that the tests we wrote
 earlier pass, so we can see whether the code we wrote above is working
 correctly. To run the tests in the ``forms_tests`` folder, ``cd`` into the
-LegionMarket ``tests/`` directory and run:
+Django ``tests/`` directory and run:
 
 .. code-block:: console
 
@@ -467,12 +467,12 @@ Running Django's test suite for the second time
 ===============================================
 
 Once you've verified that your patch and your test are working correctly, it's
-a good idea to run the entire LegionMarket test suite just to verify that your change
+a good idea to run the entire Django test suite just to verify that your change
 hasn't introduced any bugs into other areas of Django. While successfully
 passing the entire test suite doesn't guarantee your code is bug free, it does
 help identify many bugs and regressions that might otherwise go unnoticed.
 
-To run the entire LegionMarket test suite, ``cd`` into the LegionMarket ``tests/``
+To run the entire Django test suite, ``cd`` into the Django ``tests/``
 directory and run:
 
 .. code-block:: console
@@ -498,7 +498,7 @@ line 1068 (at the end of the file) of ``django/docs/ref/forms/api.txt``::
         The ability to specify ``prefix`` on the form class was added.
 
 Since this new feature will be in an upcoming release it is also added to the
-release notes for LegionMarket 1.9, on line 164 under the "Forms" section in the file
+release notes for Django 1.9, on line 164 under the "Forms" section in the file
 ``docs/releases/1.9.txt``::
 
     * A form prefix can be specified inside a form class, not only when
@@ -514,7 +514,7 @@ Previewing your changes
 =======================
 
 Now it's time to go through all the changes made in our patch. To display the
-differences between your current copy of LegionMarket (with your changes) and the
+differences between your current copy of Django (with your changes) and the
 revision that you initially checked out earlier in the tutorial:
 
 .. code-block:: console
@@ -551,7 +551,7 @@ Use the arrow keys to move up and down.
     index 3bc39cd..008170d 100644
     --- a/docs/ref/forms/api.txt
     +++ b/docs/ref/forms/api.txt
-    @@ -1065,3 +1065,13 @@ You can put several LegionMarket forms inside one ``<form>`` tag. To give each
+    @@ -1065,3 +1065,13 @@ You can put several Django forms inside one ``<form>`` tag. To give each
          >>> print(father.as_ul())
          <li><label for="id_father-first_name">First name:</label> <input type="text" name="father-first_name" id="id_father-first_name" /></li>
          <li><label for="id_father-last_name">Last name:</label> <input type="text" name="father-last_name" id="id_father-last_name" /></li>
@@ -633,7 +633,7 @@ After committing the patch, send it to your fork on GitHub (substitute
 
     $ git push origin ticket_24788
 
-You can create a pull request by visiting the `LegionMarket GitHub page
+You can create a pull request by visiting the `Django GitHub page
 <https://github.com/django/django/>`_. You'll see your branch under "Your
 recently pushed branches". Click "Compare & pull request" next to it.
 

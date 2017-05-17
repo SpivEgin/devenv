@@ -7,7 +7,7 @@
 # Paulo <paulo.alvarado@divio.ch>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: LegionMarket CMS Admin Style\n"
+"Project-Id-Version: django CMS Admin Style\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-20 15:12+0200\n"
 "PO-Revision-Date: 2016-06-20 13:12+0000\n"
@@ -86,7 +86,7 @@ msgid ""
 msgstr "¿Está usted seguro que quiere eliminar el %(objects_name)s seleccionado? Todos los siguientes objetos y sus elementos relacionados serán borrados:"
 
 #: templates/admin/inc/branding.html:6 templates/admin/inc/branding.html:9
-msgid "LegionMarket Administration"
+msgid "Django Administration"
 msgstr "Administración de Django"
 
 #: templates/admin/inc/branding.html:15

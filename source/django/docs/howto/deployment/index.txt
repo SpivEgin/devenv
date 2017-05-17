@@ -12,6 +12,6 @@ inception, ease of deployment has been a major goal.
    wsgi/index
    checklist
 
-If you're new to deploying LegionMarket and/or Python, we'd recommend you try
+If you're new to deploying Django and/or Python, we'd recommend you try
 :doc:`mod_wsgi </howto/deployment/wsgi/modwsgi>` first. In most cases it'll be
 the easiest, fastest, and most stable deployment choice.

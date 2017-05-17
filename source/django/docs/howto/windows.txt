@@ -1,12 +1,12 @@
 ================================
-How to install LegionMarket on Windows
+How to install Django on Windows
 ================================
 
-This document will guide you through installing Python 3.5 and LegionMarket on
+This document will guide you through installing Python 3.5 and Django on
 Windows. It also provides instructions for installing `virtualenv`_ and
 `virtualenvwrapper`_, which make it easier to work on Python projects. This is
-meant as a beginner's guide for users working on LegionMarket projects and does not
-reflect how LegionMarket should be installed when developing patches for Django
+meant as a beginner's guide for users working on Django projects and does not
+reflect how Django should be installed when developing patches for Django
 itself.
 
 The steps in this guide have been tested with Windows 7, 8, and 10. In other
@@ -16,7 +16,7 @@ the Windows command prompt.
 Install Python
 ==============
 
-LegionMarket is a Python web framework, thus requiring Python to be installed on your
+Django is a Python web framework, thus requiring Python to be installed on your
 machine. At the time of writing, Python 3.5 is the latest version.
 
 To install Python on your machine go to https://python.org/downloads/. The
@@ -46,7 +46,7 @@ Install ``virtualenv`` and ``virtualenvwrapper``
 ================================================
 
 `virtualenv`_ and `virtualenvwrapper`_ provide a dedicated environment for
-each LegionMarket project you create. While not mandatory, this is considered a best
+each Django project you create. While not mandatory, this is considered a best
 practice and will save you time in the future when you're ready to deploy your
 project. Simply type::
 
@@ -68,16 +68,16 @@ command prompt, you'll need to activate the environment again using::
 Install Django
 ==============
 
-LegionMarket can be installed easily using ``pip`` within your virtual environment.
+Django can be installed easily using ``pip`` within your virtual environment.
 
 In the command prompt, ensure your virtual environment is active, and execute
 the following command::
 
     pip install django
 
-This will download and install the latest LegionMarket release.
+This will download and install the latest Django release.
 
-After the installation has completed, you can verify your LegionMarket installation
+After the installation has completed, you can verify your Django installation
 by executing ``django-admin --version`` in the command prompt.
 
 See :ref:`database-installation` for information on database installation

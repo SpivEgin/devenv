@@ -3,8 +3,8 @@ Custom Dashboard
 ================
 
 .. note::
-   The Legion Market JET Dashboard tries to be as compatible as possible with django-admin-tools dashboard so that
-   django-admin-tools modules could be easily ported to The Legion Market JET. In most cases in will be enough to
+   TLM JET Dashboard tries to be as compatible as possible with django-admin-tools dashboard so that
+   django-admin-tools modules could be easily ported to TLM JET. In most cases in will be enough to
    change python imports and remove extending in modules templates.
 
 Dashboard represents ``Dashboard`` class instance with ``DashboardModule`` class instances as its children.
@@ -35,17 +35,17 @@ Set Up Custom Dashboard
                   _('Support'),
                   children=[
                       {
-                          'title': _('The Legion Market documentation'),
+                          'title': _('TLM documentation'),
                           'url': 'http://docs.djangoproject.com/',
                           'external': True,
                       },
                       {
-                          'title': _('The Legion Market "django-users" mailing list'),
+                          'title': _('TLM "django-users" mailing list'),
                           'url': 'http://groups.google.com/group/django-users',
                           'external': True,
                       },
                       {
-                          'title': _('The Legion Market irc channel'),
+                          'title': _('TLM irc channel'),
                           'url': 'irc://irc.freenode.net/django',
                           'external': True,
                       },

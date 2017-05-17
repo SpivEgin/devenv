@@ -198,9 +198,7 @@ test_data = (
     ('repeats', '/repeats/a/', [], {}),
     ('repeats2', '/repeats/aa/', [], {}),
     ('repeats3', '/repeats/aa/', [], {}),
-    ('insensitive', '/CaseInsensitive/fred', ['fred'], {}),
     ('test', '/test/1', [], {}),
-    ('test2', '/test/2', [], {}),
     ('inner-nothing', '/outer/42/', [], {'outer': '42'}),
     ('inner-nothing', '/outer/42/', ['42'], {}),
     ('inner-nothing', NoReverseMatch, ['foo'], {}),
@@ -332,6 +330,29 @@ class URLPatternReverse(SimpleTestCase):
             six.text_type
         )
 
+    def test_view_not_found_message(self):
+        msg = (
+            "Reverse for 'non-existent-view' not found. 'non-existent-view' "
+            "is not a valid view function or pattern name."
+        )
+        with self.assertRaisesMessage(NoReverseMatch, msg):
+            reverse('non-existent-view')
+
+    def test_no_args_message(self):
+        msg = "Reverse for 'places' with no arguments not found. 1 pattern(s) tried:"
+        with self.assertRaisesMessage(NoReverseMatch, msg):
+            reverse('places')
+
+    def test_illegal_args_message(self):
+        msg = "Reverse for 'places' with arguments '(1, 2)' not found. 1 pattern(s) tried:"
+        with self.assertRaisesMessage(NoReverseMatch, msg):
+            reverse('places', args=(1, 2))
+
+    def test_illegal_kwargs_message(self):
+        msg = "Reverse for 'places' with keyword arguments '{'arg1': 2}' not found. 1 pattern(s) tried:"
+        with self.assertRaisesMessage(NoReverseMatch, msg):
+            reverse('places', kwargs={str('arg1'): 2})
+
 
 class ResolverTests(SimpleTestCase):
     @ignore_warnings(category=RemovedInDjango20Warning)
@@ -361,14 +382,29 @@ class ResolverTests(SimpleTestCase):
         self.assertEqual(resolver.reverse('named-url2', 'arg'), 'extra/arg/')
         self.assertEqual(resolver.reverse('named-url2', extra='arg'), 'extra/arg/')
 
+    def test_resolver_reverse_conflict(self):
+        """
+        url() name arguments don't need to be unique. The last registered
+        pattern takes precedence for conflicting names.
+        """
+        resolver = get_resolver('urlpatterns_reverse.named_urls_conflict')
+        # Without arguments, the last URL in urlpatterns has precedence.
+        self.assertEqual(resolver.reverse('name-conflict'), 'conflict/')
+        # With an arg, the last URL in urlpatterns has precedence.
+        self.assertEqual(resolver.reverse('name-conflict', 'arg'), 'conflict-last/arg/')
+        # With a kwarg, other url()s can be reversed.
+        self.assertEqual(resolver.reverse('name-conflict', first='arg'), 'conflict-first/arg/')
+        self.assertEqual(resolver.reverse('name-conflict', middle='arg'), 'conflict-middle/arg/')
+        self.assertEqual(resolver.reverse('name-conflict', last='arg'), 'conflict-last/arg/')
+        # The number and order of the arguments don't interfere with reversing.
+        self.assertEqual(resolver.reverse('name-conflict', 'arg', 'arg'), 'conflict/arg/arg/')
+
     def test_non_regex(self):
         """
-        Verifies that we raise a Resolver404 if what we are resolving doesn't
-        meet the basic requirements of a path to match - i.e., at the very
-        least, it matches the root pattern '^/'. We must never return None
-        from resolve, or we will get a TypeError further down the line.
-
-        Regression for #10834.
+        A Resolver404 is raised if resolving doesn't meet the basic
+        requirements of a path to match - i.e., at the very least, it matches
+        the root pattern '^/'. Never return None from resolve() to prevent a
+        TypeError from occurring later (#10834).
         """
         with self.assertRaises(Resolver404):
             resolve('')
@@ -381,9 +417,9 @@ class ResolverTests(SimpleTestCase):
 
     def test_404_tried_urls_have_names(self):
         """
-        Verifies that the list of URLs that come back from a Resolver404
-        exception contains a list in the right format for printing out in
-        the DEBUG 404 page with both the patterns and URL names, if available.
+        The list of URLs that come back from a Resolver404 exception contains
+        a list in the right format for printing out in the DEBUG 404 page with
+        both the patterns and URL names, if available.
         """
         urls = 'urlpatterns_reverse.named_urls'
         # this list matches the expected URL types and names returned when
@@ -403,7 +439,6 @@ class ResolverTests(SimpleTestCase):
         e = cm.exception
         # make sure we at least matched the root ('/') url resolver:
         self.assertIn('tried', e.args[0])
-        tried = e.args[0]['tried']
         self.assertEqual(
             len(e.args[0]['tried']),
             len(url_types_names),
@@ -480,7 +515,7 @@ class ReverseLazyTest(TestCase):
 
 class ReverseLazySettingsTest(AdminScriptTestCase):
     """
-    Test that reverse_lazy can be used in settings without causing a circular
+    reverse_lazy can be used in settings without causing a circular
     import error.
     """
     def setUp(self):
@@ -864,7 +899,7 @@ class RequestURLconfTests(SimpleTestCase):
         Test reversing an URL from the *default* URLconf from inside
         a response middleware.
         """
-        message = "Reverse for 'outer' with arguments '()' and keyword arguments '{}' not found."
+        message = "Reverse for 'outer' not found."
         with self.assertRaisesMessage(NoReverseMatch, message):
             self.client.get('/second_test/')
 
@@ -894,7 +929,7 @@ class RequestURLconfTests(SimpleTestCase):
         Test reversing an URL from the *default* URLconf from inside
         a streaming response.
         """
-        message = "Reverse for 'outer' with arguments '()' and keyword arguments '{}' not found."
+        message = "Reverse for 'outer' not found."
         with self.assertRaisesMessage(NoReverseMatch, message):
             self.client.get('/second_test/')
             b''.join(self.client.get('/second_test/'))
@@ -1007,7 +1042,7 @@ class ViewLoadingTests(SimpleTestCase):
     def test_exceptions(self):
         # A missing view (identified by an AttributeError) should raise
         # ViewDoesNotExist, ...
-        with six.assertRaisesRegex(self, ViewDoesNotExist, ".*View does not exist in.*"):
+        with self.assertRaisesMessage(ViewDoesNotExist, "View does not exist in"):
             get_callable('urlpatterns_reverse.views.i_should_not_exist')
         # ... but if the AttributeError is caused by something else don't
         # swallow it.

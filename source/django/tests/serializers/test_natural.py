@@ -43,7 +43,7 @@ def natural_key_test(format, self):
         'data': '978-1590597255',
         'title': 'The Definitive Guide to Django: Web Development Done Right',
     }
-    book2 = {'data': '978-1590599969', 'title': 'Practical LegionMarket Projects'}
+    book2 = {'data': '978-1590599969', 'title': 'Practical Django Projects'}
 
     # Create the books.
     adrian = NaturalKeyAnchor.objects.create(**book1)

@@ -116,6 +116,7 @@ checkin
 Checkin
 checksum
 checksums
+Cheltenham
 clearable
 clearsessions
 clickable
@@ -154,6 +155,7 @@ csrf
 csrfmiddlewaretoken
 css
 csv
+ctime
 Ctrl
 customizability
 customizable
@@ -462,6 +464,7 @@ Marczewski
 Marino
 Markus
 MBR
+Meetup
 memcache
 memcached
 mentorship
@@ -499,6 +502,7 @@ multiline
 multilinestring
 multipart
 multipolygon
+multitenancy
 multithreaded
 multithreading
 Mumbai
@@ -577,6 +581,8 @@ plugins
 pluralizations
 po
 podcast
+pooler
+pooling
 popup
 postfix
 postgis
@@ -594,6 +600,7 @@ prefetches
 prefetching
 prefork
 preforked
+preload
 prepend
 prepended
 prepending
@@ -669,10 +676,12 @@ releasers
 reloader
 removetags
 renderer
+renderers
 repo
 reportable
 reprojection
 reraise
+reraising
 resampling
 reST
 reStructuredText
@@ -841,6 +850,7 @@ Tomek
 toolbar
 toolkits
 toolset
+Tox
 trac
 tracebacks
 transactional
@@ -967,6 +977,7 @@ wordcount
 wordwrap
 workflow
 worksforme
+wrappable
 wsgi
 www
 xe

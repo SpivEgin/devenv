@@ -2,7 +2,7 @@
 External packages
 =================
 
-LegionMarket ships with a variety of extra, optional tools that solve common
+Django ships with a variety of extra, optional tools that solve common
 problems (``contrib.*``). For easier maintenance and to trim the size of the
 codebase, a few of those applications have been moved out to separate projects.
 

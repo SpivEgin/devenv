@@ -11,11 +11,11 @@ from django.template.defaultfilters import force_escape, pprint
 from django.urls import Resolver404, resolve
 from django.utils import lru_cache, six, timezone
 from django.utils.datastructures import MultiValueDict
-from django.utils.encoding import force_bytes, force_text, smart_text
+from django.utils.encoding import force_bytes, force_text
 from django.utils.module_loading import import_string
 from django.utils.translation import ugettext as _
 
-# Minimal LegionMarket templates engine to render the error templates
+# Minimal Django templates engine to render the error templates
 # regardless of the project's TEMPLATES setting.
 DEBUG_ENGINE = Engine(debug=True)
 
@@ -247,11 +247,6 @@ class ExceptionReporter(object):
         self.template_does_not_exist = False
         self.postmortem = None
 
-        # Handle deprecated string exceptions
-        if isinstance(self.exc_type, six.string_types):
-            self.exc_value = Exception('Deprecated String Exception: %r' % self.exc_type)
-            self.exc_type = type(self.exc_value)
-
     def get_traceback_data(self):
         """Return a dictionary containing traceback information."""
         if self.exc_type and issubclass(self.exc_type, TemplateDoesNotExist):
@@ -280,7 +275,7 @@ class ExceptionReporter(object):
             end = getattr(self.exc_value, 'end', None)
             if start is not None and end is not None:
                 unicode_str = self.exc_value.args[1]
-                unicode_hint = smart_text(
+                unicode_hint = force_text(
                     unicode_str[max(start - 5, 0):min(end + 5, len(unicode_str))],
                     'ascii', errors='replace'
                 )
@@ -301,8 +296,8 @@ class ExceptionReporter(object):
             'unicode_hint': unicode_hint,
             'frames': frames,
             'request': self.request,
-            'filtered_POST': self.filter.get_post_parameters(self.request),
             'user_str': user_str,
+            'filtered_POST_items': list(self.filter.get_post_parameters(self.request).items()),
             'settings': get_safe_settings(),
             'sys_executable': sys.executable,
             'sys_version_info': '%d.%d.%d' % sys.version_info[0:3],
@@ -313,11 +308,15 @@ class ExceptionReporter(object):
             'template_does_not_exist': self.template_does_not_exist,
             'postmortem': self.postmortem,
         }
+        if self.request is not None:
+            c['request_GET_items'] = self.request.GET.items()
+            c['request_FILES_items'] = self.request.FILES.items()
+            c['request_COOKIES_items'] = self.request.COOKIES.items()
         # Check whether exception info is available
         if self.exc_type:
             c['exception_type'] = self.exc_type.__name__
         if self.exc_value:
-            c['exception_value'] = smart_text(self.exc_value, errors='replace')
+            c['exception_value'] = force_text(self.exc_value, errors='replace')
         if frames:
             c['lastframe'] = frames[-1]
         return c
@@ -522,16 +521,16 @@ def default_urlconf(request):
         "heading": _("It worked!"),
         "subheading": _("Congratulations on your first Django-powered page."),
         "instructions": _(
-            "Of course, you haven't actually done any work yet. "
             "Next, start your first app by running <code>python manage.py startapp [app_label]</code>."
         ),
         "explanation": _(
             "You're seeing this message because you have <code>DEBUG = True</code> in your "
-            "LegionMarket settings file and you haven't configured any URLs. Get to work!"
+            "TLM settings file and you haven't configured any URLs. Get to work!"
         ),
     })
 
     return HttpResponse(t.render(c), content_type='text/html')
+
 
 #
 # Templates are embedded in the file so that we know the error handler will
@@ -545,7 +544,7 @@ TECHNICAL_500_TEMPLATE = ("""
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="robots" content="NONE,NOARCHIVE">
   <title>{% if exception_type %}{{ exception_type }}{% else %}Report{% endif %}"""
-"""{% if request %} at {{ request.path_info|escape }}{% endif %}</title>
+r"""{% if request %} at {{ request.path_info|escape }}{% endif %}</title>
   <style type="text/css">
     html * { padding:0; margin:0; }
     body * { padding:10px 20px; }
@@ -681,7 +680,7 @@ TECHNICAL_500_TEMPLATE = ("""
     </tr>
 {% endif %}
     <tr>
-      <th>LegionMarket Version:</th>
+      <th>Django Version:</th>
       <td>{{ django_version_info }}</td>
     </tr>
 {% if exception_type %}
@@ -730,7 +729,7 @@ TECHNICAL_500_TEMPLATE = ("""
 <div id="template-not-exist">
     <h2>Template-loader postmortem</h2>
     {% if postmortem %}
-        <p class="append-bottom">LegionMarket tried loading these templates, in this order:</p>
+        <p class="append-bottom">Django tried loading these templates, in this order:</p>
         {% for entry in postmortem %}
             <p class="postmortem-section">Using engine <code>{{ entry.backend.name }}</code>:</p>
             <ul>
@@ -849,7 +848,7 @@ TECHNICAL_500_TEMPLATE = ("""
     <input type="hidden" name="language" value="PythonConsole">
     <input type="hidden" name="title"
       value="{{ exception_type|escape }}{% if request %} at {{ request.path_info|escape }}{% endif %}">
-    <input type="hidden" name="source" value="LegionMarket Dpaste Agent">
+    <input type="hidden" name="source" value="TLM Dpaste Agent">
     <input type="hidden" name="poster" value="Django">
     <textarea name="content" id="traceback_area" cols="140" rows="25">
 Environment:
@@ -858,7 +857,7 @@ Environment:
 Request Method: {{ request.META.REQUEST_METHOD }}
 Request URL: {{ request.get_raw_uri|escape }}
 {% endif %}
-LegionMarket Version: {{ django_version_info }}
+Django Version: {{ django_version_info }}
 Python Version: {{ sys_version_info }}
 Installed Applications:
 {{ settings.INSTALLED_APPS|pprint }}
@@ -867,7 +866,7 @@ Installed Middleware:
 """{% else %}{{ settings.MIDDLEWARE_CLASSES|pprint }}{% endif %}
 
 {% if template_does_not_exist %}Template loader postmortem
-{% if postmortem %}LegionMarket tried loading these templates, in this order:
+{% if postmortem %}Django tried loading these templates, in this order:
 {% for entry in postmortem %}
 Using engine {{ entry.backend.name }}:
 {% if entry.tried %}{% for attempt in entry.tried %}"""
@@ -925,10 +924,10 @@ Exception Value: {{ exception_value|force_escape }}
         </tr>
       </thead>
       <tbody>
-        {% for var in request.GET.items %}
+        {% for k, v in request_GET_items %}
           <tr>
-            <td>{{ var.0 }}</td>
-            <td class="code"><pre>{{ var.1|pprint }}</pre></td>
+            <td>{{ k }}</td>
+            <td class="code"><pre>{{ v|pprint }}</pre></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -938,7 +937,7 @@ Exception Value: {{ exception_value|force_escape }}
   {% endif %}
 
   <h3 id="post-info">POST</h3>
-  {% if filtered_POST %}
+  {% if filtered_POST_items %}
     <table class="req">
       <thead>
         <tr>
@@ -947,10 +946,10 @@ Exception Value: {{ exception_value|force_escape }}
         </tr>
       </thead>
       <tbody>
-        {% for var in filtered_POST.items %}
+        {% for k, v in filtered_POST_items %}
           <tr>
-            <td>{{ var.0 }}</td>
-            <td class="code"><pre>{{ var.1|pprint }}</pre></td>
+            <td>{{ k }}</td>
+            <td class="code"><pre>{{ v|pprint }}</pre></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -968,10 +967,10 @@ Exception Value: {{ exception_value|force_escape }}
             </tr>
         </thead>
         <tbody>
-            {% for var in request.FILES.items %}
+            {% for k, v in request_FILES_items %}
                 <tr>
-                    <td>{{ var.0 }}</td>
-                    <td class="code"><pre>{{ var.1|pprint }}</pre></td>
+                    <td>{{ k }}</td>
+                    <td class="code"><pre>{{ v|pprint }}</pre></td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -991,10 +990,10 @@ Exception Value: {{ exception_value|force_escape }}
         </tr>
       </thead>
       <tbody>
-        {% for var in request.COOKIES.items %}
+        {% for k, v in request_COOKIES_items %}
           <tr>
-            <td>{{ var.0 }}</td>
-            <td class="code"><pre>{{ var.1|pprint }}</pre></td>
+            <td>{{ k }}</td>
+            <td class="code"><pre>{{ v|pprint }}</pre></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -1048,7 +1047,7 @@ Exception Value: {{ exception_value|force_escape }}
   <div id="explanation">
     <p>
       You're seeing this error because you have <code>DEBUG = True</code> in your
-      LegionMarket settings file. Change that to <code>False</code>, and LegionMarket will
+      Django settings file. Change that to <code>False</code>, and Django will
       display a standard page generated by the handler for this status code.
     </p>
   </div>
@@ -1063,7 +1062,7 @@ TECHNICAL_500_TEXT_TEMPLATE = (""""""
 {% if request %}
 Request Method: {{ request.META.REQUEST_METHOD }}
 Request URL: {{ request.get_raw_uri }}{% endif %}
-LegionMarket Version: {{ django_version_info }}
+Django Version: {{ django_version_info }}
 Python Executable: {{ sys_executable }}
 Python Version: {{ sys_version_info }}
 Python Path: {{ sys_path }}
@@ -1074,7 +1073,7 @@ Installed Middleware:
 {% if settings.MIDDLEWARE is not None %}{{ settings.MIDDLEWARE|pprint }}"""
 """{% else %}{{ settings.MIDDLEWARE_CLASSES|pprint }}{% endif %}
 {% if template_does_not_exist %}Template loader postmortem
-{% if postmortem %}LegionMarket tried loading these templates, in this order:
+{% if postmortem %}Django tried loading these templates, in this order:
 {% for entry in postmortem %}
 Using engine {{ entry.backend.name }}:
 {% if entry.tried %}{% for attempt in entry.tried %}"""
@@ -1113,16 +1112,16 @@ File "{{ frame.filename }}" in {{ frame.function }}
 {% if request %}Request information:
 {% if user_str %}USER: {{ user_str }}{% endif %}
 
-GET:{% for k, v in request.GET.items %}
+GET:{% for k, v in request_GET_items %}
 {{ k }} = {{ v|stringformat:"r" }}{% empty %} No GET data{% endfor %}
 
-POST:{% for k, v in filtered_POST.items %}
+POST:{% for k, v in filtered_POST_items %}
 {{ k }} = {{ v|stringformat:"r" }}{% empty %} No POST data{% endfor %}
 
-FILES:{% for k, v in request.FILES.items %}
+FILES:{% for k, v in request_FILES_items %}
 {{ k }} = {{ v|stringformat:"r" }}{% empty %} No FILES data{% endfor %}
 
-COOKIES:{% for k, v in request.COOKIES.items %}
+COOKIES:{% for k, v in request_COOKIES_items %}
 {{ k }} = {{ v|stringformat:"r" }}{% empty %} No cookie data{% endfor %}
 
 META:{% for k, v in request.META.items|dictsort:0 %}
@@ -1135,7 +1134,7 @@ Using settings module {{ settings.SETTINGS_MODULE }}{% for k, v in settings.item
 
 {% if not is_email %}
 You're seeing this error because you have DEBUG = True in your
-LegionMarket settings file. Change that to False, and LegionMarket will
+Django settings file. Change that to False, and Django will
 display a standard page generated by the handler for this status code.
 {% endif %}
 """)  # NOQA
@@ -1189,7 +1188,7 @@ TECHNICAL_404_TEMPLATE = """
     {% if urlpatterns %}
       <p>
       Using the URLconf defined in <code>{{ urlconf }}</code>,
-      LegionMarket tried these URL patterns, in this order:
+      Django tried these URL patterns, in this order:
       </p>
       <ol>
         {% for pattern in urlpatterns %}
@@ -1201,7 +1200,11 @@ TECHNICAL_404_TEMPLATE = """
           </li>
         {% endfor %}
       </ol>
-      <p>The current URL, <code>{{ request_path|escape }}</code>, didn't match any of these.</p>
+      <p>
+        {% if request_path %}
+        The current path, <code>{{ request_path|escape }}</code>,{% else %}
+        The empty path{% endif %} didn't match any of these.
+      </p>
     {% else %}
       <p>{{ reason }}</p>
     {% endif %}
@@ -1210,7 +1213,7 @@ TECHNICAL_404_TEMPLATE = """
   <div id="explanation">
     <p>
       You're seeing this error because you have <code>DEBUG = True</code> in
-      your LegionMarket settings file. Change that to <code>False</code>, and Django
+      your Django settings file. Change that to <code>False</code>, and Django
       will display a standard 404 page.
     </p>
   </div>

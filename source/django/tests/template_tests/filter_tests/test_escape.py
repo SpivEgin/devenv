@@ -25,7 +25,7 @@ class EscapeTests(SimpleTestCase):
         self.assertEqual(output, "x&amp;y x&y")
 
     # It is only applied once, regardless of the number of times it
-    # appears in a chain (to be changed in LegionMarket 2.0).
+    # appears in a chain (to be changed in Django 2.0).
     @ignore_warnings(category=RemovedInDjango20Warning)
     @setup({'escape03': '{% autoescape off %}{{ a|escape|escape }}{% endautoescape %}'})
     def test_escape03(self):

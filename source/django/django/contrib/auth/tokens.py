@@ -24,6 +24,8 @@ class PasswordResetTokenGenerator(object):
         """
         Check that a password reset token is correct for a given user.
         """
+        if not (user and token):
+            return False
         # Parse the token
         try:
             ts_b36, hash = token.split("-")
@@ -52,7 +54,7 @@ class PasswordResetTokenGenerator(object):
 
         # By hashing on the internal state of the user and using state
         # that is sure to change (the password salt will change as soon as
-        # the password is set, at least for current LegionMarket auth, and
+        # the password is set, at least for current Django auth, and
         # last_login will also change), we produce a hash that will be
         # invalid as soon as it is used.
         # We limit the hash to 20 chars to keep URL short
@@ -77,5 +79,6 @@ class PasswordResetTokenGenerator(object):
     def _today(self):
         # Used for mocking in tests
         return date.today()
+
 
 default_token_generator = PasswordResetTokenGenerator()

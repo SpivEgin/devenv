@@ -83,7 +83,7 @@ class OnDeleteTests(TestCase):
 
     def test_do_nothing_qscount(self):
         """
-        Test that a models.DO_NOTHING relation doesn't trigger a query.
+        A models.DO_NOTHING relation doesn't trigger a query.
         """
         b = Base.objects.create()
         with self.assertNumQueries(1):
@@ -484,11 +484,7 @@ class FastDeleteTests(TestCase):
         c = Child.objects.create()
         p = Parent.objects.create()
         # 1 for self, 1 for parent
-        # However, this doesn't work as child.parent access creates a query,
-        # and this means we will be generating extra queries (a lot for large
-        # querysets). This is not a fast-delete problem.
-        # self.assertNumQueries(2, c.delete)
-        c.delete()
+        self.assertNumQueries(2, c.delete)
         self.assertFalse(Child.objects.exists())
         self.assertEqual(Parent.objects.count(), 1)
         self.assertEqual(Parent.objects.filter(pk=p.pk).count(), 1)

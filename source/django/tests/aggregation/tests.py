@@ -51,12 +51,12 @@ class AggregateTestCase(TestCase):
             pubdate=datetime.date(2007, 12, 6)
         )
         cls.b2 = Book.objects.create(
-            isbn='067232959', name='Sams Teach Yourself LegionMarket in 24 Hours',
+            isbn='067232959', name='Sams Teach Yourself Django in 24 Hours',
             pages=528, rating=3.0, price=Decimal('23.09'), contact=cls.a3, publisher=cls.p2,
             pubdate=datetime.date(2008, 3, 3)
         )
         cls.b3 = Book.objects.create(
-            isbn='159059996', name='Practical LegionMarket Projects',
+            isbn='159059996', name='Practical Django Projects',
             pages=300, rating=4.0, price=Decimal('29.69'), contact=cls.a4, publisher=cls.p1,
             pubdate=datetime.date(2008, 6, 23)
         )
@@ -164,8 +164,8 @@ class AggregateTestCase(TestCase):
         self.assertQuerysetEqual(
             Book.objects.annotate().order_by('pk'), [
                 "The Definitive Guide to Django: Web Development Done Right",
-                "Sams Teach Yourself LegionMarket in 24 Hours",
-                "Practical LegionMarket Projects",
+                "Sams Teach Yourself Django in 24 Hours",
+                "Practical Django Projects",
                 "Python Web Development with Django",
                 "Artificial Intelligence: A Modern Approach",
                 "Paradigms of Artificial Intelligence Programming: Case Studies in Common Lisp"
@@ -186,7 +186,7 @@ class AggregateTestCase(TestCase):
             page_sum=Sum("pages")).defer('name').filter(pk=self.b1.pk)
 
         rows = [
-            (1, "159059725", 447, "The Definitive Guide to Django: Web Development Done Right")
+            (self.b1.id, "159059725", 447, "The Definitive Guide to Django: Web Development Done Right")
         ]
         self.assertQuerysetEqual(
             qs.order_by('pk'), rows,
@@ -198,7 +198,7 @@ class AggregateTestCase(TestCase):
             page_sum=Sum("pages")).defer('name').filter(pk=self.b1.pk)
 
         rows = [
-            (1, "159059725", 447, "Adrian Holovaty",
+            (self.b1.id, "159059725", 447, "Adrian Holovaty",
              "The Definitive Guide to Django: Web Development Done Right")
         ]
         self.assertQuerysetEqual(
@@ -211,9 +211,9 @@ class AggregateTestCase(TestCase):
         self.assertQuerysetEqual(
             books, [
                 ('Artificial Intelligence: A Modern Approach', 51.5),
-                ('Practical LegionMarket Projects', 29.0),
+                ('Practical Django Projects', 29.0),
                 ('Python Web Development with Django', Approximate(30.3, places=1)),
-                ('Sams Teach Yourself LegionMarket in 24 Hours', 45.0)
+                ('Sams Teach Yourself Django in 24 Hours', 45.0)
             ],
             lambda b: (b.name, b.authors__age__avg),
         )
@@ -223,9 +223,9 @@ class AggregateTestCase(TestCase):
             books, [
                 ('Artificial Intelligence: A Modern Approach', 2),
                 ('Paradigms of Artificial Intelligence Programming: Case Studies in Common Lisp', 1),
-                ('Practical LegionMarket Projects', 1),
+                ('Practical Django Projects', 1),
                 ('Python Web Development with Django', 3),
-                ('Sams Teach Yourself LegionMarket in 24 Hours', 1),
+                ('Sams Teach Yourself Django in 24 Hours', 1),
                 ('The Definitive Guide to Django: Web Development Done Right', 2)
             ],
             lambda b: (b.name, b.num_authors)
@@ -267,9 +267,9 @@ class AggregateTestCase(TestCase):
             books, [
                 ('Artificial Intelligence: A Modern Approach', 7),
                 ('Paradigms of Artificial Intelligence Programming: Case Studies in Common Lisp', 9),
-                ('Practical LegionMarket Projects', 3),
+                ('Practical Django Projects', 3),
                 ('Python Web Development with Django', 7),
-                ('Sams Teach Yourself LegionMarket in 24 Hours', 1),
+                ('Sams Teach Yourself Django in 24 Hours', 1),
                 ('The Definitive Guide to Django: Web Development Done Right', 3)
             ],
             lambda b: (b.name, b.publisher__num_awards__sum)
@@ -292,15 +292,15 @@ class AggregateTestCase(TestCase):
         self.assertEqual(
             books, [
                 {
-                    "contact_id": 1,
-                    "id": 1,
+                    "contact_id": self.a1.id,
+                    "id": self.b1.id,
                     "isbn": "159059725",
                     "mean_age": 34.5,
                     "name": "The Definitive Guide to Django: Web Development Done Right",
                     "pages": 447,
                     "price": Approximate(Decimal("30")),
                     "pubdate": datetime.date(2007, 12, 6),
-                    "publisher_id": 1,
+                    "publisher_id": self.p1.id,
                     "rating": 4.5,
                 }
             ]
@@ -315,7 +315,7 @@ class AggregateTestCase(TestCase):
         self.assertEqual(
             list(books), [
                 {
-                    "pk": 1,
+                    "pk": self.b1.pk,
                     "isbn": "159059725",
                     "mean_age": 34.5,
                 }
@@ -335,15 +335,15 @@ class AggregateTestCase(TestCase):
         self.assertEqual(
             list(books), [
                 {
-                    "contact_id": 1,
-                    "id": 1,
+                    "contact_id": self.a1.id,
+                    "id": self.b1.id,
                     "isbn": "159059725",
                     "mean_age": 34.5,
                     "name": "The Definitive Guide to Django: Web Development Done Right",
                     "pages": 447,
                     "price": Approximate(Decimal("30")),
                     "pubdate": datetime.date(2007, 12, 6),
-                    "publisher_id": 1,
+                    "publisher_id": self.p1.id,
                     "rating": 4.5,
                 }
             ]
@@ -517,7 +517,7 @@ class AggregateTestCase(TestCase):
         """
         Sum on a distinct() QuerySet should aggregate only the distinct items.
         """
-        authors = Author.objects.filter(book__in=[5, 6])
+        authors = Author.objects.filter(book__in=[self.b5, self.b6])
         self.assertEqual(authors.count(), 3)
 
         distinct_authors = authors.distinct()
@@ -536,7 +536,7 @@ class AggregateTestCase(TestCase):
             rating=3.5,
             price=Decimal("1000"),
             publisher=p,
-            contact_id=1,
+            contact_id=self.a1.id,
             pubdate=datetime.date(2008, 12, 1)
         )
         Book.objects.create(
@@ -546,7 +546,7 @@ class AggregateTestCase(TestCase):
             rating=4.0,
             price=Decimal("1000"),
             publisher=p,
-            contact_id=1,
+            contact_id=self.a1.id,
             pubdate=datetime.date(2008, 12, 2)
         )
         Book.objects.create(
@@ -556,7 +556,7 @@ class AggregateTestCase(TestCase):
             rating=4.5,
             price=Decimal("35"),
             publisher=p,
-            contact_id=1,
+            contact_id=self.a1.id,
             pubdate=datetime.date(2008, 12, 3)
         )
 
@@ -735,25 +735,25 @@ class AggregateTestCase(TestCase):
                 {
                     'earliest_book': datetime.date(1991, 10, 15),
                     'num_awards': 9,
-                    'id': 4,
+                    'id': self.p4.id,
                     'name': 'Morgan Kaufmann'
                 },
                 {
                     'earliest_book': datetime.date(1995, 1, 15),
                     'num_awards': 7,
-                    'id': 3,
+                    'id': self.p3.id,
                     'name': 'Prentice Hall'
                 },
                 {
                     'earliest_book': datetime.date(2007, 12, 6),
                     'num_awards': 3,
-                    'id': 1,
+                    'id': self.p1.id,
                     'name': 'Apress'
                 },
                 {
                     'earliest_book': datetime.date(2008, 3, 3),
                     'num_awards': 1,
-                    'id': 2,
+                    'id': self.p2.id,
                     'name': 'Sams'
                 }
             ]
@@ -777,7 +777,7 @@ class AggregateTestCase(TestCase):
         )
         self.assertEqual(
             list(books), [
-                (1, "159059725", 34.5),
+                (self.b1.id, "159059725", 34.5),
             ]
         )
 
@@ -816,7 +816,7 @@ class AggregateTestCase(TestCase):
 
     def test_dates_with_aggregation(self):
         """
-        Test that .dates() returns a distinct set of dates when applied to a
+        .dates() returns a distinct set of dates when applied to a
         QuerySet with aggregation.
 
         Refs #18056. Previously, .dates() would return distinct (date_kind,
@@ -847,8 +847,7 @@ class AggregateTestCase(TestCase):
 
     def test_ticket17424(self):
         """
-        Check that doing exclude() on a foreign model after annotate()
-        doesn't crash.
+        Doing exclude() on a foreign model after annotate() doesn't crash.
         """
         all_books = list(Book.objects.values_list('pk', flat=True).order_by('pk'))
         annotated_books = Book.objects.order_by('pk').annotate(one=Count("id"))
@@ -868,7 +867,7 @@ class AggregateTestCase(TestCase):
 
     def test_ticket12886(self):
         """
-        Check that aggregation over sliced queryset works correctly.
+        Aggregation over sliced queryset works correctly.
         """
         qs = Book.objects.all().order_by('-rating')[0:3]
         vals = qs.aggregate(average_top3_rating=Avg('rating'))['average_top3_rating']
@@ -876,8 +875,8 @@ class AggregateTestCase(TestCase):
 
     def test_ticket11881(self):
         """
-        Check that subqueries do not needlessly contain ORDER BY, SELECT FOR UPDATE
-        or select_related() stuff.
+        Subqueries do not needlessly contain ORDER BY, SELECT FOR UPDATE or
+        select_related() stuff.
         """
         qs = Book.objects.all().select_for_update().order_by(
             'pk').select_related('publisher').annotate(max_pk=Max('pk'))

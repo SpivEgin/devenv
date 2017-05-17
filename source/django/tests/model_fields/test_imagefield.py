@@ -4,7 +4,7 @@ import os
 import shutil
 from unittest import skipIf
 
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, ValidationError
 from django.core.files import File
 from django.core.files.images import ImageFile
 from django.test import TestCase
@@ -133,6 +133,12 @@ class ImageFieldTests(ImageFieldTestMixin, TestCase):
         self.assertEqual(hash(p1_db.mugshot), hash(p1.mugshot))
         self.assertIs(p1_db.mugshot != p1.mugshot, False)
 
+    def test_validation(self):
+        p = self.PersonModel(name="Joan")
+        p.mugshot.save("shot.txt", self.file1)
+        with self.assertRaisesMessage(ValidationError, "File extension 'txt' is not allowed."):
+            p.full_clean()
+
     def test_instantiate_missing(self):
         """
         If the underlying file is unavailable, still create instantiate the
@@ -173,8 +179,8 @@ class ImageFieldTests(ImageFieldTestMixin, TestCase):
 
     def test_pickle(self):
         """
-        Tests that ImageField can be pickled, unpickled, and that the
-        image of the unpickled version is the same as the original.
+        ImageField can be pickled, unpickled, and that the image of
+        the unpickled version is the same as the original.
         """
         import pickle
 
@@ -236,7 +242,7 @@ class ImageFieldTwoDimensionsTests(ImageFieldTestMixin, TestCase):
 
     def test_default_value(self):
         """
-        Tests that the default value for an ImageField is an instance of
+        The default value for an ImageField is an instance of
         the field's attr_class (TestImageFieldFile in this case) with no
         name (name set to None).
         """
@@ -246,7 +252,7 @@ class ImageFieldTwoDimensionsTests(ImageFieldTestMixin, TestCase):
 
     def test_assignment_to_None(self):
         """
-        Tests that assigning ImageField to None clears dimensions.
+        Assigning ImageField to None clears dimensions.
         """
         p = self.PersonModel(name='Joe', mugshot=self.file1)
         self.check_dimensions(p, 4, 8)
@@ -278,7 +284,7 @@ class ImageFieldTwoDimensionsTests(ImageFieldTestMixin, TestCase):
 
     def test_dimensions(self):
         """
-        Checks that dimensions are updated correctly in various situations.
+        Dimensions are updated correctly in various situations.
         """
         p = self.PersonModel(name='Joe')
 
@@ -411,7 +417,7 @@ class TwoImageFieldTests(ImageFieldTestMixin, TestCase):
 
     def test_dimensions(self):
         """
-        Checks that dimensions are updated correctly in various situations.
+        Dimensions are updated correctly in various situations.
         """
         p = self.PersonModel(name='Joe')
 

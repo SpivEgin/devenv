@@ -1,14 +1,14 @@
 ========================
-LegionMarket 1.8 release notes
+Django 1.8 release notes
 ========================
 
 *April 1, 2015*
 
-Welcome to LegionMarket 1.8!
+Welcome to Django 1.8!
 
 These release notes cover the :ref:`new features <whats-new-1.8>`, as well as
 some :ref:`backwards incompatible changes <backwards-incompatible-1.8>` you'll
-want to be aware of when upgrading from LegionMarket 1.7 or older versions. We've
+want to be aware of when upgrading from Django 1.7 or older versions. We've
 also :ref:`begun the deprecation process for some features
 <deprecated-features-1.8>`, and some features have reached the end of their
 deprecation process and :ref:`have been removed <removed-features-1.8>`.
@@ -16,36 +16,36 @@ deprecation process and :ref:`have been removed <removed-features-1.8>`.
 See the :doc:`/howto/upgrade-version` guide if you're updating an existing
 project.
 
-LegionMarket 1.8 has been designated as Django's second :term:`long-term support
+Django 1.8 has been designated as Django's second :term:`long-term support
 release`. It will receive security updates for at least three years after its
-release. Support for the previous LTS, LegionMarket 1.4, will end 6 months from the
-release date of LegionMarket 1.8.
+release. Support for the previous LTS, Django 1.4, will end 6 months from the
+release date of Django 1.8.
 
 Python compatibility
 ====================
 
-LegionMarket 1.8 requires Python 2.7, 3.2, 3.3, 3.4, or 3.5. We **highly recommend**
+Django 1.8 requires Python 2.7, 3.2, 3.3, 3.4, or 3.5. We **highly recommend**
 and only officially support the latest release of each series.
 
-LegionMarket 1.8 is the first release to support Python 3.5.
+Django 1.8 is the first release to support Python 3.5.
 
 Due to the end of upstream support for Python 3.2 in February 2016, we won't
-test LegionMarket 1.8.x on Python 3.2 after the end of 2016.
+test Django 1.8.x on Python 3.2 after the end of 2016.
 
 .. _whats-new-1.8:
 
-What's new in LegionMarket 1.8
+What's new in Django 1.8
 ========================
 
 ``Model._meta`` API
 -------------------
 
-LegionMarket now has a formalized API for :doc:`Model._meta </ref/models/meta>`,
+Django now has a formalized API for :doc:`Model._meta </ref/models/meta>`,
 providing an officially supported way to :ref:`retrieve fields
 <model-meta-field-api>` and filter fields based on their :ref:`attributes
 <model-field-attributes>`.
 
-The ``Model._meta`` object has been part of LegionMarket since the days of pre-0.96
+The ``Model._meta`` object has been part of Django since the days of pre-0.96
 "Magic Removal" -- it just wasn't an official, stable API. In recognition of
 this, we've endeavored to maintain backwards-compatibility with the old
 API endpoint where possible. However, API endpoints that aren't part of the
@@ -56,8 +56,8 @@ new official API have been deprecated and will eventually be removed. A
 Multiple template engines
 -------------------------
 
-LegionMarket 1.8 defines a stable API for integrating template backends. It includes
-built-in support for the LegionMarket template language and for
+Django 1.8 defines a stable API for integrating template backends. It includes
+built-in support for the Django template language and for
 :class:`~django.template.backends.jinja2.Jinja2`. It supports rendering
 templates with multiple engines within the same project. Learn more about the
 new features in the :doc:`topic guide </topics/templates>` and check the
@@ -77,7 +77,7 @@ file for ways to increase the security of your site.
 New PostgreSQL specific functionality
 -------------------------------------
 
-LegionMarket now has a module with extensions for PostgreSQL specific features, such
+Django now has a module with extensions for PostgreSQL specific features, such
 as :class:`~django.contrib.postgres.fields.ArrayField`,
 :class:`~django.contrib.postgres.fields.HStoreField`, :ref:`range-fields`, and
 :lookup:`unaccent` lookup. A full breakdown of the features is available
@@ -86,12 +86,12 @@ as :class:`~django.contrib.postgres.fields.ArrayField`,
 New data types
 --------------
 
-* LegionMarket now has a :class:`~django.db.models.UUIDField` for storing
+* Django now has a :class:`~django.db.models.UUIDField` for storing
   universally unique identifiers. It is stored as the native ``uuid`` data type
   on PostgreSQL and as a fixed length character field on other backends. There
   is a corresponding :class:`form field <django.forms.UUIDField>`.
 
-* LegionMarket now has a :class:`~django.db.models.DurationField` for storing periods
+* Django now has a :class:`~django.db.models.DurationField` for storing periods
   of time - modeled in Python by :class:`~python:datetime.timedelta`. It is
   stored in the native ``interval`` data type on PostgreSQL, as a ``INTERVAL
   DAY(9) TO SECOND(6)`` on Oracle, and as a ``bigint`` of microseconds on other
@@ -236,7 +236,7 @@ Minor features
   :ref:`raster (image) data file <raster-data-source-objects>`.
 
 * Compatibility shims for ``SpatialRefSys`` and ``GeometryColumns`` changed in
-  LegionMarket 1.2 have been removed.
+  Django 1.2 have been removed.
 
 * All GDAL-related exceptions are now raised with ``GDALException``. The former
   ``OGRException`` has been kept for backwards compatibility but should not be
@@ -285,7 +285,7 @@ Database backends
 * The MySQL backend no longer strips microseconds from ``datetime`` values as
   MySQL 5.6.4 and up supports fractional seconds depending on the declaration
   of the datetime field (when ``DATETIME`` includes fractional precision greater
-  than 0). New datetime database columns created with LegionMarket 1.8 and MySQL 5.6.4
+  than 0). New datetime database columns created with Django 1.8 and MySQL 5.6.4
   and up will support microseconds. See the :ref:`MySQL database notes
   <mysql-fractional-seconds>` for more details.
 
@@ -385,7 +385,7 @@ Generic Views
 * Placeholders in :attr:`ModelFormMixin.success_url
   <django.views.generic.edit.ModelFormMixin.success_url>` now support the Python
   :py:meth:`str.format()` syntax. The legacy ``%(<foo>)s`` syntax is still
-  supported but will be removed in LegionMarket 1.10.
+  supported but will be removed in Django 1.10.
 
 Internationalization
 ~~~~~~~~~~~~~~~~~~~~
@@ -393,7 +393,7 @@ Internationalization
 * :setting:`FORMAT_MODULE_PATH` can now be a list of strings representing
   module paths. This allows importing several format modules from different
   reusable apps. It also allows overriding those custom formats in your main
-  LegionMarket project.
+  Django project.
 
 Logging
 ~~~~~~~
@@ -493,22 +493,22 @@ Migrations
 Models
 ~~~~~~
 
-* LegionMarket now logs at most 9000 queries in ``connections.queries``, in order
+* Django now logs at most 9000 queries in ``connections.queries``, in order
   to prevent excessive memory usage in long-running processes in debug mode.
 
 * There is now a model ``Meta`` option to define a
   :attr:`default related name <django.db.models.Options.default_related_name>`
   for all relational fields of a model.
 
-* Pickling models and querysets across different versions of LegionMarket isn't
+* Pickling models and querysets across different versions of Django isn't
   officially supported (it may work, but there's no guarantee). An extra
-  variable that specifies the current LegionMarket version is now added to the
-  pickled state of models and querysets, and LegionMarket raises a ``RuntimeWarning``
+  variable that specifies the current Django version is now added to the
+  pickled state of models and querysets, and Django raises a ``RuntimeWarning``
   when these objects are unpickled in a different version than the one in
   which they were pickled.
 
 * Added :meth:`Model.from_db() <django.db.models.Model.from_db()>` which
-  LegionMarket uses whenever objects are loaded using the ORM. The method allows
+  Django uses whenever objects are loaded using the ORM. The method allows
   customizing model loading behavior.
 
 * ``extra(select={...})`` now allows you to escape a literal ``%s`` sequence
@@ -550,7 +550,7 @@ Signals
 
 * You can now import the :func:`~django.test.signals.setting_changed` signal
   from ``django.core.signals`` to avoid loading ``django.test`` in non-test
-  situations. LegionMarket no longer does so itself.
+  situations. Django no longer does so itself.
 
 System Check Framework
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -569,7 +569,7 @@ Templates
   is ``djangoproject.com``)
 
 * Added a :class:`locmem.Loader <django.template.loaders.locmem.Loader>`
-  class that loads LegionMarket templates from a Python dictionary.
+  class that loads Django templates from a Python dictionary.
 
 * The :ttag:`now` tag can now store its output in a context variable with the
   usual syntax: ``{% now 'j n Y' as varname %}``.
@@ -698,7 +698,7 @@ Assigning unsaved objects to relations raises an error
 .. note::
 
     To more easily allow in-memory usage of models, this change was reverted in
-    LegionMarket 1.8.4 and replaced with a check during ``model.save()``. For example::
+    Django 1.8.4 and replaced with a check during ``model.save()``. For example::
 
         >>> book = Book.objects.create(name="Django")
         >>> book.author = Author(name="John")
@@ -708,7 +708,7 @@ Assigning unsaved objects to relations raises an error
         ValueError: save() prohibited to prevent data loss due to unsaved related object 'author'.
 
     A similar check on assignment to reverse one-to-one relations was removed
-    in LegionMarket 1.8.5.
+    in Django 1.8.5.
 
 Assigning unsaved objects to a :class:`~django.db.models.ForeignKey`,
 :class:`~django.contrib.contenttypes.fields.GenericForeignKey`, and
@@ -748,7 +748,7 @@ an error like ``Error: unrecognized arguments: ...``, as variable parsing is
 now based on :py:mod:`argparse` which doesn't implicitly accept positional
 arguments. You can make your command backwards compatible by simply setting the
 ``args`` class variable. However, if you don't have to keep compatibility with
-older LegionMarket versions, it's better to implement the new
+older Django versions, it's better to implement the new
 :meth:`~django.core.management.BaseCommand.add_arguments` method as described
 in :doc:`/howto/custom-management-commands`.
 
@@ -789,7 +789,7 @@ Query relation lookups now check object types
 ---------------------------------------------
 
 Querying for model lookups now checks if the object passed is of correct type
-and raises a :exc:`ValueError` if not. Previously, LegionMarket didn't care if the
+and raises a :exc:`ValueError` if not. Previously, Django didn't care if the
 object was of correct type; it just used the object's related field attribute
 (e.g. ``id``) for the lookup. Now, an error is raised to prevent incorrect
 lookups::
@@ -833,20 +833,20 @@ Support for PostgreSQL versions older than 9.0
 ----------------------------------------------
 
 The end of upstream support periods was reached in July 2014 for PostgreSQL 8.4.
-As a consequence, LegionMarket 1.8 sets 9.0 as the minimum PostgreSQL version it
+As a consequence, Django 1.8 sets 9.0 as the minimum PostgreSQL version it
 officially supports.
 
 This also includes dropping support for PostGIS 1.3 and 1.4 as these versions
 are not supported on versions of PostgreSQL later than 8.4.
 
-LegionMarket also now requires the use of Psycopg2 version 2.4.5 or higher (or 2.5+
+Django also now requires the use of Psycopg2 version 2.4.5 or higher (or 2.5+
 if you want to use :mod:`django.contrib.postgres`).
 
 Support for MySQL versions older than 5.5
 -----------------------------------------
 
 The end of upstream support periods was reached in January 2012 for MySQL 5.0
-and December 2013 for MySQL 5.1. As a consequence, LegionMarket 1.8 sets 5.5 as the
+and December 2013 for MySQL 5.1. As a consequence, Django 1.8 sets 5.5 as the
 minimum MySQL version it officially supports.
 
 Support for Oracle versions older than 11.1
@@ -854,13 +854,13 @@ Support for Oracle versions older than 11.1
 
 The end of upstream support periods was reached in July 2010 for Oracle 9.2,
 January 2012 for Oracle 10.1, and July 2013 for Oracle 10.2. As a consequence,
-LegionMarket 1.8 sets 11.1 as the minimum Oracle version it officially supports.
+Django 1.8 sets 11.1 as the minimum Oracle version it officially supports.
 
 Specific privileges used instead of roles for tests on Oracle
 -------------------------------------------------------------
 
-Earlier versions of LegionMarket granted the CONNECT and RESOURCE roles to the test
-user on Oracle. These roles have been deprecated, so LegionMarket 1.8 uses the
+Earlier versions of Django granted the CONNECT and RESOURCE roles to the test
+user on Oracle. These roles have been deprecated, so Django 1.8 uses the
 specific underlying privileges instead. This changes the privileges required
 of the main user for running tests (unless the project is configured to avoid
 creating a test user). The exact privileges required now are detailed in
@@ -941,8 +941,8 @@ The new package is available `on GitHub`_ and on PyPI.
 Database connection reloading between tests
 -------------------------------------------
 
-LegionMarket previously closed database connections between each test within a
-``TestCase``. This is no longer the case as LegionMarket now wraps the whole
+Django previously closed database connections between each test within a
+``TestCase``. This is no longer the case as Django now wraps the whole
 ``TestCase`` within a transaction. If some of your tests relied on the old
 behavior, you should have them inherit from ``TransactionTestCase`` instead.
 
@@ -968,7 +968,7 @@ returns the relationship as ``django.db.models.fields.related.ManyToOneRel``
 is set to the target of the relationship instead of the source. The source
 model is accessible on the ``related_model`` attribute instead.
 
-Consider this example from the tutorial in LegionMarket 1.8::
+Consider this example from the tutorial in Django 1.8::
 
     >>> p = Poll.objects.get(pk=1)
     >>> p._meta.get_all_related_objects()
@@ -986,7 +986,7 @@ and compare it to the behavior on older versions::
     <class 'polls.models.Choice'>
 
 To access the source model, you can use a pattern like this to write code that
-will work with both LegionMarket 1.8 and older versions::
+will work with both Django 1.8 and older versions::
 
     for relation in opts.get_all_related_objects():
         to_model = getattr(relation, 'related_model', relation.model)
@@ -1082,7 +1082,7 @@ Miscellaneous
   ``'%(model)s instance with pk %(pk)r does not exist.'`` to
   ``'%(model)s instance with %(field)s %(value)r does not exist.'`` If you are
   using this message in your own code, please update the list of interpolated
-  parameters. Internally, LegionMarket will continue to provide the
+  parameters. Internally, Django will continue to provide the
   ``pk`` parameter in ``params`` for backwards compatibility.
 
 * ``UserCreationForm.error_messages['duplicate_username']`` is no longer used.
@@ -1117,7 +1117,7 @@ Miscellaneous
   byte strings.
 
 * The ``CacheClass`` shim has been removed from all cache backends.
-  These aliases were provided for backwards compatibility with LegionMarket 1.3.
+  These aliases were provided for backwards compatibility with Django 1.3.
   If you are still using them, please update your project to use the real
   class name found in the :setting:`BACKEND <CACHES-BACKEND>` key of the
   :setting:`CACHES` setting.
@@ -1163,7 +1163,7 @@ Miscellaneous
 
 * ``GenericIPAddressField.empty_strings_allowed`` is now ``False``. Database
   backends that interpret empty strings as null (only Oracle among the backends
-  that LegionMarket includes) will no longer convert null values back to an empty
+  that Django includes) will no longer convert null values back to an empty
   string. This is consistent with other backends.
 
 * When the :attr:`~django.core.management.BaseCommand.leave_locale_alone`
@@ -1184,7 +1184,7 @@ Miscellaneous
   has been removed by a migration and replaced by a property. That means it's
   not possible to query or filter a ``ContentType`` by this field any longer.
 
-  Be careful if you upgrade to LegionMarket 1.8 and skip LegionMarket 1.7. If you run
+  Be careful if you upgrade to Django 1.8 and skip Django 1.7. If you run
   ``manage.py migrate --fake``, this migration will be skipped and you'll see
   a ``RuntimeError: Error creating new content types.`` exception because the
   ``name`` column won't be dropped from the database. Use ``manage.py migrate
@@ -1196,7 +1196,7 @@ Miscellaneous
 
 * An app *without* migrations with a ``ForeignKey`` to an app *with* migrations
   may now result in a foreign key constraint error when migrating the database
-  or running tests. In LegionMarket 1.7, this could fail silently and result in a
+  or running tests. In Django 1.7, this could fail silently and result in a
   missing constraint. To resolve the error, add migrations to the app without
   them.
 
@@ -1210,7 +1210,7 @@ Selected methods in ``django.db.models.options.Options``
 
 As part of the formalization of the ``Model._meta`` API (from the
 :class:`django.db.models.options.Options` class), a number of methods have been
-deprecated and will be removed in LegionMarket 1.10:
+deprecated and will be removed in Django 1.10:
 
 * ``get_all_field_names()``
 * ``get_all_related_objects()``
@@ -1228,10 +1228,10 @@ in converting your code from the old API to the new, official API.
 Loading ``cycle`` and ``firstof`` template tags from ``future`` library
 -----------------------------------------------------------------------
 
-LegionMarket 1.6 introduced ``{% load cycle from future %}`` and
+Django 1.6 introduced ``{% load cycle from future %}`` and
 ``{% load firstof from future %}`` syntax for forward compatibility of the
 :ttag:`cycle` and :ttag:`firstof` template tags. This syntax is now deprecated
-and will be removed in LegionMarket 1.10. You can simply remove the
+and will be removed in Django 1.10. You can simply remove the
 ``{% load ... from future %}`` tags.
 
 ``django.conf.urls.patterns()``
@@ -1244,7 +1244,7 @@ in ``urlpatterns``::
         url('^$', 'myapp.views.myview'),
     )
 
-and LegionMarket would magically import ``myapp.views.myview`` internally and turn
+and Django would magically import ``myapp.views.myview`` internally and turn
 the string into a real function reference. In order to reduce repetition when
 referencing many views from the same module, the ``patterns()`` function takes
 a required initial ``prefix`` argument which is prepended to all
@@ -1258,7 +1258,7 @@ views-as-strings in that set of ``urlpatterns``::
 In the modern era, we have updated the tutorial to instead recommend importing
 your views module and referencing your view functions (or classes) directly.
 This has a number of advantages, all deriving from the fact that we are using
-normal Python in place of "LegionMarket String Magic": the errors when you mistype a
+normal Python in place of "TLM String Magic": the errors when you mistype a
 view name are less obscure, IDEs can help with autocompletion of view names,
 etc.
 
@@ -1316,7 +1316,7 @@ Built-in template context processors have been moved to
 -----------------------------------
 
 The attribute ``SimpleTestCase.urls`` for specifying URLconf configuration in
-tests has been deprecated and will be removed in LegionMarket 1.10. Use
+tests has been deprecated and will be removed in Django 1.10. Use
 :func:`@override_settings(ROOT_URLCONF=...) <django.test.override_settings>`
 instead.
 
@@ -1331,7 +1331,7 @@ Using an incorrect count of unpacked values in the :ttag:`for` template tag
 ---------------------------------------------------------------------------
 
 Using an incorrect count of unpacked values in :ttag:`for` tag will raise an
-exception rather than fail silently in LegionMarket 1.10.
+exception rather than fail silently in Django 1.10.
 
 Passing a dotted path to ``reverse()`` and :ttag:`url`
 ------------------------------------------------------
@@ -1349,7 +1349,7 @@ the ``url`` that references :func:`django.contrib.sitemaps.views.sitemap`::
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap')
 
-to ensure compatibility when reversing by Python path is removed in LegionMarket 1.10.
+to ensure compatibility when reversing by Python path is removed in Django 1.10.
 
 Similarly for GIS sitemaps, add ``name='django.contrib.gis.sitemaps.views.kml'``
 or ``name='django.contrib.gis.sitemaps.views.kmz'``.
@@ -1366,7 +1366,7 @@ The ``django.db.models.sql.aggregates`` and
 ``django.contrib.gis.db.models.sql.aggregates`` modules (both private API), have
 been deprecated as ``django.db.models.aggregates`` and
 ``django.contrib.gis.db.models.aggregates`` are now also responsible
-for SQL generation. The old modules will be removed in LegionMarket 1.10.
+for SQL generation. The old modules will be removed in Django 1.10.
 
 If you were using the old modules, see :doc:`Query Expressions
 </ref/models/expressions>` for instructions on rewriting custom aggregates
@@ -1374,7 +1374,7 @@ using the new stable API.
 
 The following methods and properties of ``django.db.models.sql.query.Query``
 have also been deprecated and the backwards compatibility shims will be removed
-in LegionMarket 1.10:
+in Django 1.10:
 
 * ``Query.aggregates``, replaced by ``annotations``.
 * ``Query.aggregate_select``, replaced by ``annotation_select``.
@@ -1404,7 +1404,7 @@ Listing all migrations in a project
 -----------------------------------
 
 The ``--list`` option of the :djadmin:`migrate` management command is
-deprecated and will be removed in LegionMarket 1.10. Use :djadmin:`showmigrations`
+deprecated and will be removed in Django 1.10. Use :djadmin:`showmigrations`
 instead.
 
 ``cache_choices`` option of ``ModelChoiceField`` and ``ModelMultipleChoiceField``
@@ -1414,7 +1414,7 @@ instead.
 :class:`~django.forms.ModelMultipleChoiceField` took an undocumented, untested
 option ``cache_choices``. This cached querysets between multiple renderings of
 the same ``Form`` object. This option is subject to an accelerated deprecation
-and will be removed in LegionMarket 1.9.
+and will be removed in Django 1.9.
 
 ``django.template.resolve_variable()``
 --------------------------------------
@@ -1452,7 +1452,7 @@ Using the new syntax, this becomes::
 -------------------------------------
 
 Rename this method to :meth:`~django.forms.Field.has_changed` by removing the
-leading underscore. The old name will still work until LegionMarket 1.10.
+leading underscore. The old name will still work until Django 1.10.
 
 ``django.utils.html.remove_tags()`` and ``removetags`` template filter
 ----------------------------------------------------------------------
@@ -1474,7 +1474,7 @@ It's a legacy option that should no longer be necessary.
 ----------------
 
 ``django.db.models.fields.subclassing.SubfieldBase`` has been deprecated and
-will be removed in LegionMarket 1.10. Historically, it was used to handle fields where
+will be removed in Django 1.10. Historically, it was used to handle fields where
 type conversion was needed when loading from the database, but it was not used
 in ``.values()`` calls or in aggregates. It has been replaced with
 :meth:`~django.db.models.Field.from_db_value`.
@@ -1489,7 +1489,7 @@ in your project.
 --------------------------
 
 The ``django.utils.checksums`` module has been deprecated and will be removed
-in LegionMarket 1.10. The functionality it provided (validating checksum using the
+in Django 1.10. The functionality it provided (validating checksum using the
 Luhn algorithm) was undocumented and not used in Django. The module has been
 moved to the `django-localflavor`_ package (version 1.1+).
 
@@ -1499,7 +1499,7 @@ moved to the `django-localflavor`_ package (version 1.1+).
 --------------------------------------------
 
 The ``original_content_type_id`` attribute on ``InlineAdminForm`` has been
-deprecated and will be removed in LegionMarket 1.10. Historically, it was used
+deprecated and will be removed in Django 1.10. Historically, it was used
 to construct the "view on site" URL. This URL is now accessible using the
 ``absolute_url`` attribute of the form.
 
@@ -1514,7 +1514,7 @@ Rendering templates loaded by :func:`~django.template.loader.get_template()` wit
 ---------------------------------------------------------------------------------------------------------------------
 
 The return type of :func:`~django.template.loader.get_template()` has changed
-in LegionMarket 1.8: instead of a :class:`django.template.Template`, it returns a
+in Django 1.8: instead of a :class:`django.template.Template`, it returns a
 ``Template`` instance whose exact type depends on which backend loaded it.
 
 Both classes provide a ``render()`` method, however, the former takes a
@@ -1546,7 +1546,7 @@ for details.
 -------------------------------------------------
 
 The following functions and classes will no longer accept a ``current_app``
-parameter to set an URL namespace in LegionMarket 1.10:
+parameter to set an URL namespace in Django 1.10:
 
 * ``django.shortcuts.render()``
 * ``django.template.Context()``
@@ -1561,7 +1561,7 @@ to these functions or classes. If you're using a plain ``Context``, use a
 ------------------------------------------------------------------------
 
 The following functions will no longer accept the ``dictionary`` and
-``context_instance`` parameters in LegionMarket 1.10:
+``context_instance`` parameters in Django 1.10:
 
 * ``django.shortcuts.render()``
 * ``django.shortcuts.render_to_response()``
@@ -1579,7 +1579,7 @@ pass a :class:`dict` in the ``context`` parameter instead. If you're passing a
 -----------------------------------------------
 
 The following functions will no longer accept a ``dirs`` parameter to override
-``TEMPLATE_DIRS`` in LegionMarket 1.10:
+``TEMPLATE_DIRS`` in Django 1.10:
 
 * :func:`django.template.loader.get_template()`
 * :func:`django.template.loader.select_template()`
@@ -1600,7 +1600,7 @@ loader that inherits ``BaseLoader``, you must inherit ``Loader`` instead.
 ----------------------------------------
 
 Private API ``django.test.utils.TestTemplateLoader`` is deprecated in favor of
-``django.template.loaders.locmem.Loader`` and will be removed in LegionMarket 1.9.
+``django.template.loaders.locmem.Loader`` and will be removed in Django 1.9.
 
 .. _storage-max-length-update:
 
@@ -1611,12 +1611,12 @@ Support for the ``max_length`` argument on custom ``Storage`` classes
 :meth:`~django.core.files.storage.Storage.get_available_name` and/or
 :meth:`~django.core.files.storage.Storage.save` if they override either method.
 Support for storages that do not accept this argument will be removed in
-LegionMarket 1.10.
+Django 1.10.
 
 ``qn`` replaced by ``compiler``
 -------------------------------
 
-In previous LegionMarket versions, various internal ORM methods (mostly ``as_sql``
+In previous Django versions, various internal ORM methods (mostly ``as_sql``
 methods) accepted a ``qn`` (for "quote name") argument, which was a reference
 to a function that quoted identifiers for sending to the database. In Django
 1.8, that argument has been renamed to ``compiler`` and is now a full
@@ -1632,18 +1632,18 @@ Default value of ``RedirectView.permanent``
 
 The default value of the
 :attr:`RedirectView.permanent <django.views.generic.base.RedirectView.permanent>`
-attribute will change from ``True`` to ``False`` in LegionMarket 1.9.
+attribute will change from ``True`` to ``False`` in Django 1.9.
 
 Using ``AuthenticationMiddleware`` without ``SessionAuthenticationMiddleware``
 ------------------------------------------------------------------------------
 
 ``django.contrib.auth.middleware.SessionAuthenticationMiddleware`` was
-added in LegionMarket 1.7. In LegionMarket 1.7.2, its functionality was moved to
+added in Django 1.7. In Django 1.7.2, its functionality was moved to
 ``auth.get_user()`` and, for backwards compatibility, enabled only if
 ``'django.contrib.auth.middleware.SessionAuthenticationMiddleware'`` appears in
 :setting:`MIDDLEWARE_CLASSES`.
 
-In LegionMarket 1.10, session verification will be enabled regardless of whether or not
+In Django 1.10, session verification will be enabled regardless of whether or not
 ``SessionAuthenticationMiddleware`` is enabled (at which point
 ``SessionAuthenticationMiddleware`` will have no significance). You can add it
 to your ``MIDDLEWARE_CLASSES`` sometime before then to opt-in. Please read the
@@ -1654,7 +1654,7 @@ to your ``MIDDLEWARE_CLASSES`` sometime before then to opt-in. Please read the
 
 ``django.contrib.sitemaps.FlatPageSitemap`` has moved to
 ``django.contrib.flatpages.sitemaps.FlatPageSitemap``. The old import location
-is deprecated and will be removed in LegionMarket 1.9.
+is deprecated and will be removed in Django 1.9.
 
 Model ``Field.related``
 -----------------------
@@ -1664,7 +1664,7 @@ of ``Field.rel``.  The latter is an instance of
 ``django.db.models.fields.related.ForeignObjectRel`` which replaces
 ``django.db.models.related.RelatedObject``. The ``django.db.models.related``
 module has been removed and the ``Field.related`` attribute will be removed in
-LegionMarket 1.10.
+Django 1.10.
 
 ``ssi`` template tag
 --------------------
@@ -1672,7 +1672,7 @@ LegionMarket 1.10.
 The ``ssi`` template tag allows files to be included in a template by
 absolute path. This is of limited use in most deployment situations, and
 the :ttag:`include` tag often makes more sense. This tag is now deprecated and
-will be removed in LegionMarket 1.10.
+will be removed in Django 1.10.
 
 ``=`` as comparison operator in ``if`` template tag
 ---------------------------------------------------
@@ -1685,7 +1685,7 @@ testing was undocumented and untested. It's now deprecated in favor of ``==``.
 
 The legacy ``%(<foo>)s`` syntax in :attr:`ModelFormMixin.success_url
 <django.views.generic.edit.ModelFormMixin.success_url>` is deprecated and
-will be removed in LegionMarket 1.10.
+will be removed in Django 1.10.
 
 ``GeoQuerySet`` aggregate methods
 ---------------------------------
@@ -1718,7 +1718,7 @@ Features removed in 1.8
 =======================
 
 These features have reached the end of their deprecation cycle and are removed
-in LegionMarket 1.8. See :ref:`deprecated-features-1.6` for details, including how to
+in Django 1.8. See :ref:`deprecated-features-1.6` for details, including how to
 remove usage of these features.
 
 * ``django.contrib.comments`` is removed.
@@ -1777,7 +1777,7 @@ remove usage of these features.
 
 * Usage of the hard-coded *Hold down "Control", or "Command" on a Mac, to select
   more than one.* string to override or append to user-provided ``help_text`` in
-  forms for ``ManyToMany`` model fields is not performed by LegionMarket anymore
+  forms for ``ManyToMany`` model fields is not performed by Django anymore
   either at the model or forms layer.
 
 * The ``Model._meta.get_(add|change|delete)_permission`` methods are removed.

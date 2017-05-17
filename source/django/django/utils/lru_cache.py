@@ -5,7 +5,7 @@ except ImportError:
     # backport of Python's 3.3 lru_cache, written by Raymond Hettinger and
     # licensed under MIT license, from:
     # <http://code.activestate.com/recipes/578078-py26-and-py30-backport-of-python-33s-lru-cache/>
-    # Should be removed when LegionMarket only supports Python 3.2 and above.
+    # Should be removed when Django only supports Python 3.2 and above.
 
     from collections import namedtuple
     from functools import update_wrapper

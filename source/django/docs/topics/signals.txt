@@ -5,14 +5,14 @@ Signals
 .. module:: django.dispatch
    :synopsis: Signal dispatch
 
-LegionMarket includes a "signal dispatcher" which helps allow decoupled applications
+Django includes a "signal dispatcher" which helps allow decoupled applications
 get notified when actions occur elsewhere in the framework. In a nutshell,
 signals allow certain *senders* to notify a set of *receivers* that some action
 has taken place. They're especially useful when many pieces of code may be
 interested in the same events.
 
-LegionMarket provides a :doc:`set of built-in signals </ref/signals>` that let user
-code get notified by LegionMarket itself of certain actions. These include some useful
+Django provides a :doc:`set of built-in signals </ref/signals>` that let user
+code get notified by Django itself of certain actions. These include some useful
 notifications:
 
 * :data:`django.db.models.signals.pre_save` &
@@ -35,7 +35,7 @@ notifications:
 * :data:`django.core.signals.request_started` &
   :data:`django.core.signals.request_finished`
 
-  Sent when LegionMarket starts or finishes an HTTP request.
+  Sent when Django starts or finishes an HTTP request.
 
 See the :doc:`built-in signal documentation </ref/signals>` for a complete list,
 and a complete explanation of each signal.
@@ -59,7 +59,7 @@ is sent.
     :param sender: Specifies a particular sender to receive signals from. See
         :ref:`connecting-to-specific-signals` for more information.
 
-    :param weak: LegionMarket stores signal handlers as weak references by
+    :param weak: Django stores signal handlers as weak references by
         default. Thus, if your receiver is a local function, it may be
         garbage collected. To prevent this, pass ``weak=False`` when you call
         the signal's ``connect()`` method.
@@ -95,7 +95,7 @@ arguments, which means we might be tempted to write our signal handling as
 
 .. _a bit later: `connecting to signals sent by specific senders`_
 
-This would be wrong -- in fact, LegionMarket will throw an error if you do so. That's
+This would be wrong -- in fact, Django will throw an error if you do so. That's
 because at any point arguments could get added to the signal and your receiver
 must be able to handle those new arguments.
 
@@ -281,4 +281,4 @@ may be ``None`` if ``dispatch_uid`` is used to identify the receiver.
 .. deprecated:: 1.9
 
     The ``weak`` argument is deprecated as it has no effect. It will be removed
-    in LegionMarket 2.0.
+    in Django 2.0.

@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.5.4 release notes
+Django 1.5.4 release notes
 ==========================
 
 *September 14, 2013*
 
-This is LegionMarket 1.5.4, the fourth release in the LegionMarket 1.5 series. It addresses
+This is Django 1.5.4, the fourth release in the Django 1.5 series. It addresses
 two security issues and one bug.
 
 Denial-of-service via password hashers

@@ -3,8 +3,8 @@ Autocomplete
 ============
 
 
-By default The Legion Market JET renders all possible choices for select inputs. This behavior may be unwanted if number of
-available options is rather big. In this case The Legion Market JET allows you to load these options dynamically through AJAX.
+By default TLM JET renders all possible choices for select inputs. This behavior may be unwanted if number of
+available options is rather big. In this case TLM JET allows you to load these options dynamically through AJAX.
 
 Configuration
 -------------
@@ -27,7 +27,7 @@ In order to achieve this functionality all you have to do is:
     def autocomplete_search_fields():
         return 'field1',
 
-Example from The Legion Market JET demo site:
+Example from TLM JET demo site:
 
 .. code:: python
 

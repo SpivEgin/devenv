@@ -40,7 +40,7 @@ class AppsTests(SimpleTestCase):
 
     def test_singleton_master(self):
         """
-        Ensures that only one master registry can exist.
+        Only one master registry can exist.
         """
         with self.assertRaises(RuntimeError):
             Apps(installed_apps=None)
@@ -78,7 +78,8 @@ class AppsTests(SimpleTestCase):
         with self.assertRaises(ImportError):
             with self.settings(INSTALLED_APPS=['there is no such app']):
                 pass
-        with self.assertRaises(ImportError):
+        msg = "Cannot import 'there is no such app'. Check that 'apps.apps.NoSuchApp.name' is correct."
+        with self.assertRaisesMessage(ImproperlyConfigured, msg):
             with self.settings(INSTALLED_APPS=['apps.apps.NoSuchApp']):
                 pass
 
@@ -178,7 +179,7 @@ class AppsTests(SimpleTestCase):
 
     def test_models_py(self):
         """
-        Tests that the models in the models.py file were loaded correctly.
+        The models in the models.py file were loaded correctly.
         """
         self.assertEqual(apps.get_model("apps", "TotallyNormal"), TotallyNormal)
         with self.assertRaises(LookupError):
@@ -281,7 +282,7 @@ class AppsTests(SimpleTestCase):
         # and LazyModelC shouldn't be waited on until LazyModelB exists.
         self.assertSetEqual(set(apps._pending_operations) - initial_pending, {('apps', 'lazyb')})
 
-        # Test that multiple operations can wait on the same model
+        # Multiple operations can wait on the same model
         apps.lazy_model_operation(test_func, ('apps', 'lazyb'))
 
         class LazyB(models.Model):

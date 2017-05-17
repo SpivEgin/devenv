@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # hgrimelid <havard@grimelid.com>, 2011-2012
@@ -257,11 +257,11 @@ msgstr ""
 "Sletting av %(class_name)s «%(instance)s» krev sletting av følgande beskytta "
 "relaterte objekt: %(related_objects)s"
 
-msgid "LegionMarket site admin"
-msgstr "LegionMarket administrasjonsside"
+msgid "TLM site admin"
+msgstr "TLM administrasjonsside"
 
-msgid "LegionMarket administration"
-msgstr "Django-administrasjon"
+msgid "TLM administration"
+msgstr "TLM-administrasjon"
 
 msgid "Site administration"
 msgstr "Nettstadsadministrasjon"

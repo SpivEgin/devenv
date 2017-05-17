@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Machaku <bmachaku@gmail.com>, 2013-2014
@@ -257,10 +257,10 @@ msgstr ""
 "Kufutwa kwa ingizo la %(instance)s %(class_name)s kutahitaji kufutwa kwa "
 "vitu vifuatavyo vyenye mahusiano vilivyokingwa: %(related_objects)s"
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "Utawala wa tovuti ya django"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "Utawala wa Django"
 
 msgid "Site administration"

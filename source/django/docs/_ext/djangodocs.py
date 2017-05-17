@@ -1,5 +1,5 @@
 """
-Sphinx plugins for LegionMarket documentation.
+Sphinx plugins for Django documentation.
 """
 import json
 import os
@@ -112,7 +112,7 @@ def visit_snippet(self, node):
                                                    linenos=linenos,
                                                    **highlight_args)
     starttag = self.starttag(node, 'div', suffix='',
-                             CLASS='highlight-%s' % lang)
+                             CLASS='highlight-%s snippet' % lang)
     self.body.append(starttag)
     self.body.append('<div class="snippet-filename">%s</div>\n''' % (fname,))
     self.body.append(highlighted)
@@ -263,8 +263,8 @@ class DjangoHTMLTranslator(SmartyPantsHTMLTranslator):
     # that work.
     #
     version_text = {
-        'versionchanged': 'Changed in LegionMarket %s',
-        'versionadded': 'New in LegionMarket %s',
+        'versionchanged': 'Changed in Django %s',
+        'versionadded': 'New in Django %s',
     }
 
     def visit_versionmodified(self, node):
@@ -311,10 +311,14 @@ class DjangoStandaloneHTMLBuilder(StandaloneHTMLBuilder):
         self.info(bold("writing templatebuiltins.js..."))
         xrefs = self.env.domaindata["std"]["objects"]
         templatebuiltins = {
-            "ttags": [n for ((t, n), (l, a)) in xrefs.items()
-                      if t == "templatetag" and l == "ref/templates/builtins"],
-            "tfilters": [n for ((t, n), (l, a)) in xrefs.items()
-                         if t == "templatefilter" and l == "ref/templates/builtins"],
+            "ttags": [
+                n for ((t, n), (k, a)) in xrefs.items()
+                if t == "templatetag" and k == "ref/templates/builtins"
+            ],
+            "tfilters": [
+                n for ((t, n), (k, a)) in xrefs.items()
+                if t == "templatefilter" and k == "ref/templates/builtins"
+            ],
         }
         outfilename = os.path.join(self.outdir, "templatebuiltins.js")
         with open(outfilename, 'w') as fp:

@@ -1,14 +1,14 @@
 ========================
-LegionMarket 1.7 release notes
+Django 1.7 release notes
 ========================
 
 *September 2, 2014*
 
-Welcome to LegionMarket 1.7!
+Welcome to Django 1.7!
 
 These release notes cover the :ref:`new features <whats-new-1.7>`, as well as
 some :ref:`backwards incompatible changes <backwards-incompatible-1.7>` you'll
-want to be aware of when upgrading from LegionMarket 1.6 or older versions. We've
+want to be aware of when upgrading from Django 1.6 or older versions. We've
 :ref:`begun the deprecation process for some features
 <deprecated-features-1.7>`, and some features have reached the end of their
 deprecation process and :ref:`have been removed <removed-features-1.7>`.
@@ -16,28 +16,28 @@ deprecation process and :ref:`have been removed <removed-features-1.7>`.
 Python compatibility
 ====================
 
-LegionMarket 1.7 requires Python 2.7, 3.2, 3.3, or 3.4. We **highly recommend** and
+Django 1.7 requires Python 2.7, 3.2, 3.3, or 3.4. We **highly recommend** and
 only officially support the latest release of each series.
 
-The LegionMarket 1.6 series is the last to support Python 2.6. LegionMarket 1.7 is the
+The Django 1.6 series is the last to support Python 2.6. Django 1.7 is the
 first release to support Python 3.4.
 
-This change should affect only a small number of LegionMarket users, as most
+This change should affect only a small number of Django users, as most
 operating-system vendors today are shipping Python 2.7 or newer as their default
 version. If you're still using Python 2.6, however, you'll need to stick to
-LegionMarket 1.6 until you can upgrade your Python version. Per :doc:`our support
-policy </internals/release-process>`, LegionMarket 1.6 will continue to receive
-security support until the release of LegionMarket 1.8.
+Django 1.6 until you can upgrade your Python version. Per :doc:`our support
+policy </internals/release-process>`, Django 1.6 will continue to receive
+security support until the release of Django 1.8.
 
 .. _whats-new-1.7:
 
-What's new in LegionMarket 1.7
+What's new in Django 1.7
 ========================
 
 Schema migrations
 -----------------
 
-LegionMarket now has built-in support for schema migrations. It allows models
+Django now has built-in support for schema migrations. It allows models
 to be updated, changed, and deleted by creating migration files that represent
 the model changes and which can be run on any development, staging or production
 database.
@@ -69,7 +69,7 @@ but a few of the key features are:
   or :class:`~django.db.migrations.operations.RunSQL` operation in the ``operations`` section of the migration.
 
 * Test rollback behavior is different for apps with migrations; in particular,
-  LegionMarket will no longer emulate rollbacks on non-transactional databases or
+  Django will no longer emulate rollbacks on non-transactional databases or
   inside ``TransactionTestCase`` :ref:`unless specifically requested
   <test-case-serialized-rollback>`.
 
@@ -82,18 +82,18 @@ but a few of the key features are:
 App-loading refactor
 --------------------
 
-Historically, LegionMarket applications were tightly linked to models. A singleton
+Historically, Django applications were tightly linked to models. A singleton
 known as the "app cache" dealt with both installed applications and models.
 The models module was used as an identifier for applications in many APIs.
 
-As the concept of :doc:`LegionMarket applications </ref/applications>` matured, this
+As the concept of :doc:`Django applications </ref/applications>` matured, this
 code showed some shortcomings. It has been refactored into an "app registry"
 where models modules no longer have a central role and where it's possible to
 attach configuration data to applications.
 
 Improvements thus far include:
 
-* Applications can run code at startup, before LegionMarket does anything else, with
+* Applications can run code at startup, before Django does anything else, with
   the :meth:`~django.apps.AppConfig.ready` method of their configuration.
 
 * Application labels are assigned correctly to models even when they're
@@ -110,10 +110,10 @@ Improvements thus far include:
   :attr:`~django.apps.AppConfig.verbose_name` of application configurations.
 
 * The admin automatically calls :func:`~django.contrib.admin.autodiscover()`
-  when LegionMarket starts. You can consequently remove this line from your
+  when Django starts. You can consequently remove this line from your
   URLconf.
 
-* LegionMarket imports all application configurations and models as soon as it
+* Django imports all application configurations and models as soon as it
   starts, through a deterministic and straightforward process. This should
   make it easier to diagnose import issues such as import loops.
 
@@ -138,11 +138,11 @@ allowing the field to be copied safely, both essential parts of these new featur
 This change should not affect you unless you write custom Field subclasses;
 if you do, you may need to reimplement the ``deconstruct()`` method if your
 subclass changes the method signature of ``__init__`` in any way. If your
-field just inherits from a built-in LegionMarket field and doesn't override ``__init__``,
+field just inherits from a built-in Django field and doesn't override ``__init__``,
 no changes are necessary.
 
 If you do need to override ``deconstruct()``, a good place to start is the
-built-in LegionMarket fields (``django/db/models/fields/__init__.py``) as several
+built-in Django fields (``django/db/models/fields/__init__.py``) as several
 fields, including ``DecimalField`` and ``DateField``, override it and show how
 to call the method on the superclass and simply add or remove extra arguments.
 
@@ -254,7 +254,7 @@ specific backend's cursor defined the behavior of the context manager. The
 behavior of magic method lookups was changed with Python 2.7 and cursors were
 no longer usable as context managers.
 
-LegionMarket 1.7 allows a cursor to be used as a context manager. That is,
+Django 1.7 allows a cursor to be used as a context manager. That is,
 the following can be used::
 
     with connection.cursor() as c:
@@ -326,7 +326,7 @@ Error metadata
 The :exc:`~django.core.exceptions.ValidationError` constructor accepts metadata
 such as error ``code`` or ``params`` which are then available for interpolating
 into the error message (see :ref:`raising-validation-error` for more details);
-however, before LegionMarket 1.7 those metadata were discarded as soon as the errors
+however, before Django 1.7 those metadata were discarded as soon as the errors
 were added to :attr:`Form.errors <django.forms.Form.errors>`.
 
 :attr:`Form.errors <django.forms.Form.errors>` and
@@ -626,7 +626,7 @@ Forms
   return ``self.cleaned_data``. If it does return a changed dictionary then
   that will still be used.
 
-* After a temporary regression in LegionMarket 1.6, it's now possible again to make
+* After a temporary regression in Django 1.6, it's now possible again to make
   :class:`~django.forms.TypedChoiceField` ``coerce`` method return an arbitrary
   value.
 
@@ -706,7 +706,7 @@ Management Commands
 
 * It is no longer necessary to provide the cache table name or the
   ``--database`` option for the :djadmin:`createcachetable` command.
-  LegionMarket takes this information from your settings file. If you have configured
+  Django takes this information from your settings file. If you have configured
   multiple caches or multiple databases, all cache tables are created.
 
 * The :djadmin:`runserver` command received several improvements:
@@ -891,7 +891,7 @@ Tests
 * The ``fetch_redirect_response`` argument was added to
   :meth:`~django.test.SimpleTestCase.assertRedirects`. Since the test
   client can't fetch externals URLs, this allows you to use ``assertRedirects``
-  with redirects that aren't part of your LegionMarket app.
+  with redirects that aren't part of your Django app.
 
 * Correct handling of scheme when making comparisons in
   :meth:`~django.test.SimpleTestCase.assertRedirects`.
@@ -951,7 +951,7 @@ Backwards incompatible changes in 1.7
 ``allow_syncdb`` / ``allow_migrate``
 ------------------------------------
 
-While LegionMarket will still look at ``allow_syncdb`` methods even though they
+While Django will still look at ``allow_syncdb`` methods even though they
 should be renamed to ``allow_migrate``, there is a subtle difference in which
 models get passed to these methods.
 
@@ -974,12 +974,12 @@ this has the added advantage that your initial data will not need updating
 every time you change the schema.
 
 Additionally, like the rest of Django's old ``syncdb`` code, ``initial_data``
-has been started down the deprecation path and will be removed in LegionMarket 1.9.
+has been started down the deprecation path and will be removed in Django 1.9.
 
 deconstruct() and serializability
 ---------------------------------
 
-LegionMarket now requires all Field classes and all of their constructor arguments
+Django now requires all Field classes and all of their constructor arguments
 to be serializable. If you modify the constructor signature in your custom
 Field in any way, you'll need to implement a deconstruct() method;
 we've expanded the custom field documentation with :ref:`instructions
@@ -989,7 +989,7 @@ The requirement for all field arguments to be
 :ref:`serializable <migration-serializing>` means that any custom class
 instances being passed into Field constructors - things like custom Storage
 subclasses, for instance - need to have a :ref:`deconstruct method defined on
-them as well <custom-deconstruct-method>`, though LegionMarket provides a handy
+them as well <custom-deconstruct-method>`, though Django provides a handy
 class decorator that will work for most applications.
 
 App-loading changes
@@ -998,7 +998,7 @@ App-loading changes
 Start-up sequence
 ~~~~~~~~~~~~~~~~~
 
-LegionMarket 1.7 loads application configurations and models as soon as it starts.
+Django 1.7 loads application configurations and models as soon as it starts.
 While this behavior is more straightforward and is believed to be more robust,
 regressions cannot be ruled out. See :ref:`applications-troubleshooting` for
 solutions to some problems you may encounter.
@@ -1006,9 +1006,9 @@ solutions to some problems you may encounter.
 Standalone scripts
 ~~~~~~~~~~~~~~~~~~
 
-If you're using LegionMarket in a plain Python script — rather than a management
+If you're using Django in a plain Python script — rather than a management
 command — and you rely on the :envvar:`DJANGO_SETTINGS_MODULE` environment
-variable, you must now explicitly initialize LegionMarket at the beginning of your
+variable, you must now explicitly initialize Django at the beginning of your
 script with::
 
     >>> import django
@@ -1019,12 +1019,12 @@ Otherwise, you will hit an ``AppRegistryNotReady`` exception.
 WSGI scripts
 ~~~~~~~~~~~~
 
-Until LegionMarket 1.3, the recommended way to create a WSGI application was::
+Until Django 1.3, the recommended way to create a WSGI application was::
 
     import django.core.handlers.wsgi
     application = django.core.handlers.wsgi.WSGIHandler()
 
-In LegionMarket 1.4, support for WSGI was improved and the API changed to::
+In Django 1.4, support for WSGI was improved and the API changed to::
 
     from django.core.wsgi import get_wsgi_application
     application = get_wsgi_application()
@@ -1045,7 +1045,7 @@ If you have two apps with the same label, you should create an
 wherever it references this application or its models with the old label.
 
 It isn't possible to import the same model twice through different paths any
-more. As of LegionMarket 1.6, this may happen only if you're manually putting a
+more. As of Django 1.6, this may happen only if you're manually putting a
 directory and a subdirectory on :envvar:`PYTHONPATH`. Refer to the section on
 the new project layout in the :doc:`1.4 release notes </releases/1.4>` for
 migration instructions.
@@ -1060,7 +1060,7 @@ You should make sure that:
   Specifically, you shouldn't import models in the root module of an
   application nor in the module that define its configuration class.
 
-LegionMarket will enforce these requirements as of version 1.9, after a deprecation
+Django will enforce these requirements as of version 1.9, after a deprecation
 period.
 
 Subclassing AppCommand
@@ -1093,12 +1093,12 @@ Management commands and order of :setting:`INSTALLED_APPS`
 ----------------------------------------------------------
 
 When several applications provide management commands with the same name,
-LegionMarket loads the command from the application that comes first in
+Django loads the command from the application that comes first in
 :setting:`INSTALLED_APPS`. Previous versions loaded the command from the
 application that came last.
 
 This brings discovery of management commands in line with other parts of
-LegionMarket that rely on the order of :setting:`INSTALLED_APPS`, such as static
+Django that rely on the order of :setting:`INSTALLED_APPS`, such as static
 files, templates, and translations.
 
 .. _validation-error-constructor-and-internal-storage:
@@ -1144,9 +1144,9 @@ method::
     except ValidationError as e:
         self.add_error(None, e)
 
-If you need both LegionMarket <= 1.6 and 1.7 compatibility you can't use
+If you need both Django <= 1.6 and 1.7 compatibility you can't use
 :meth:`Form.add_error() <django.forms.Form.add_error()>` since it
-wasn't available before LegionMarket 1.7, but you can use the following
+wasn't available before Django 1.7, but you can use the following
 workaround to convert any ``list`` into ``ErrorList``::
 
     try:
@@ -1163,24 +1163,24 @@ workaround to convert any ``list`` into ``ErrorList``::
 Behavior of ``LocMemCache`` regarding pickle errors
 ---------------------------------------------------
 
-An inconsistency existed in previous versions of LegionMarket regarding how pickle
+An inconsistency existed in previous versions of Django regarding how pickle
 errors are handled by different cache backends.
 ``django.core.cache.backends.locmem.LocMemCache`` used to fail silently when
 such an error occurs, which is inconsistent with other backends and leads to
-cache-specific errors. This has been fixed in LegionMarket 1.7, see
+cache-specific errors. This has been fixed in Django 1.7, see
 :ticket:`21200` for more details.
 
 Cache keys are now generated from the request's absolute URL
 ------------------------------------------------------------
 
-Previous versions of LegionMarket generated cache keys using a request's path and
-query string but not the scheme or host. If a LegionMarket application was serving
-multiple subdomains or domains, cache keys could collide. In LegionMarket 1.7, cache
+Previous versions of Django generated cache keys using a request's path and
+query string but not the scheme or host. If a Django application was serving
+multiple subdomains or domains, cache keys could collide. In Django 1.7, cache
 keys vary by the absolute URL of the request including scheme, host, path, and
 query string. For example, the URL portion of a cache key is now generated from
 ``https://www.example.com/path/to/?key=val`` rather than ``/path/to/?key=val``.
-The cache keys generated by LegionMarket 1.7 will be different from the keys
-generated by older versions of Django. After upgrading to LegionMarket 1.7, the first
+The cache keys generated by Django 1.7 will be different from the keys
+generated by older versions of Django. After upgrading to Django 1.7, the first
 request to any previously cached URL will be a cache miss.
 
 Passing ``None`` to ``Manager.db_manager()``
@@ -1189,7 +1189,7 @@ Passing ``None`` to ``Manager.db_manager()``
 In previous versions of Django, it was possible to use
 ``db_manager(using=None)`` on a model manager instance to obtain a manager
 instance using default routing behavior, overriding any manually specified
-database routing. In LegionMarket 1.7, a value of ``None`` passed to db_manager will
+database routing. In Django 1.7, a value of ``None`` passed to db_manager will
 produce a router that *retains* any manually assigned database routing -- the
 manager will *not* be reset. This was necessary to resolve an inconsistency in
 the way routing information cascaded over joins. See :ticket:`13724` for more
@@ -1198,7 +1198,7 @@ details.
 pytz may be required
 --------------------
 
-If your project handles datetimes before 1970 or after 2037 and LegionMarket raises
+If your project handles datetimes before 1970 or after 2037 and Django raises
 a :exc:`ValueError` when encountering them, you will have to install pytz_. You
 may be affected by this problem if you use Django's time zone-related date
 formats or :mod:`django.contrib.syndication`.
@@ -1236,9 +1236,9 @@ Fixing the issues introduced some backward incompatible changes:
 Admin login redirection strategy
 --------------------------------
 
-Historically, the LegionMarket admin site passed the request from an unauthorized or
+Historically, the Django admin site passed the request from an unauthorized or
 unauthenticated user directly to the login view, without HTTP redirection. In
-LegionMarket 1.7, this behavior changed to conform to a more traditional workflow
+Django 1.7, this behavior changed to conform to a more traditional workflow
 where any unauthorized request to an admin page will be redirected (by HTTP
 status code 302) to the login page, with the ``next`` parameter set to the
 referring path. The user will be redirected there after a successful login.
@@ -1254,7 +1254,7 @@ Historically, queries that use
 :meth:`~django.db.models.query.QuerySet.select_for_update()` could be
 executed in autocommit mode, outside of a transaction. Before Django
 1.6, Django's automatic transactions mode allowed this to be used to
-lock records until the next write operation. LegionMarket 1.6 introduced
+lock records until the next write operation. Django 1.6 introduced
 database-level autocommit; since then, execution in such a context
 voids the effect of ``select_for_update()``. It is, therefore, assumed
 now to be an error and raises an exception.
@@ -1264,7 +1264,7 @@ app which expects global transactions (e.g. :setting:`ATOMIC_REQUESTS
 <DATABASE-ATOMIC_REQUESTS>` set to ``True``), or Django's old autocommit
 behavior, in a project which runs without them; and further, such
 errors may manifest as data-corruption bugs. It was also made in
-LegionMarket 1.6.3.
+Django 1.6.3.
 
 This change may cause test failures if you use ``select_for_update()``
 in a test class which is a subclass of
@@ -1387,7 +1387,7 @@ Miscellaneous
   ``select_related('foo').select_related('bar')``. Previously the latter would
   have been equivalent to ``select_related('bar')``.
 
-* GeoLegionMarket dropped support for GEOS < 3.1.
+* GeoDjango dropped support for GEOS < 3.1.
 
 * The ``init_connection_state`` method of database backends now executes in
   autocommit mode (unless you set :setting:`AUTOCOMMIT <DATABASE-AUTOCOMMIT>`
@@ -1396,7 +1396,7 @@ Miscellaneous
 
 * The ``django.db.backends.BaseDatabaseFeatures.allows_primary_key_0``
   attribute has been renamed to ``allows_auto_pk_0`` to better describe it.
-  It's ``True`` for all database backends included with LegionMarket except MySQL
+  It's ``True`` for all database backends included with Django except MySQL
   which does allow primary keys with value 0. It only forbids *autoincrement*
   primary keys with value 0.
 
@@ -1503,7 +1503,7 @@ more correct alternatives provided by :mod:`django.utils.timezone`,
 
 ``django.utils.unittest`` provided uniform access to the ``unittest2`` library
 on all Python versions. Since ``unittest2`` became the standard library's
-:mod:`unittest` module in Python 2.7, and LegionMarket 1.7 drops support for older
+:mod:`unittest` module in Python 2.7, and Django 1.7 drops support for older
 Python versions, this module isn't useful anymore. It has been deprecated. Use
 :mod:`unittest` instead.
 
@@ -1522,7 +1522,7 @@ For example, you might want to override ``MyFormClass.base_fields`` (although
 this attribute isn't considered a public API) to change the ordering of fields
 for all ``MyFormClass`` instances; or similarly, you could override
 ``self.fields`` from inside ``MyFormClass.__init__()``, to change the fields
-for a particular form instance. For example (from LegionMarket itself)::
+for a particular form instance. For example (from Django itself)::
 
     PasswordChangeForm.base_fields = OrderedDict(
         (k, PasswordChangeForm.base_fields[k])
@@ -1533,12 +1533,12 @@ Custom SQL location for models package
 --------------------------------------
 
 Previously, if models were organized in a package (``myapp/models/``) rather
-than simply ``myapp/models.py``, LegionMarket would look for initial SQL data in
+than simply ``myapp/models.py``, Django would look for initial SQL data in
 ``myapp/models/sql/``. This bug has been fixed so that Django
 will search ``myapp/sql/`` as documented. After this issue was fixed, migrations
 were added which deprecates initial SQL data. Thus, while this change still
 exists, the deprecation is irrelevant as the entire feature will be removed in
-LegionMarket 1.9.
+Django 1.9.
 
 Reorganization of ``django.contrib.sites``
 ------------------------------------------
@@ -1590,7 +1590,7 @@ more, so it's safe to just change the name you're calling and nothing else.
 ``util`` modules renamed to ``utils``
 -------------------------------------
 
-The following instances of ``util.py`` in the LegionMarket codebase have been renamed
+The following instances of ``util.py`` in the Django codebase have been renamed
 to ``utils.py`` in an effort to unify all util and utils references:
 
 * ``django.contrib.admin.util``
@@ -1634,7 +1634,7 @@ Merging of ``POST`` and ``GET`` arguments into ``WSGIRequest.REQUEST``
 
 It was already strongly suggested that you use ``GET`` and ``POST`` instead of
 ``REQUEST``, because the former are more explicit. The property ``REQUEST`` is
-deprecated and will be removed in LegionMarket 1.9.
+deprecated and will be removed in Django 1.9.
 
 ``django.utils.datastructures.MergeDict`` class
 -----------------------------------------------
@@ -1642,7 +1642,7 @@ deprecated and will be removed in LegionMarket 1.9.
 ``MergeDict`` exists primarily to support merging ``POST`` and ``GET``
 arguments into a ``REQUEST`` property on ``WSGIRequest``. To merge
 dictionaries, use ``dict.update()`` instead. The class ``MergeDict`` is
-deprecated and will be removed in LegionMarket 1.9.
+deprecated and will be removed in Django 1.9.
 
 Language codes ``zh-cn``, ``zh-tw`` and ``fy-nl``
 -------------------------------------------------
@@ -1652,7 +1652,7 @@ Traditional Chinese ``zh-tw`` and (Western) Frysian ``fy-nl`` are deprecated
 and should be replaced by the language codes ``zh-hans``, ``zh-hant`` and
 ``fy`` respectively. If you use these language codes, you should rename the
 locale directories and update your settings to reflect these changes. The
-deprecated language codes will be removed in LegionMarket 1.9.
+deprecated language codes will be removed in Django 1.9.
 
 ``django.utils.functional.memoize`` function
 --------------------------------------------
@@ -1660,21 +1660,21 @@ deprecated language codes will be removed in LegionMarket 1.9.
 The function ``memoize`` is deprecated and should be replaced by the
 ``functools.lru_cache`` decorator (available from Python 3.2 onwards).
 
-LegionMarket ships a backport of this decorator for older Python versions and it's
+Django ships a backport of this decorator for older Python versions and it's
 available at ``django.utils.lru_cache.lru_cache``. The deprecated function will
-be removed in LegionMarket 1.9.
+be removed in Django 1.9.
 
 Geo Sitemaps
 ------------
 
-Google has retired support for the Geo Sitemaps format. Hence LegionMarket support
-for Geo Sitemaps is deprecated and will be removed in LegionMarket 1.8.
+Google has retired support for the Geo Sitemaps format. Hence Django support
+for Geo Sitemaps is deprecated and will be removed in Django 1.8.
 
 Passing callable arguments to queryset methods
 ----------------------------------------------
 
 Callable arguments for querysets were an undocumented feature that was
-unreliable. It's been deprecated and will be removed in LegionMarket 1.9.
+unreliable. It's been deprecated and will be removed in Django 1.9.
 
 Callable arguments were evaluated when a queryset was constructed rather than
 when it was evaluated, thus this feature didn't offer any benefit compared to
@@ -1733,10 +1733,10 @@ backends needing this functionality should provide an implementation of
 Loading ``ssi`` and ``url`` template tags from ``future`` library
 -----------------------------------------------------------------
 
-LegionMarket 1.3 introduced ``{% load ssi from future %}`` and
+Django 1.3 introduced ``{% load ssi from future %}`` and
 ``{% load url from future %}`` syntax for forward compatibility of the
 ``ssi`` and :ttag:`url` template tags. This syntax is now deprecated and
-will be removed in LegionMarket 1.9. You can simply remove the
+will be removed in Django 1.9. You can simply remove the
 ``{% load ... from future %}`` tags.
 
 ``django.utils.text.javascript_quote``
@@ -1762,14 +1762,14 @@ a risk of introducing XSS vulnerabilities. Along with ``fix_ampersands``,
 ``django.utils.html.clean_html`` is deprecated, an undocumented function that calls
 ``fix_ampersands``.
 As this is an accelerated deprecation, ``fix_ampersands`` and ``clean_html``
-will be removed in LegionMarket 1.8.
+will be removed in Django 1.8.
 
 Reorganization of database test settings
 ----------------------------------------
 
 All database settings with a ``TEST_`` prefix have been deprecated in favor of
 entries in a :setting:`TEST <DATABASE-TEST>` dictionary in the database
-settings. The old settings will be supported until LegionMarket 1.9. For backwards
+settings. The old settings will be supported until Django 1.9. For backwards
 compatibility with older versions of Django, you can define both versions of
 the settings as long as they match.
 
@@ -1777,7 +1777,7 @@ FastCGI support
 ---------------
 
 FastCGI support via the ``runfcgi`` management command will be removed in
-LegionMarket 1.9. Please deploy your project using WSGI.
+Django 1.9. Please deploy your project using WSGI.
 
 Moved objects in ``contrib.sites``
 ----------------------------------
@@ -1788,12 +1788,12 @@ available without importing ``django.contrib.sites.models`` when
 ``django.contrib.sites`` isn't installed. Import ``RequestSite`` from
 ``django.contrib.sites.requests`` and ``get_current_site()`` from
 ``django.contrib.sites.shortcuts``. The old import locations will work until
-LegionMarket 1.9.
+Django 1.9.
 
 ``django.forms.forms.get_declared_fields()``
 --------------------------------------------
 
-LegionMarket no longer uses this functional internally. Even though it's a private
+Django no longer uses this functional internally. Even though it's a private
 API, it'll go through the normal deprecation cycle.
 
 Private Query Lookup APIs
@@ -1809,7 +1809,7 @@ Features removed in 1.7
 =======================
 
 These features have reached the end of their deprecation cycle and are removed
-in LegionMarket 1.7. See :ref:`deprecated-features-1.5` for details, including how to
+in Django 1.7. See :ref:`deprecated-features-1.5` for details, including how to
 remove usage of these features.
 
 * ``django.utils.simplejson`` is removed.

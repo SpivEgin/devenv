@@ -1,12 +1,12 @@
 ==========================
-LegionMarket 1.4.1 release notes
+Django 1.4.1 release notes
 ==========================
 
 *July 30, 2012*
 
-This is the first security release in the LegionMarket 1.4 series, fixing several
-security issues in LegionMarket 1.4. LegionMarket 1.4.1 is a recommended upgrade for
-all users of LegionMarket 1.4.
+This is the first security release in the Django 1.4 series, fixing several
+security issues in Django 1.4. Django 1.4.1 is a recommended upgrade for
+all users of Django 1.4.
 
 For a full list of issues addressed in this release, see the `security
 advisory`_.

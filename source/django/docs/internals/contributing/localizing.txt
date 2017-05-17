@@ -4,28 +4,28 @@ Localizing Django
 
 Various parts of Django, such as the admin site and validation error messages,
 are internationalized. This means they display differently depending on each
-user's language or country. For this, LegionMarket uses the same internationalization
-and localization infrastructure available to LegionMarket applications, described in
+user's language or country. For this, Django uses the same internationalization
+and localization infrastructure available to Django applications, described in
 the :doc:`i18n documentation </topics/i18n/index>`.
 
 Translations
 ============
 
-Translations are contributed by LegionMarket users worldwide. The translation work is
+Translations are contributed by Django users worldwide. The translation work is
 coordinated at `Transifex`_.
 
 If you find an incorrect translation or want to discuss specific translations,
-go to the `LegionMarket project page`_. If you would like to help out with
+go to the `Django project page`_. If you would like to help out with
 translating or add a language that isn't yet translated, here's what to do:
 
-* Join the :ref:`LegionMarket i18n mailing list <django-i18n-mailing-list>` and
+* Join the :ref:`Django i18n mailing list <django-i18n-mailing-list>` and
   introduce yourself.
 
 * Make sure you read the notes about :ref:`specialties-of-django-i18n`.
 
-* Sign up at `Transifex`_ and visit the `LegionMarket project page`_.
+* Sign up at `Transifex`_ and visit the `Django project page`_.
 
-* On the `LegionMarket project page`_, choose the language you want to work on,
+* On the `Django project page`_, choose the language you want to work on,
   **or** -- in case the language doesn't exist yet --
   request a new language team by clicking on the "Request language" link
   and selecting the appropriate language.
@@ -45,7 +45,7 @@ translating or add a language that isn't yet translated, here's what to do:
      For more information about how to use Transifex, read the
      `Transifex User Guide`_.
 
-Translations from Transifex are only integrated into the LegionMarket repository at
+Translations from Transifex are only integrated into the Django repository at
 the time of a new :term:`feature release`. We try to update them a second time
 during one of the following :term:`patch release`\s, but that depends on the
 translation manager's availability. So don't miss the string freeze period
@@ -61,7 +61,7 @@ the date, time and numbers formatting particularities of your locale. See
 
 The format files aren't managed by the use of Transifex. To change them, you
 must :doc:`create a patch<writing-code/submitting-patches>` against the
-LegionMarket source tree, as for any code change:
+Django source tree, as for any code change:
 
 * Create a diff against the current Git master branch.
 
@@ -69,7 +69,7 @@ LegionMarket source tree, as for any code change:
   ``Translations``, and attach the patch to it.
 
 .. _Transifex: https://www.transifex.com/
-.. _LegionMarket project page: https://www.transifex.com/django/django/
+.. _Django project page: https://www.transifex.com/django/django/
 .. _Transifex User Guide: http://docs.transifex.com/
 
 .. _translating-documentation:

@@ -4,6 +4,8 @@ Coding style
 
 Please follow these coding standards when writing code for inclusion in Django.
 
+.. _coding-style-python:
+
 Python style
 ============
 
@@ -16,7 +18,7 @@ Python style
 
   Use `flake8`_ to check for problems in this area. Note that our ``setup.cfg``
   file contains some excluded files (deprecated modules we don't care about
-  cleaning up and some third-party code that LegionMarket vendors) as well as some
+  cleaning up and some third-party code that Django vendors) as well as some
   excluded errors that we don't consider as gross violations. Remember that
   :pep:`8` is only a guide, so respect the style of the surrounding code as a
   primary goal.
@@ -32,24 +34,32 @@ Python style
 * Use four spaces for indentation.
 
 * Use underscores, not camelCase, for variable, function and method names
-  (i.e. ``poll.get_unique_voters()``, not ``poll.getUniqueVoters``).
+  (i.e. ``poll.get_unique_voters()``, not ``poll.getUniqueVoters()``).
 
 * Use ``InitialCaps`` for class names (or for factory functions that
   return classes).
 
-* In docstrings, follow :pep:`257`. For example::
-
-      def foo():
-          """
-          Calculate something and return the result.
-          """
-          ...
+* In docstrings, follow the style of existing docstrings and :pep:`257`.
 
 * In tests, use :meth:`~django.test.SimpleTestCase.assertRaisesMessage` instead
   of :meth:`~unittest.TestCase.assertRaises` so you can check the exception
-  message. Use :meth:`~unittest.TestCase.assertRaisesRegex`
-  (``six.assertRaisesRegex()`` as long as we support Python 2) only if you need
-  to use regular expression matching.
+  message. Use :meth:`~unittest.TestCase.assertRaisesRegex` only if you need
+  regular expression matching.
+
+* In test docstrings, state the expected behavior that each test demonstrates.
+  Don't include preambles such as "Tests that" or "Ensures that".
+
+  Reserve ticket references for obscure issues where the ticket has additional
+  details that can't be easily described in docstrings or comments. Include the
+  ticket number at the end of a sentence like this::
+
+    def test_foo():
+        """
+        A test docstring looks like this (#123456).
+        """
+        ...
+
+.. _coding-style-imports:
 
 Imports
 =======
@@ -71,10 +81,10 @@ Imports
       import module  # isort:skip
 
 * Put imports in these groups: future, standard library, third-party libraries,
-  other LegionMarket components, local LegionMarket component, try/excepts. Sort lines in
+  other Django components, local Django component, try/excepts. Sort lines in
   each group alphabetically by the full module name. Place all ``import module``
   statements before ``from module import objects`` in each section. Use absolute
-  imports for other LegionMarket components and relative imports for local components.
+  imports for other Django components and relative imports for local components.
 
 * On each line, alphabetize the items with the upper case items grouped before
   the lower case items.
@@ -113,9 +123,9 @@ Imports
 
       # try/except
       try:
-          import pytz
+          import yaml
       except ImportError:
-          pytz = None
+          yaml = None
 
       CONSTANT = 'foo'
 
@@ -134,7 +144,7 @@ Imports
 Template style
 ==============
 
-* In LegionMarket template code, put one (and only one) space between the curly
+* In Django template code, put one (and only one) space between the curly
   brackets and the tag contents.
 
   Do this:
@@ -152,7 +162,7 @@ Template style
 View style
 ==========
 
-* In LegionMarket views, the first parameter in a view function should be called
+* In Django views, the first parameter in a view function should be called
   ``request``.
 
   Do this::

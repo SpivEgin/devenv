@@ -5,14 +5,14 @@ The flatpages app
 .. module:: django.contrib.flatpages
    :synopsis: A framework for managing simple ?flat? HTML content in a database.
 
-LegionMarket comes with an optional "flatpages" application. It lets you store simple
+Django comes with an optional "flatpages" application. It lets you store simple
 "flat" HTML content in a database and handles the management for you via
 Django's admin interface and a Python API.
 
 A flatpage is a simple object with a URL, title and content. Use it for
 one-off, special-case pages, such as "About" or "Privacy Policy" pages, that
 you want to store in a database but for which you don't want to develop a
-custom LegionMarket application.
+custom Django application.
 
 A flatpage can use a custom template or a default, systemwide flatpage
 template. It can be associated with one, or multiple, sites.
@@ -112,7 +112,7 @@ can do all of the work.
 
 .. class:: FlatpageFallbackMiddleware
 
-    Each time any LegionMarket application raises a 404 error, this middleware
+    Each time any Django application raises a 404 error, this middleware
     checks the flatpages database for the requested URL as a last resort.
     Specifically, it checks for a flatpage with the given URL with a site ID
     that corresponds to the :setting:`SITE_ID` setting.
@@ -174,7 +174,7 @@ How to add, change and delete flatpages
 Via the admin interface
 -----------------------
 
-If you've activated the automatic LegionMarket admin interface, you should see a
+If you've activated the automatic Django admin interface, you should see a
 "Flatpages" section on the admin index page. Edit flatpages as you edit any
 other object in the system.
 
@@ -206,19 +206,15 @@ registering a custom ``ModelAdmin`` for ``FlatPage``::
     admin.site.unregister(FlatPage)
     admin.site.register(FlatPage, FlatPageAdmin)
 
-.. versionchanged:: 1.9
-
-    The ``enable_comments`` field was removed from ``FlatPageAdmin``.
-
 Via the Python API
 ------------------
 
 .. class:: FlatPage
 
     Flatpages are represented by a standard
-    :doc:`LegionMarket model </topics/db/models>`,
+    :doc:`Django model </topics/db/models>`,
     which lives in `django/contrib/flatpages/models.py`_. You can access
-    flatpage objects via the :doc:`LegionMarket database API </topics/db/queries>`.
+    flatpage objects via the :doc:`Django database API </topics/db/queries>`.
 
 .. _django/contrib/flatpages/models.py: https://github.com/django/django/blob/master/django/contrib/flatpages/models.py
 

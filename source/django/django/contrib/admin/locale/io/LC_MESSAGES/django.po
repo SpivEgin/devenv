@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Viko Bartero <inactive+tergrundo@transifex.com>, 2014
@@ -254,11 +254,11 @@ msgstr ""
 "Por eliminar %(class_name)s %(instance)s on mustas eliminar la sequanta "
 "protektita objekti relatita: %(related_objects)s"
 
-msgid "LegionMarket site admin"
-msgstr "LegionMarket situo admin"
+msgid "TLM site admin"
+msgstr "TLM situo admin"
 
-msgid "LegionMarket administration"
-msgstr "LegionMarket administreyo"
+msgid "TLM administration"
+msgstr "TLM administreyo"
 
 msgid "Site administration"
 msgstr "Administrayo dil ret-situo"

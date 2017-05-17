@@ -28,7 +28,8 @@ from django.core.cache.backends.base import InvalidCacheBackendError
 from django.core.exceptions import ImproperlyConfigured, SuspiciousOperation
 from django.http import HttpResponse
 from django.test import (
-    RequestFactory, TestCase, ignore_warnings, override_settings,
+    RequestFactory, SimpleTestCase, TestCase, ignore_warnings,
+    override_settings,
 )
 from django.test.utils import patch_logger
 from django.utils import six, timezone
@@ -187,6 +188,15 @@ class SessionTestsMixin(object):
         self.assertFalse(self.session.exists(prev_key))
         self.assertNotEqual(self.session.session_key, prev_key)
         self.assertEqual(list(self.session.items()), prev_data)
+
+    def test_cycle_with_no_session_cache(self):
+        self.session['a'], self.session['b'] = 'c', 'd'
+        self.session.save()
+        prev_data = self.session.items()
+        self.session = self.backend(self.session.session_key)
+        self.assertFalse(hasattr(self.session, '_session_cache'))
+        self.session.cycle_key()
+        self.assertCountEqual(self.session.items(), prev_data)
 
     def test_save_doesnt_clear_data(self):
         self.session['a'] = 'b'
@@ -503,8 +513,8 @@ class CacheDBSessionWithTimeZoneTests(CacheDBSessionTests):
     pass
 
 
-# Don't need DB flushing for these tests, so can use unittest.TestCase as base class
-class FileSessionTests(SessionTestsMixin, unittest.TestCase):
+# Don't need DB flushing for these tests, so use SimpleTestCase as base class
+class FileSessionTests(SessionTestsMixin, SimpleTestCase):
 
     backend = FileSession
 
@@ -587,7 +597,7 @@ class FileSessionTests(SessionTestsMixin, unittest.TestCase):
         self.assertEqual(1, count_sessions())
 
 
-class CacheSessionTests(SessionTestsMixin, unittest.TestCase):
+class CacheSessionTests(SessionTestsMixin, SimpleTestCase):
 
     backend = CacheSession
 
@@ -691,7 +701,7 @@ class SessionMiddlewareTests(TestCase):
         # Handle the response through the middleware
         response = middleware.process_response(request, response)
 
-        # Check that the value wasn't saved above.
+        # The value wasn't saved above.
         self.assertNotIn('hello', request.session.load())
 
     def test_session_update_error_redirect(self):
@@ -729,7 +739,7 @@ class SessionMiddlewareTests(TestCase):
         # Handle the response through the middleware
         response = middleware.process_response(request, response)
 
-        # Check that the cookie was deleted, not recreated.
+        # The cookie was deleted, not recreated.
         # A deleted cookie header looks like:
         #  Set-Cookie: sessionid=; expires=Thu, 01-Jan-1970 00:00:00 GMT; Max-Age=0; Path=/
         self.assertEqual(
@@ -757,7 +767,7 @@ class SessionMiddlewareTests(TestCase):
         # Handle the response through the middleware
         response = middleware.process_response(request, response)
 
-        # Check that the cookie was deleted, not recreated.
+        # The cookie was deleted, not recreated.
         # A deleted cookie header with a custom domain and path looks like:
         #  Set-Cookie: sessionid=; Domain=.example.local;
         #              expires=Thu, 01-Jan-1970 00:00:00 GMT; Max-Age=0;
@@ -828,8 +838,8 @@ class SessionMiddlewareTests(TestCase):
         self.assertEqual(response['Vary'], 'Cookie')
 
 
-# Don't need DB flushing for these tests, so can use unittest.TestCase as base class
-class CookieSessionTests(SessionTestsMixin, unittest.TestCase):
+# Don't need DB flushing for these tests, so use SimpleTestCase as base class
+class CookieSessionTests(SessionTestsMixin, SimpleTestCase):
 
     backend = CookieSession
 

@@ -12,10 +12,11 @@ from django.contrib.auth.forms import (
     SetPasswordForm, UserChangeForm, UserCreationForm,
 )
 from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_login_failed
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.core.mail import EmailMultiAlternatives
-from django.forms.fields import CharField, Field
+from django.forms.fields import CharField, Field, IntegerField
 from django.test import SimpleTestCase, TestCase, mock, override_settings
 from django.utils import six, translation
 from django.utils.encoding import force_text
@@ -25,6 +26,8 @@ from django.utils.translation import ugettext as _
 from .models.custom_user import (
     CustomUser, CustomUserWithoutIsActiveField, ExtensionUser,
 )
+from .models.with_custom_email_field import CustomEmailField
+from .models.with_integer_username import IntegerUsernameUser
 from .settings import AUTH_TEMPLATES
 
 
@@ -235,6 +238,16 @@ class UserCreationFormTest(TestDataMixin, TestCase):
         self.assertEqual(form.cleaned_data['password1'], data['password1'])
         self.assertEqual(form.cleaned_data['password2'], data['password2'])
 
+    @override_settings(AUTH_PASSWORD_VALIDATORS=[
+        {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    ])
+    def test_password_help_text(self):
+        form = UserCreationForm()
+        self.assertEqual(
+            form.fields['password1'].help_text,
+            '<ul><li>Your password can&#39;t be too similar to your other personal information.</li></ul>'
+        )
+
 
 # To verify that the login form rejects inactive users, use an authentication
 # backend that allows them.
@@ -267,6 +280,24 @@ class AuthenticationFormTest(TestDataMixin, TestCase):
         form = AuthenticationForm(None, data)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.non_field_errors(), [force_text(form.error_messages['inactive'])])
+
+    def test_login_failed(self):
+        signal_calls = []
+
+        def signal_handler(**kwargs):
+            signal_calls.append(kwargs)
+
+        user_login_failed.connect(signal_handler)
+        fake_request = object()
+        try:
+            form = AuthenticationForm(fake_request, {
+                'username': 'testclient',
+                'password': 'incorrect',
+            })
+            self.assertFalse(form.is_valid())
+            self.assertIs(signal_calls[0]['request'], fake_request)
+        finally:
+            user_login_failed.disconnect(signal_handler)
 
     def test_inactive_user_i18n(self):
         with self.settings(USE_I18N=True), translation.override('pt-br', deactivate=True):
@@ -366,6 +397,23 @@ class AuthenticationFormTest(TestDataMixin, TestCase):
         form = AuthenticationForm(None, data)
         form.is_valid()  # Not necessary to have valid credentails for the test.
         self.assertEqual(form.cleaned_data['password'], data['password'])
+
+    @override_settings(AUTH_USER_MODEL='auth_tests.IntegerUsernameUser')
+    def test_integer_username(self):
+        class CustomAuthenticationForm(AuthenticationForm):
+            username = IntegerField()
+
+        user = IntegerUsernameUser.objects.create_user(username=0, password='pwd')
+        data = {
+            'username': 0,
+            'password': 'pwd',
+        }
+        form = CustomAuthenticationForm(None, data)
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['username'], data['username'])
+        self.assertEqual(form.cleaned_data['password'], data['password'])
+        self.assertEqual(form.errors, {})
+        self.assertEqual(form.user_cache, user)
 
 
 class SetPasswordFormTest(TestDataMixin, TestCase):
@@ -697,7 +745,7 @@ class PasswordResetFormTest(TestDataMixin, TestCase):
 
     def test_inactive_user(self):
         """
-        Test that inactive user cannot receive password reset email.
+        Inactive user cannot receive password reset email.
         """
         (user, username, email) = self.create_dummy_user()
         user.is_active = False
@@ -765,6 +813,17 @@ class PasswordResetFormTest(TestDataMixin, TestCase):
             message.get_payload(1).get_payload()
         ))
 
+    @override_settings(AUTH_USER_MODEL='auth_tests.CustomEmailField')
+    def test_custom_email_field(self):
+        email = 'test@mail.com'
+        CustomEmailField.objects.create_user('test name', 'test password', email)
+        form = PasswordResetForm({'email': email})
+        self.assertTrue(form.is_valid())
+        form.save()
+        self.assertEqual(form.cleaned_data['email'], email)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, [email])
+
 
 class ReadOnlyPasswordHashTest(SimpleTestCase):
 
@@ -774,6 +833,22 @@ class ReadOnlyPasswordHashTest(SimpleTestCase):
         widget = ReadOnlyPasswordHashWidget()
         html = widget.render(name='password', value=None, attrs={})
         self.assertIn(_("No password set."), html)
+
+    @override_settings(PASSWORD_HASHERS=['django.contrib.auth.hashers.PBKDF2PasswordHasher'])
+    def test_render(self):
+        widget = ReadOnlyPasswordHashWidget()
+        value = 'pbkdf2_sha256$100000$a6Pucb1qSFcD$WmCkn9Hqidj48NVe5x0FEM6A9YiOqQcl/83m2Z5udm0='
+        self.assertHTMLEqual(
+            widget.render('name', value, {'id': 'id_password'}),
+            """
+            <div id="id_password">
+                <strong>algorithm</strong>: pbkdf2_sha256
+                <strong>iterations</strong>: 100000
+                <strong>salt</strong>: a6Pucb******
+                <strong>hash</strong>: WmCkn9**************************************
+            </div>
+            """
+        )
 
     def test_readonly_field_has_changed(self):
         field = ReadOnlyPasswordHashField()

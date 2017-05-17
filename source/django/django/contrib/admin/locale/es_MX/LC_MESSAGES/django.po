@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Abraham Estrada <abraham.estrada@gmail.com>, 2011-2013
@@ -259,10 +259,10 @@ msgstr ""
 "La eliminación de %(class_name)s %(instance)s provocaría la eliminación de "
 "los siguientes objetos relacionados protegidos: %(related_objects)s"
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "Sitio de administración de Django"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "Administración de Django"
 
 msgid "Site administration"

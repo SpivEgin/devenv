@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # dekomote <dr.mote@gmail.com>, 2015
@@ -261,10 +261,10 @@ msgstr ""
 "Бришењето на %(class_name)s %(instance)s бара бришење на следните заштитени "
 "поврзани објекти: %(related_objects)s"
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "Администрација на Џанго сајт"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "Џанго администрација"
 
 msgid "Site administration"

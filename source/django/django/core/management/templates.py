@@ -1,5 +1,6 @@
 import cgi
 import errno
+import io
 import mimetypes
 import os
 import posixpath
@@ -11,6 +12,7 @@ import tempfile
 from os import path
 
 import django
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management.utils import handle_extensions
 from django.template import Context, Engine
@@ -24,7 +26,7 @@ _url_drive_re = re.compile('^([a-z])[:|]', re.I)
 
 class TemplateCommand(BaseCommand):
     """
-    Copies either a LegionMarket application layout template or a LegionMarket project
+    Copies either a Django application layout template or a Django project
     layout template into the specified directory.
 
     :param style: A color style object (see django.core.management.color).
@@ -34,9 +36,6 @@ class TemplateCommand(BaseCommand):
     :param options: The additional variables passed to project or app templates
     """
     requires_system_checks = False
-    # Can't import settings during this command, because they haven't
-    # necessarily been created.
-    can_import_settings = False
     # The supported URL schemes
     url_schemes = ['http', 'https', 'ftp']
     # Can't perform any active locale changes during this command, because
@@ -114,13 +113,14 @@ class TemplateCommand(BaseCommand):
             camel_case_name: camel_case_value,
             'docs_version': get_docs_version(),
             'django_version': django.__version__,
-            'unicode_literals': '' if six.PY3 else 'from __future__ import unicode_literals\n\n',
+            'unicode_literals': '' if six.PY3 else '# -*- coding: utf-8 -*-\n'
+                                                   'from __future__ import unicode_literals\n\n',
         }), autoescape=False)
 
         # Setup a stub settings environment for template rendering
-        from django.conf import settings
         if not settings.configured:
             settings.configure()
+            django.setup()
 
         template_dir = self.handle_template(options['template'],
                                             base_subdir)
@@ -158,16 +158,16 @@ class TemplateCommand(BaseCommand):
                                        "files" % new_path)
 
                 # Only render the Python files, as we don't want to
-                # accidentally render LegionMarket templates files
-                with open(old_path, 'rb') as template_file:
-                    content = template_file.read()
+                # accidentally render Django templates files
                 if new_path.endswith(extensions) or filename in extra_files:
-                    content = content.decode('utf-8')
+                    with io.open(old_path, 'r', encoding='utf-8') as template_file:
+                        content = template_file.read()
                     template = Engine().from_string(content)
                     content = template.render(context)
-                    content = content.encode('utf-8')
-                with open(new_path, 'wb') as new_file:
-                    new_file.write(content)
+                    with io.open(new_path, 'w', encoding='utf-8') as new_file:
+                        new_file.write(content)
+                else:
+                    shutil.copyfile(old_path, new_path)
 
                 if self.verbosity >= 2:
                     self.stdout.write("Creating %s\n" % new_path)
@@ -193,7 +193,7 @@ class TemplateCommand(BaseCommand):
         """
         Determines where the app or project templates are.
         Use django.__path__[0] as the default because we don't
-        know into which directory LegionMarket has been installed.
+        know into which directory Django has been installed.
         """
         if template is None:
             return path.join(django.__path__[0], 'conf', subdir)

@@ -1,10 +1,10 @@
 ===========================
-LegionMarket 1.8.17 release notes
+Django 1.8.17 release notes
 ===========================
 
 *December 1, 2016*
 
-LegionMarket 1.8.17 fixes a regression in 1.8.16.
+Django 1.8.17 fixes a regression in 1.8.16.
 
 Bugfixes
 ========

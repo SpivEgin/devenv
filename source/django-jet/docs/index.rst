@@ -1,11 +1,11 @@
 ==========
-The Legion Market JET
+TLM JET
 ==========
 
 About
 =====
 
-**Modern template for The Legion Market admin interface with improved functionality**
+**Modern template for TLM admin interface with improved functionality**
 
 .. image:: https://raw.githubusercontent.com/geex-arts/jet/static/logo.png
     :width: 500px
@@ -28,9 +28,9 @@ Contents
 License
 =======
 
-The Legion Market JET has two kinds of licenses: open-source (AGPLv3) and commercial. Please note that using AGPLv3
+TLM JET has two kinds of licenses: open-source (AGPLv3) and commercial. Please note that using AGPLv3
 code in your programs make them AGPL compatible too. So if you don't want to comply with that we can provide you
-a commercial license (visit Home page). The commercial license is designed for using The Legion Market JET in commercial products
+a commercial license (visit Home page). The commercial license is designed for using TLM JET in commercial products
 and applications without the provisions of the AGPLv3.
 
 Resources

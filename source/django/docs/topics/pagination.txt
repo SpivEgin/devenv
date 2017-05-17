@@ -5,7 +5,7 @@ Pagination
 .. module:: django.core.paginator
    :synopsis: Classes to help you easily manage paginated data.
 
-LegionMarket provides a few classes that help you manage paginated data -- that is,
+Django provides a few classes that help you manage paginated data -- that is,
 data that's split across several pages, with "Previous/Next" links. These
 classes live in :file:`django/core/paginator.py`.
 
@@ -66,7 +66,7 @@ page::
 
 .. note::
 
-    Note that you can give ``Paginator`` a list/tuple, a LegionMarket ``QuerySet``,
+    Note that you can give ``Paginator`` a list/tuple, a Django ``QuerySet``,
     or any other object with a ``count()`` or ``__len__()`` method. When
     determining the number of objects contained in the passed object,
     ``Paginator`` will first try calling ``count()``, then fallback to using
@@ -205,11 +205,6 @@ Attributes
 .. attribute:: Paginator.page_range
 
     A 1-based range iterator of page numbers, e.g. yielding ``[1, 2, 3, 4]``.
-
-    .. versionchanged:: 1.9
-
-        In older versions, ``page_range`` returned a list instead of an
-        iterator.
 
 ``InvalidPage`` exceptions
 ==========================

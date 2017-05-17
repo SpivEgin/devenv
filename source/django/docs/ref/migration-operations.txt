@@ -7,10 +7,10 @@ Migration Operations
 Migration files are composed of one or more ``Operation``\s, objects that
 declaratively record what the migration should do to your database.
 
-LegionMarket also uses these ``Operation`` objects to work out what your models
+Django also uses these ``Operation`` objects to work out what your models
 looked like historically, and to calculate what changes you've made to
 your models since the last migration so it can automatically write
-your migrations; that's why they're declarative, as it means LegionMarket can
+your migrations; that's why they're declarative, as it means Django can
 easily load them all into memory and run through them without touching
 the database to work out what your project should look like.
 
@@ -25,7 +25,7 @@ but be aware that manually adding schema-altering operations can confuse the
 migration autodetector and make resulting runs of :djadmin:`makemigrations`
 output incorrect code.
 
-All of the core LegionMarket operations are available from the
+All of the core Django operations are available from the
 ``django.db.migrations.operations`` module.
 
 For introductory material, see the :doc:`migrations topic guide
@@ -147,8 +147,8 @@ value is permanent and should be baked into the project state (``True``),
 or if it is temporary and just for this migration (``False``) - usually
 because the migration is adding a non-nullable field to a table and needs
 a default value to put into existing rows. It does not affect the behavior
-of setting defaults in the database directly - LegionMarket never sets database
-defaults and always applies them in the LegionMarket ORM code.
+of setting defaults in the database directly - Django never sets database
+defaults and always applies them in the Django ORM code.
 
 ``RemoveField``
 ---------------
@@ -177,8 +177,8 @@ value is permanent and should be baked into the project state (``True``),
 or if it is temporary and just for this migration (``False``) - usually
 because the migration is altering a nullable field to a non-nullable one and
 needs a default value to put into existing rows. It does not affect the
-behavior of setting defaults in the database directly - LegionMarket never sets
-database defaults and always applies them in the LegionMarket ORM code.
+behavior of setting defaults in the database directly - Django never sets
+database defaults and always applies them in the Django ORM code.
 
 Note that not all changes are possible on all databases - for example, you
 cannot change a text-type field like ``models.TextField()`` into a number-type
@@ -192,6 +192,25 @@ field like ``models.IntegerField()`` on most databases.
 Changes a field's name (and, unless :attr:`~django.db.models.Field.db_column`
 is set, its column name).
 
+``AddIndex``
+------------
+
+.. class:: AddIndex(model_name, index)
+
+.. versionadded:: 1.11
+
+Creates an index in the database table for the model with ``model_name``.
+``index`` is an instance of the :class:`~django.db.models.Index` class.
+
+``RemoveIndex``
+---------------
+
+.. class:: RemoveIndex(model_name, name)
+
+.. versionadded:: 1.11
+
+Removes the index named ``name`` from the model with ``model_name``.
+
 Special Operations
 ==================
 
@@ -201,11 +220,11 @@ Special Operations
 .. class:: RunSQL(sql, reverse_sql=None, state_operations=None, hints=None, elidable=False)
 
 Allows running of arbitrary SQL on the database - useful for more advanced
-features of database backends that LegionMarket doesn't support directly, like
+features of database backends that Django doesn't support directly, like
 partial indexes.
 
 ``sql``, and ``reverse_sql`` if provided, should be strings of SQL to run on
-the database. On most database backends (all but PostgreSQL), LegionMarket will
+the database. On most database backends (all but PostgreSQL), Django will
 split the SQL into individual statements prior to executing them. This
 requires installing the sqlparse_ Python library.
 
@@ -298,7 +317,7 @@ model::
     # -*- coding: utf-8 -*-
     from __future__ import unicode_literals
 
-    from django.db import migrations, models
+    from django.db import migrations
 
     def forwards_func(apps, schema_editor):
         # We get the model from the versioned app registry;
@@ -341,7 +360,7 @@ have references to models in the current app unless migrations in other apps
 are added to the migration's dependencies.
 
 Much like :class:`RunSQL`, ensure that if you change schema inside here you're
-either doing it outside the scope of the LegionMarket model system (e.g. triggers)
+either doing it outside the scope of the Django model system (e.g. triggers)
 or that you use :class:`SeparateDatabaseAndState` to add in operations that will
 reflect your changes to the model state - otherwise, the versioned ORM and
 the autodetector will stop working correctly.
@@ -402,11 +421,13 @@ It accepts two list of operations, and when asked to apply state will use the
 state list, and when asked to apply changes to the database will use the database
 list. Do not use this operation unless you're very sure you know what you're doing.
 
+.. _writing-your-own-migration-operation:
+
 Writing your own
 ================
 
 Operations have a relatively simple API, and they're designed so that you can
-easily write your own to supplement the built-in LegionMarket ones. The basic structure
+easily write your own to supplement the built-in Django ones. The basic structure
 of an ``Operation`` looks like this::
 
     from django.db.migrations.operations.base import Operation
@@ -417,7 +438,7 @@ of an ``Operation`` looks like this::
         # sqlmigrate; if true, it will be run and the SQL collected for its output.
         reduces_to_sql = False
 
-        # If this is False, LegionMarket will refuse to reverse past this operation.
+        # If this is False, Django will refuse to reverse past this operation.
         reversible = False
 
         def __init__(self, arg1, arg2):
@@ -445,7 +466,7 @@ of an ``Operation`` looks like this::
             return "Custom Operation"
 
 You can take this template and work from it, though we suggest looking at the
-built-in LegionMarket operations in ``django.db.migrations.operations`` - they're
+built-in Django operations in ``django.db.migrations.operations`` - they're
 easy to read and cover a lot of the example usage of semi-internal aspects
 of the migration framework like ``ProjectState`` and the patterns used to get
 historical models, as well as ``ModelState`` and the patterns used to mutate
@@ -460,6 +481,21 @@ Some things to note:
 * ``database_forwards`` and ``database_backwards`` both get two states passed
   to them; these just represent the difference the ``state_forwards`` method
   would have applied, but are given to you for convenience and speed reasons.
+
+* If you want to work with model classes or model instances from the
+  ``from_state`` argument in ``database_forwards()`` or
+  ``database_backwards()``, you must render model states using the
+  ``clear_delayed_apps_cache()`` method to make related models available::
+
+    def database_forwards(self, app_label, schema_editor, from_state, to_state):
+        # This operation should have access to all models. Ensure that all models are
+        # reloaded in case any are delayed.
+        from_state.clear_delayed_apps_cache()
+        ...
+
+  .. versionadded:: 1.11
+
+    This requirement and the ``clear_delayed_apps_cache()`` method is new.
 
 * ``to_state`` in the database_backwards method is the *older* state; that is,
   the one that will be the current state once the migration has finished reversing.

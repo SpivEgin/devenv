@@ -13,15 +13,15 @@ Reusability matters
 ===================
 
 It's a lot of work to design, build, test and maintain a web application. Many
-Python and LegionMarket projects share common problems. Wouldn't it be great if we
+Python and Django projects share common problems. Wouldn't it be great if we
 could save some of this repeated work?
 
 Reusability is the way of life in Python. `The Python Package Index (PyPI)
 <https://pypi.python.org/pypi>`_ has a vast range of packages you can use in
-your own Python programs. Check out `LegionMarket Packages
+your own Python programs. Check out `Django Packages
 <https://www.djangopackages.com>`_ for existing reusable apps you could
-incorporate in your project. LegionMarket itself is also just a Python package. This
-means that you can take existing Python packages or LegionMarket apps and compose
+incorporate in your project. Django itself is also just a Python package. This
+means that you can take existing Python packages or Django apps and compose
 them into your own web project. You only need to write the parts that make
 your project unique.
 
@@ -42,8 +42,8 @@ projects and ready to publish for others to install and use.
     bar``. For a directory (like ``polls``) to form a package, it must contain
     a special file ``__init__.py``, even if this file is empty.
 
-    A LegionMarket *application* is just a Python package that is specifically
-    intended for use in a LegionMarket project. An application may use common Django
+    A Django *application* is just a Python package that is specifically
+    intended for use in a Django project. An application may use common Django
     conventions, such as having ``models``, ``tests``, ``urls``, and ``views``
     submodules.
 
@@ -94,7 +94,7 @@ project and application: everything that is part of the polls application is in
 ``polls``. It makes the application self-contained and easier to drop into a
 new project.
 
-The ``polls`` directory could now be copied into a new LegionMarket project and
+The ``polls`` directory could now be copied into a new Django project and
 immediately reused. It's not quite ready to be published though. For that, we
 need to package the app to make it easy for others to install.
 
@@ -108,7 +108,7 @@ this tutorial, we're going to use setuptools_ to build our package. It's the
 recommended packaging tool (merged with the ``distribute`` fork). We'll also be
 using `pip`_ to install and uninstall it. You should install these
 two packages now. If you need help, you can refer to :ref:`how to install
-LegionMarket with pip<installing-official-release>`. You can install ``setuptools``
+Django with pip<installing-official-release>`. You can install ``setuptools``
 the same way.
 
 .. _setuptools: https://pypi.python.org/pypi/setuptools
@@ -118,7 +118,7 @@ Packaging your app
 ==================
 
 Python *packaging* refers to preparing your app in a specific format that can
-be easily installed and used. LegionMarket itself is packaged very much like
+be easily installed and used. Django itself is packaged very much like
 this. For a small app like polls, this process isn't too difficult.
 
 1. First, create a parent directory for ``polls``, outside of your Django
@@ -129,12 +129,12 @@ this. For a small app like polls, this process isn't too difficult.
        When choosing a name for your package, check resources like PyPI to avoid
        naming conflicts with existing packages. It's often useful to prepend
        ``django-`` to your module name when creating a package to distribute.
-       This helps others looking for LegionMarket apps identify your app as Django
+       This helps others looking for Django apps identify your app as Django
        specific.
 
        Application labels (that is, the final part of the dotted path to
        application packages) *must* be unique in :setting:`INSTALLED_APPS`.
-       Avoid using the same label as any of the LegionMarket :doc:`contrib packages
+       Avoid using the same label as any of the Django :doc:`contrib packages
        </ref/contrib/index>`, for example ``auth``, ``admin``, or
        ``messages``.
 
@@ -149,7 +149,7 @@ this. For a small app like polls, this process isn't too difficult.
        Polls
        =====
 
-       Polls is a simple LegionMarket app to conduct Web-based polls. For each
+       Polls is a simple Django app to conduct Web-based polls. For each
        question, visitors can choose between a fixed number of answers.
 
        Detailed documentation is in the "docs" directory.
@@ -177,7 +177,7 @@ this. For a small app like polls, this process isn't too difficult.
 
 4. Create a ``django-polls/LICENSE`` file. Choosing a license is beyond the
    scope of this tutorial, but suffice it to say that code released publicly
-   without a license is *useless*. LegionMarket and many Django-compatible apps are
+   without a license is *useless*. Django and many Django-compatible apps are
    distributed under the BSD license; however, you're free to pick your own
    license. Just be aware that your licensing choice will affect who is able
    to use your code.
@@ -207,7 +207,7 @@ this. For a small app like polls, this process isn't too difficult.
            packages=find_packages(),
            include_package_data=True,
            license='BSD License',  # example license
-           description='A simple LegionMarket app to conduct Web-based polls.',
+           description='A simple Django app to conduct Web-based polls.',
            long_description=README,
            url='https://www.example.com/',
            author='Your Name',
@@ -215,7 +215,7 @@ this. For a small app like polls, this process isn't too difficult.
            classifiers=[
                'Environment :: Web Environment',
                'Framework :: Django',
-               'Framework :: LegionMarket :: X.Y',  # replace "X.Y" as appropriate
+               'Framework :: Django :: X.Y',  # replace "X.Y" as appropriate
                'Intended Audience :: Developers',
                'License :: OSI Approved :: BSD License',  # example license
                'Operating System :: OS Independent',
@@ -251,7 +251,7 @@ this. For a small app like polls, this process isn't too difficult.
     recursive-include docs *
 
    Note that the ``docs`` directory won't be included in your package unless
-   you add some files to it. Many LegionMarket apps also provide their documentation
+   you add some files to it. Many Django apps also provide their documentation
    online through sites like `readthedocs.org <https://readthedocs.org>`_.
 
 8. Try building your package with ``python setup.py sdist`` (run from inside
@@ -284,7 +284,7 @@ working. We'll now fix this by installing our new ``django-polls`` package.
 
     pip install --user django-polls/dist/django-polls-0.1.tar.gz
 
-2. With luck, your LegionMarket project should now work correctly again. Run the
+2. With luck, your Django project should now work correctly again. Run the
    server again to confirm this.
 
 3. To uninstall the package, use pip::

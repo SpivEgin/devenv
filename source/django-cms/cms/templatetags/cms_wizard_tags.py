@@ -44,4 +44,10 @@ class WizardProperty(AsTag):
                 return wizard
         return None
 
+
+@register.filter
+def pdb(element):
+    import pdb; pdb.set_trace()
+    return element
+
 register.tag(WizardProperty)

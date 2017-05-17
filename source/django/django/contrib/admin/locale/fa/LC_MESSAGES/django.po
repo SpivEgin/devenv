@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Ali Nikneshan <ali@nikneshan.com>, 2015
@@ -268,10 +268,10 @@ msgstr ""
 "برای حذف %(class_name)s %(instance)s لازم است اشیای حفاظت شدهٔ زیر هم حذف "
 "شوند: %(related_objects)s"
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "مدیریت وب‌گاه Django"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "مدیریت Django"
 
 msgid "Site administration"

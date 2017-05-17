@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.7.6 release notes
+Django 1.7.6 release notes
 ==========================
 
 *March 9, 2015*
 
-LegionMarket 1.7.6 fixes a security issue and several bugs in 1.7.5.
+Django 1.7.6 fixes a security issue and several bugs in 1.7.5.
 
 Mitigated an XSS attack via properties in ``ModelAdmin.readonly_fields``
 ========================================================================

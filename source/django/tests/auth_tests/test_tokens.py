@@ -11,9 +11,6 @@ from django.utils.six import PY3
 class TokenGeneratorTest(TestCase):
 
     def test_make_token(self):
-        """
-        Ensure that we can make a token and that it is valid
-        """
         user = User.objects.create_user('tokentestuser', 'test2@example.com', 'testpw')
         p0 = PasswordResetTokenGenerator()
         tk1 = p0.make_token(user)
@@ -21,7 +18,7 @@ class TokenGeneratorTest(TestCase):
 
     def test_10265(self):
         """
-        Ensure that the token generated for a user created in the same request
+        The token generated for a user created in the same request
         will work correctly.
         """
         # See ticket #10265
@@ -34,7 +31,7 @@ class TokenGeneratorTest(TestCase):
 
     def test_timeout(self):
         """
-        Ensure we can use the token after n days, but no greater.
+        The token is valid after n days, but no greater.
         """
         # Uses a mocked version of PasswordResetTokenGenerator so we can change
         # the value of 'today'
@@ -57,7 +54,7 @@ class TokenGeneratorTest(TestCase):
     @unittest.skipIf(PY3, "Unnecessary test with Python 3")
     def test_date_length(self):
         """
-        Make sure we don't allow overly long dates, causing a potential DoS.
+        Overly long dates, which are a potential DoS vector, aren't allowed.
         """
         user = User.objects.create_user('ima1337h4x0r', 'test4@example.com', 'p4ssw0rd')
         p0 = PasswordResetTokenGenerator()
@@ -65,3 +62,10 @@ class TokenGeneratorTest(TestCase):
         # This will put a 14-digit base36 timestamp into the token, which is too large.
         with self.assertRaises(ValueError):
             p0._make_token_with_timestamp(user, 175455491841851871349)
+
+    def test_check_token_with_nonexistent_token_and_user(self):
+        user = User.objects.create_user('tokentestuser', 'test2@example.com', 'testpw')
+        p0 = PasswordResetTokenGenerator()
+        tk1 = p0.make_token(user)
+        self.assertIs(p0.check_token(None, tk1), False)
+        self.assertIs(p0.check_token(user, None), False)

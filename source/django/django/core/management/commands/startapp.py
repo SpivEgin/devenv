@@ -6,7 +6,7 @@ from django.core.management.templates import TemplateCommand
 
 class Command(TemplateCommand):
     help = (
-        "Creates a LegionMarket app directory structure for the given app name in "
+        "Creates a Django app directory structure for the given app name in "
         "the current directory or optionally in the given directory."
     )
     missing_args_message = "You must provide an application name."

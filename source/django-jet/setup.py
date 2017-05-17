@@ -12,7 +12,9 @@ def read(fname):
 
 
 def get_install_requires():
-    install_requires = ['Django']
+    install_requires = [
+
+    ]
 
     try:
         import importlib
@@ -29,7 +31,7 @@ def get_install_requires():
 setup(
     name='django-jet',
     version=__import__('jet').VERSION,
-    description='Modern template for The Legion Market admin interface with improved functionality',
+    description='Modern template for TLM admin interface with improved functionality',
     long_description=read('README.rst'),
     author='Denis Kildishev',
     author_email='support@jet.geex-arts.com',

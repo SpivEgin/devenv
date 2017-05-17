@@ -79,7 +79,7 @@ class OGRGeomType(object):
 
     @property
     def django(self):
-        "Returns the LegionMarket GeometryField for this OGR Type."
+        "Returns the Django GeometryField for this OGR Type."
         s = self.name.replace('25D', '')
         if s in ('LinearRing', 'None'):
             return None

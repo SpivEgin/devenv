@@ -8,7 +8,7 @@ from ..utils import get_random_secret_key
 
 class Command(TemplateCommand):
     help = (
-        "Creates a LegionMarket project directory structure for the given project "
+        "Creates a Django project directory structure for the given project "
         "name in the current directory or optionally in the given directory."
     )
     missing_args_message = "You must provide a project name."

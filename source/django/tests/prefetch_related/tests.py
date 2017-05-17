@@ -15,8 +15,8 @@ from django.utils.encoding import force_text
 from .models import (
     Author, Author2, AuthorAddress, AuthorWithAge, Bio, Book, Bookmark,
     BookReview, BookWithYear, Comment, Department, Employee, FavoriteAuthors,
-    House, LessonEntry, Person, Qualification, Reader, Room, TaggedItem,
-    Teacher, WordEntry,
+    House, LessonEntry, ModelIterableSubclass, Person, Qualification, Reader,
+    Room, TaggedItem, Teacher, WordEntry,
 )
 
 
@@ -43,6 +43,13 @@ class PrefetchRelatedTests(TestCase):
 
         cls.reader1.books_read.add(cls.book1, cls.book4)
         cls.reader2.books_read.add(cls.book2, cls.book4)
+
+    def assertWhereContains(self, sql, needle):
+        where_idx = sql.index('WHERE')
+        self.assertEqual(
+            sql.count(str(needle), where_idx), 1,
+            msg="WHERE clause doesn't contain %s, actual SQL: %s" % (needle, sql[where_idx:])
+        )
 
     def test_m2m_forward(self):
         with self.assertNumQueries(2):
@@ -118,18 +125,13 @@ class PrefetchRelatedTests(TestCase):
         self.assertIn(qs[0], qs)
 
     def test_clear(self):
-        """
-        Test that we can clear the behavior by calling prefetch_related()
-        """
         with self.assertNumQueries(5):
             with_prefetch = Author.objects.prefetch_related('books')
             without_prefetch = with_prefetch.prefetch_related(None)
             [list(a.books.all()) for a in without_prefetch]
 
     def test_m2m_then_m2m(self):
-        """
-        Test we can follow a m2m and another m2m
-        """
+        """A m2m can be followed through another m2m."""
         with self.assertNumQueries(3):
             qs = Author.objects.prefetch_related('books__read_by')
             lists = [[[six.text_type(r) for r in b.read_by.all()]
@@ -168,7 +170,7 @@ class PrefetchRelatedTests(TestCase):
 
     def test_get(self):
         """
-        Test that objects retrieved with .get() get the prefetch behavior.
+        Objects retrieved with .get() get the prefetch behavior.
         """
         # Need a double
         with self.assertNumQueries(3):
@@ -178,8 +180,8 @@ class PrefetchRelatedTests(TestCase):
 
     def test_foreign_key_then_m2m(self):
         """
-        Test we can follow an m2m relation after a relation like ForeignKey
-        that doesn't have many objects
+        A m2m relation can be followed after a relation like ForeignKey that
+        doesn't have many objects.
         """
         with self.assertNumQueries(2):
             qs = Author.objects.select_related('first_book').prefetch_related('first_book__read_by')
@@ -189,8 +191,8 @@ class PrefetchRelatedTests(TestCase):
 
     def test_reverse_one_to_one_then_m2m(self):
         """
-        Test that we can follow a m2m relation after going through
-        the select_related reverse of an o2o.
+        A m2m relation can be followed afterr going through the select_related
+        reverse of an o2o.
         """
         qs = Author.objects.prefetch_related('bio__books').select_related('bio')
 
@@ -243,21 +245,21 @@ class PrefetchRelatedTests(TestCase):
             list(Book.objects.prefetch_related('authors__addresses'))
 
         sql = queries[-1]['sql']
-        self.assertEqual(sql.count(self.author1.name), 1)
+        self.assertWhereContains(sql, self.author1.name)
 
     def test_m2m_then_m2m_object_ids(self):
         with CaptureQueriesContext(connection) as queries:
             list(Book.objects.prefetch_related('authors__favorite_authors'))
 
         sql = queries[-1]['sql']
-        self.assertEqual(sql.count(self.author1.name), 1)
+        self.assertWhereContains(sql, self.author1.name)
 
     def test_m2m_then_reverse_one_to_one_object_ids(self):
         with CaptureQueriesContext(connection) as queries:
             list(Book.objects.prefetch_related('authors__authorwithage'))
 
         sql = queries[-1]['sql']
-        self.assertEqual(sql.count(str(self.author1.id)), 1, sql)
+        self.assertWhereContains(sql, self.author1.id)
 
 
 class CustomPrefetchTests(TestCase):
@@ -736,6 +738,9 @@ class CustomPrefetchTests(TestCase):
     def test_values_queryset(self):
         with self.assertRaisesMessage(ValueError, 'Prefetch querysets cannot use values().'):
             Prefetch('houses', House.objects.values('pk'))
+        # That error doesn't affect managers with custom ModelIterable subclasses
+        self.assertIs(Teacher.objects_custom.all()._iterable_class, ModelIterableSubclass)
+        Prefetch('teachers', Teacher.objects_custom.all())
 
     def test_to_attr_doesnt_cache_through_attr_as_list(self):
         house = House.objects.prefetch_related(
@@ -832,7 +837,7 @@ class GenericRelationTests(TestCase):
 
     def test_traverse_GFK(self):
         """
-        Test that we can traverse a 'content_object' with prefetch_related() and
+        A 'content_object' can be traversed with prefetch_related() and
         get to related objects on the other side (assuming it is suitably
         filtered)
         """
@@ -952,7 +957,7 @@ class MultiTableInheritanceTest(TestCase):
     @override_settings(DEBUG=True)
     def test_child_link_prefetch(self):
         with self.assertNumQueries(2):
-            l = [a.authorwithage for a in Author.objects.prefetch_related('authorwithage')]
+            authors = [a.authorwithage for a in Author.objects.prefetch_related('authorwithage')]
 
         # Regression for #18090: the prefetching query must include an IN clause.
         # Note that on Oracle the table name is upper case in the generated SQL,
@@ -960,7 +965,7 @@ class MultiTableInheritanceTest(TestCase):
         self.assertIn('authorwithage', connection.queries[-1]['sql'].lower())
         self.assertIn(' IN ', connection.queries[-1]['sql'])
 
-        self.assertEqual(l, [a.authorwithage for a in Author.objects.all()])
+        self.assertEqual(authors, [a.authorwithage for a in Author.objects.all()])
 
 
 class ForeignKeyToFieldTest(TestCase):
@@ -1093,7 +1098,7 @@ class NullableTest(TestCase):
         boss1 = Employee.objects.create(name="Peter")
         boss2 = Employee.objects.create(name="Jack")
         with self.assertNumQueries(2):
-            # Check that prefetch is done and it does not cause any errors.
+            # Prefetch is done and it does not cause any errors.
             bulk = Employee.objects.prefetch_related('serfs').in_bulk([boss1.pk, boss2.pk])
             for b in bulk.values():
                 list(b.serfs.all())
@@ -1386,3 +1391,37 @@ class Ticket25546Tests(TestCase):
             self.assertListEqual(book1.first_authors[0].happy_place, [self.author1_address1])
             self.assertListEqual(book1.first_authors[1].happy_place, [])
             self.assertListEqual(book2.first_authors[0].happy_place, [self.author2_address1])
+
+
+class ReadPrefetchedObjectsCacheTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.book1 = Book.objects.create(title='Les confessions Volume I')
+        cls.book2 = Book.objects.create(title='Candide')
+        cls.author1 = AuthorWithAge.objects.create(name='Rousseau', first_book=cls.book1, age=70)
+        cls.author2 = AuthorWithAge.objects.create(name='Voltaire', first_book=cls.book2, age=65)
+        cls.book1.authors.add(cls.author1)
+        cls.book2.authors.add(cls.author2)
+        FavoriteAuthors.objects.create(author=cls.author1, likes_author=cls.author2)
+
+    def test_retrieves_results_from_prefetched_objects_cache(self):
+        """
+        When intermediary results are prefetched without a destination
+        attribute, they are saved in the RelatedManager's cache
+        (_prefetched_objects_cache). prefetch_related() uses this cache
+        (#27554).
+        """
+        authors = AuthorWithAge.objects.prefetch_related(
+            Prefetch(
+                'author',
+                queryset=Author.objects.prefetch_related(
+                    # Results are saved in the RelatedManager's cache
+                    # (_prefetched_objects_cache) and do not replace the
+                    # RelatedManager on Author instances (favorite_authors)
+                    Prefetch('favorite_authors__first_book'),
+                ),
+            ),
+        )
+        with self.assertNumQueries(4):
+            # AuthorWithAge -> Author -> FavoriteAuthors, Book
+            self.assertQuerysetEqual(authors, ['<AuthorWithAge: Rousseau>', '<AuthorWithAge: Voltaire>'])

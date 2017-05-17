@@ -16,7 +16,7 @@ class ManyToManyTests(TestCase):
         self.p3 = Publication.objects.create(title='Science Weekly')
         self.p4 = Publication.objects.create(title='Highlights for Children')
 
-        self.a1 = Article.objects.create(headline='LegionMarket lets you build Web apps easily')
+        self.a1 = Article.objects.create(headline='Django lets you build Web apps easily')
         self.a1.publications.add(self.p1)
 
         self.a2 = Article.objects.create(headline='NASA uses Python')
@@ -30,7 +30,7 @@ class ManyToManyTests(TestCase):
 
     def test_add(self):
         # Create an Article.
-        a5 = Article(headline='LegionMarket lets you reate Web apps easily')
+        a5 = Article(headline='Django lets you reate Web apps easily')
         # You can't associate it with a Publication until it's been saved.
         with self.assertRaises(ValueError):
             getattr(a5, 'publications')
@@ -134,7 +134,7 @@ class ManyToManyTests(TestCase):
         self.assertQuerysetEqual(
             self.p1.article_set.all(),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA uses Python>',
             ]
         )
@@ -148,27 +148,27 @@ class ManyToManyTests(TestCase):
         self.assertQuerysetEqual(
             Article.objects.filter(publications__id__exact=self.p1.id),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA uses Python>',
             ])
         self.assertQuerysetEqual(
             Article.objects.filter(publications__pk=self.p1.id),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA uses Python>',
             ]
         )
         self.assertQuerysetEqual(
             Article.objects.filter(publications=self.p1.id),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA uses Python>',
             ]
         )
         self.assertQuerysetEqual(
             Article.objects.filter(publications=self.p1),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA uses Python>',
             ]
         )
@@ -196,7 +196,7 @@ class ManyToManyTests(TestCase):
         self.assertQuerysetEqual(
             Article.objects.filter(publications__in=[self.p1.id, self.p2.id]).distinct(),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA finds intelligent life on Earth>',
                 '<Article: NASA uses Python>',
                 '<Article: Oxygen-free diet works wonders>',
@@ -204,7 +204,7 @@ class ManyToManyTests(TestCase):
         self.assertQuerysetEqual(
             Article.objects.filter(publications__in=[self.p1.id, self.p2]).distinct(),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA finds intelligent life on Earth>',
                 '<Article: NASA uses Python>',
                 '<Article: Oxygen-free diet works wonders>',
@@ -213,7 +213,7 @@ class ManyToManyTests(TestCase):
         self.assertQuerysetEqual(
             Article.objects.filter(publications__in=[self.p1, self.p2]).distinct(),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA finds intelligent life on Earth>',
                 '<Article: NASA uses Python>',
                 '<Article: Oxygen-free diet works wonders>',
@@ -224,7 +224,7 @@ class ManyToManyTests(TestCase):
         # involved is a little complex).
         self.assertQuerysetEqual(
             Article.objects.exclude(publications=self.p2),
-            ['<Article: LegionMarket lets you build Web apps easily>']
+            ['<Article: Django lets you build Web apps easily>']
         )
 
     def test_reverse_selects(self):
@@ -290,7 +290,7 @@ class ManyToManyTests(TestCase):
         self.assertQuerysetEqual(
             Article.objects.all(),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA finds intelligent life on Earth>',
                 '<Article: Oxygen-free diet works wonders>',
             ]
@@ -316,7 +316,7 @@ class ManyToManyTests(TestCase):
         self.assertQuerysetEqual(
             Article.objects.all(),
             [
-                '<Article: LegionMarket lets you build Web apps easily>',
+                '<Article: Django lets you build Web apps easily>',
                 '<Article: NASA finds intelligent life on Earth>',
                 '<Article: NASA uses Python>',
                 '<Article: Oxygen-free diet works wonders>',
@@ -332,7 +332,7 @@ class ManyToManyTests(TestCase):
 
         # Bulk delete some articles - references to deleted objects should go
         q = Article.objects.filter(headline__startswith='Django')
-        self.assertQuerysetEqual(q, ['<Article: LegionMarket lets you build Web apps easily>'])
+        self.assertQuerysetEqual(q, ['<Article: Django lets you build Web apps easily>'])
         q.delete()
         # After the delete, the QuerySet cache needs to be cleared,
         # and the referenced objects should be gone
@@ -475,9 +475,9 @@ class ManyToManyTests(TestCase):
         self.assertQuerysetEqual(self.a4.publications.all(), ['<Publication: Science Weekly>'])
 
     def test_forward_assign_with_queryset(self):
-        # Ensure that querysets used in m2m assignments are pre-evaluated
-        # so their value isn't affected by the clearing operation in
-        # ManyRelatedManager.set() (#19816).
+        # Querysets used in m2m assignments are pre-evaluated so their value
+        # isn't affected by the clearing operation in ManyRelatedManager.set()
+        # (#19816).
         self.a1.publications.set([self.p1, self.p2])
 
         qs = self.a1.publications.filter(title='The Python Journal')
@@ -487,12 +487,12 @@ class ManyToManyTests(TestCase):
         self.assertEqual(1, qs.count())
 
     def test_reverse_assign_with_queryset(self):
-        # Ensure that querysets used in M2M assignments are pre-evaluated
-        # so their value isn't affected by the clearing operation in
-        # ManyRelatedManager.set() (#19816).
+        # Querysets used in M2M assignments are pre-evaluated so their value
+        # isn't affected by the clearing operation in ManyRelatedManager.set()
+        # (#19816).
         self.p1.article_set.set([self.a1, self.a2])
 
-        qs = self.p1.article_set.filter(headline='LegionMarket lets you build Web apps easily')
+        qs = self.p1.article_set.filter(headline='Django lets you build Web apps easily')
         self.p1.article_set.set(qs)
 
         self.assertEqual(1, self.p1.article_set.count())
@@ -517,6 +517,40 @@ class ManyToManyTests(TestCase):
         self.a4.publications.clear()
         self.assertQuerysetEqual(self.a4.publications.all(), [])
         self.assertQuerysetEqual(self.p2.article_set.all(), ['<Article: NASA finds intelligent life on Earth>'])
+
+    def test_clear_after_prefetch(self):
+        a4 = Article.objects.prefetch_related('publications').get(id=self.a4.id)
+        self.assertQuerysetEqual(a4.publications.all(), ['<Publication: Science News>'])
+        a4.publications.clear()
+        self.assertQuerysetEqual(a4.publications.all(), [])
+
+    def test_remove_after_prefetch(self):
+        a4 = Article.objects.prefetch_related('publications').get(id=self.a4.id)
+        self.assertQuerysetEqual(a4.publications.all(), ['<Publication: Science News>'])
+        a4.publications.remove(self.p2)
+        self.assertQuerysetEqual(a4.publications.all(), [])
+
+    def test_add_after_prefetch(self):
+        a4 = Article.objects.prefetch_related('publications').get(id=self.a4.id)
+        self.assertEqual(a4.publications.count(), 1)
+        a4.publications.add(self.p1)
+        self.assertEqual(a4.publications.count(), 2)
+
+    def test_set_after_prefetch(self):
+        a4 = Article.objects.prefetch_related('publications').get(id=self.a4.id)
+        self.assertEqual(a4.publications.count(), 1)
+        a4.publications.set([self.p2, self.p1])
+        self.assertEqual(a4.publications.count(), 2)
+        a4.publications.set([self.p1])
+        self.assertEqual(a4.publications.count(), 1)
+
+    def test_add_then_remove_after_prefetch(self):
+        a4 = Article.objects.prefetch_related('publications').get(id=self.a4.id)
+        self.assertEqual(a4.publications.count(), 1)
+        a4.publications.add(self.p1)
+        self.assertEqual(a4.publications.count(), 2)
+        a4.publications.remove(self.p1)
+        self.assertQuerysetEqual(a4.publications.all(), ['<Publication: Science News>'])
 
     def test_inherited_models_selects(self):
         """

@@ -237,7 +237,7 @@ def _possibly_make_aware(dt):
     in UTC, if USE_TZ is True.
     """
     # This function is only needed to help with the deprecations above and can
-    # be removed in LegionMarket 2.0, RemovedInDjango20Warning.
+    # be removed in Django 2.0, RemovedInDjango20Warning.
     if settings.USE_TZ:
         tz = timezone.get_default_timezone()
         return timezone.make_aware(dt, tz).astimezone(timezone.utc)
@@ -380,15 +380,13 @@ class FileSystemStorage(Storage):
         assert name, "The name argument is not allowed to be empty."
         name = self.path(name)
         # If the file exists, delete it from the filesystem.
-        # Note that there is a race between os.path.exists and os.remove:
-        # if os.remove fails with ENOENT, the file was removed
-        # concurrently, and we can continue normally.
-        if os.path.exists(name):
-            try:
-                os.remove(name)
-            except OSError as e:
-                if e.errno != errno.ENOENT:
-                    raise
+        # If os.remove() fails with ENOENT, the file may have been removed
+        # concurrently, and it's safe to continue normally.
+        try:
+            os.remove(name)
+        except OSError as e:
+            if e.errno != errno.ENOENT:
+                raise
 
     def exists(self, name):
         return os.path.exists(self.path(name))
@@ -472,5 +470,6 @@ def get_storage_class(import_path=None):
 class DefaultStorage(LazyObject):
     def _setup(self):
         self._wrapped = get_storage_class()()
+
 
 default_storage = DefaultStorage()

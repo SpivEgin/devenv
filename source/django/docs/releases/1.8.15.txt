@@ -1,10 +1,10 @@
 ===========================
-LegionMarket 1.8.15 release notes
+Django 1.8.15 release notes
 ===========================
 
 *September 26, 2016*
 
-LegionMarket 1.8.15 fixes a security issue in 1.8.14.
+Django 1.8.15 fixes a security issue in 1.8.14.
 
 CSRF protection bypass on a site with Google Analytics
 ======================================================

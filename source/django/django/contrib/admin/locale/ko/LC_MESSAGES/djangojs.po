@@ -1,11 +1,11 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # DaHae Sung <sdh4513136@hanmail.net>, 2016
 # Hoseok Lee <ihooi77@gmail.com>, 2016
 # Jaehong Kim <mixe@korea.com>, 2011
 # Jannis Leidel <jannis@leidel.info>, 2011
-# Jeong Seongtae <magno79@gmail.com>, 2014
+# Le Tartuffe <magno79@gmail.com>, 2014
 # minsung kang, 2015
 msgid ""
 msgstr ""

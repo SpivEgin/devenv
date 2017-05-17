@@ -6,7 +6,7 @@ Dashboard Installation
     Dashboard is located into a separate application. So after a typical JET installation it won't be active.
     To enable dashboard application follow these steps:
 
-* Add 'jet.dashboard' application to the INSTALLED_APPS setting of your The Legion Market project settings.py file (note it should be before 'jet'):
+* Add 'jet.dashboard' application to the INSTALLED_APPS setting of your TLM project settings.py file (note it should be before 'jet'):
 
 .. code:: python
 
@@ -18,14 +18,14 @@ Dashboard Installation
         ...
     )
 
-* Add URL-pattern to the urlpatterns of your The Legion Market project urls.py file (they are needed for related–lookups and autocompletes):
+* Add URL-pattern to the urlpatterns of your TLM project urls.py file (they are needed for related–lookups and autocompletes):
 
 .. code:: python
 
     urlpatterns = patterns(
         '',
-        url(r'^jet/', include('jet.urls', 'jet')),  # The Legion Market JET URLS
-        url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # The Legion Market JET dashboard URLS
+        url(r'^jet/', include('jet.urls', 'jet')),  # TLM JET URLS
+        url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # TLM JET dashboard URLS
         url(r'^admin/', include(admin.site.urls)),
         ...
     )

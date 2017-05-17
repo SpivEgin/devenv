@@ -7,7 +7,7 @@ Time zones
 Overview
 ========
 
-When support for time zones is enabled, LegionMarket stores datetime information in
+When support for time zones is enabled, Django stores datetime information in
 UTC in the database, uses time-zone-aware datetime objects internally, and
 translates them to the end user's time zone in templates and forms.
 
@@ -26,14 +26,12 @@ to this problem is to use UTC in the code and use local time only when
 interacting with end users.
 
 Time zone support is disabled by default. To enable it, set :setting:`USE_TZ =
-True <USE_TZ>` in your settings file. Installing pytz_ is highly recommended,
-but may not be mandatory depending on your particular database backend,
-operating system and time zone. If you encounter an exception querying dates
-or times, please try installing it before filing a bug. It's as simple as:
+True <USE_TZ>` in your settings file. Time zone support uses pytz_, which is
+installed when you install Django.
 
-.. code-block:: console
+.. versionchanged:: 1.11
 
-    $ pip install pytz
+    Older versions don't require ``pytz`` or install it automatically.
 
 .. note::
 
@@ -44,7 +42,7 @@ or times, please try installing it before filing a bug. It's as simple as:
 .. note::
 
     There is also an independent but related :setting:`USE_L10N` setting that
-    controls whether LegionMarket should activate format localization. See
+    controls whether Django should activate format localization. See
     :doc:`/topics/i18n/formatting` for more details.
 
 If you're wrestling with a particular problem, start with the :ref:`time zone
@@ -67,7 +65,7 @@ You can use :func:`~django.utils.timezone.is_aware` and
 :func:`~django.utils.timezone.is_naive` to determine whether datetimes are
 aware or naive.
 
-When time zone support is disabled, LegionMarket uses naive datetime objects in local
+When time zone support is disabled, Django uses naive datetime objects in local
 time. This is simple and sufficient for many use cases. In this mode, to obtain
 the current time, you would write::
 
@@ -75,7 +73,7 @@ the current time, you would write::
 
     now = datetime.datetime.now()
 
-When time zone support is enabled (:setting:`USE_TZ=True <USE_TZ>`), LegionMarket uses
+When time zone support is enabled (:setting:`USE_TZ=True <USE_TZ>`), Django uses
 time-zone-aware datetime objects. If your code creates datetime objects, they
 should be aware too. In this mode, the example above becomes::
 
@@ -98,7 +96,7 @@ should be aware too. In this mode, the example above becomes::
     However, as PostgreSQL's docs put it, this type "exhibits properties which
     lead to questionable usefulness".
 
-    LegionMarket only supports naive time objects and will raise an exception if you
+    Django only supports naive time objects and will raise an exception if you
     attempt to save an aware time object, as a timezone for a time with no
     associated date does not make sense.
 
@@ -107,19 +105,16 @@ should be aware too. In this mode, the example above becomes::
 Interpretation of naive datetime objects
 ----------------------------------------
 
-When :setting:`USE_TZ` is ``True``, LegionMarket still accepts naive datetime
+When :setting:`USE_TZ` is ``True``, Django still accepts naive datetime
 objects, in order to preserve backwards-compatibility. When the database layer
 receives one, it attempts to make it aware by interpreting it in the
 :ref:`default time zone <default-current-time-zone>` and raises a warning.
 
 Unfortunately, during DST transitions, some datetimes don't exist or are
-ambiguous. In such situations, pytz_ raises an exception. Other
-:class:`~datetime.tzinfo` implementations, such as the local time zone used as
-a fallback when pytz_ isn't installed, may raise an exception or return
-inaccurate results. That's why you should always create aware datetime objects
-when time zone support is enabled.
+ambiguous. In such situations, pytz_ raises an exception. That's why you should
+always create aware datetime objects when time zone support is enabled.
 
-In practice, this is rarely an issue. LegionMarket gives you aware datetime objects
+In practice, this is rarely an issue. Django gives you aware datetime objects
 in the models and forms, and most often, new datetime objects are created from
 existing ones through :class:`~datetime.timedelta` arithmetic. The only
 datetime that's often created in application code is the current time, and
@@ -142,7 +137,7 @@ used.
 
 .. note::
 
-    As explained in the documentation of :setting:`TIME_ZONE`, LegionMarket sets
+    As explained in the documentation of :setting:`TIME_ZONE`, Django sets
     environment variables so that its process runs in the default time zone.
     This happens regardless of the value of :setting:`USE_TZ` and of the
     current time zone.
@@ -159,8 +154,8 @@ Selecting the current time zone
 
 The current time zone is the equivalent of the current :term:`locale <locale
 name>` for translations. However, there's no equivalent of the
-``Accept-Language`` HTTP header that LegionMarket could use to determine the user's
-time zone automatically. Instead, LegionMarket provides :ref:`time zone selection
+``Accept-Language`` HTTP header that Django could use to determine the user's
+time zone automatically. Instead, Django provides :ref:`time zone selection
 functions <time-zone-selection-functions>`. Use them to build the time zone
 selection logic that makes sense for you.
 
@@ -210,7 +205,7 @@ Include a form in ``template.html`` that will ``POST`` to this view:
         <label for="timezone">Time zone:</label>
         <select name="timezone">
             {% for tz in timezones %}
-            <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected="selected"{% endif %}>{{ tz }}</option>
+            <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>{{ tz }}</option>
             {% endfor %}
         </select>
         <input type="submit" value="Set" />
@@ -221,7 +216,7 @@ Include a form in ``template.html`` that will ``POST`` to this view:
 Time zone aware input in forms
 ==============================
 
-When you enable time zone support, LegionMarket interprets datetimes entered in
+When you enable time zone support, Django interprets datetimes entered in
 forms in the :ref:`current time zone <default-current-time-zone>` and returns
 aware datetime objects in ``cleaned_data``.
 
@@ -234,14 +229,14 @@ pytz_ do this), such datetimes will be reported as invalid values.
 Time zone aware output in templates
 ===================================
 
-When you enable time zone support, LegionMarket converts aware datetime objects to
+When you enable time zone support, Django converts aware datetime objects to
 the :ref:`current time zone <default-current-time-zone>` when they're rendered
 in templates. This behaves very much like :doc:`format localization
 </topics/i18n/formatting>`.
 
 .. warning::
 
-    LegionMarket doesn't convert naive datetime objects, because they could be
+    Django doesn't convert naive datetime objects, because they could be
     ambiguous, and because your code should never produce naive datetimes when
     time zone support is enabled. However, you can force conversion with the
     template filters described below.
@@ -360,7 +355,7 @@ For example::
 Forces conversion of a single value to an arbitrary timezone.
 
 The argument must be an instance of a :class:`~datetime.tzinfo` subclass or a
-time zone name. If it is a time zone name, pytz_ is required.
+time zone name.
 
 For example::
 
@@ -375,7 +370,7 @@ For example::
 Migration guide
 ===============
 
-Here's how to migrate a project that was started before LegionMarket supported time
+Here's how to migrate a project that was started before Django supported time
 zones.
 
 Database
@@ -405,14 +400,13 @@ Code
 ----
 
 The first step is to add :setting:`USE_TZ = True <USE_TZ>` to your settings
-file and install pytz_ (if possible). At this point, things should mostly
-work. If you create naive datetime objects in your code, LegionMarket makes them
-aware when necessary.
+file. At this point, things should mostly work. If you create naive datetime
+objects in your code, Django makes them aware when necessary.
 
 However, these conversions may fail around DST transitions, which means you
 aren't getting the full benefits of time zone support yet. Also, you're likely
 to run into a few problems because it's impossible to compare a naive datetime
-with an aware datetime. Since LegionMarket now gives you aware datetimes, you'll get
+with an aware datetime. Since Django now gives you aware datetimes, you'll get
 exceptions wherever you compare a datetime that comes from a model or a form
 with a naive datetime that you've created in your code.
 
@@ -425,7 +419,7 @@ code: :func:`~django.utils.timezone.now`,
 :func:`~django.utils.timezone.make_aware`, and
 :func:`~django.utils.timezone.make_naive`.
 
-Finally, in order to help you locate code that needs upgrading, LegionMarket raises
+Finally, in order to help you locate code that needs upgrading, Django raises
 a warning when you attempt to save a naive datetime to the database::
 
     RuntimeWarning: DateTimeField ModelName.field_name received a naive
@@ -455,7 +449,7 @@ For models with :class:`~django.db.models.DateTimeField`\ s, this difference
 makes it impossible to write a fixture that works both with and without time
 zone support.
 
-Fixtures generated with ``USE_TZ = False``, or before LegionMarket 1.4, use the
+Fixtures generated with ``USE_TZ = False``, or before Django 1.4, use the
 "naive" format. If your project contains such fixtures, after you enable time
 zone support, you'll see :exc:`RuntimeWarning`\ s when you load them. To get
 rid of the warnings, you must convert your fixtures to the "aware" format.
@@ -474,7 +468,7 @@ Setup
 
 1. **I don't need multiple time zones. Should I enable time zone support?**
 
-   Yes. When time zone support is enabled, LegionMarket uses a more accurate model
+   Yes. When time zone support is enabled, Django uses a more accurate model
    of local time. This shields you from subtle and unreproducible bugs around
    Daylight Saving Time (DST) transitions.
 
@@ -484,7 +478,7 @@ Setup
    application receives non-ASCII input.
 
    When you enable time zone support, you'll encounter some errors because
-   you're using naive datetimes where LegionMarket expects aware datetimes. Such
+   you're using naive datetimes where Django expects aware datetimes. Such
    errors show up when running tests and they're easy to fix. You'll quickly
    learn how to avoid invalid operations.
 
@@ -523,28 +517,13 @@ Setup
    one year is 2011-02-28 or 2011-03-01, which depends on your business
    requirements.)
 
-3. **Should I install pytz?**
-
-   Yes. LegionMarket has a policy of not requiring external dependencies, and for
-   this reason pytz_ is optional. However, it's much safer to install it.
-
-   As soon as you activate time zone support, LegionMarket needs a definition of the
-   default time zone. When pytz is available, LegionMarket loads this definition
-   from the `tz database`_. This is the most accurate solution. Otherwise, it
-   relies on the difference between local time and UTC, as reported by the
-   operating system, to compute conversions. This is less reliable, especially
-   around DST transitions.
-
-   Furthermore, if you want to support users in more than one time zone, pytz
-   is the reference for time zone definitions.
-
-4. **How do I interact with a database that stores datetimes in local time?**
+3. **How do I interact with a database that stores datetimes in local time?**
 
    Set the :setting:`TIME_ZONE <DATABASE-TIME_ZONE>` option to the appropriate
    time zone for this database in the :setting:`DATABASES` setting.
 
    This is useful for connecting to a database that doesn't support time zones
-   and that isn't managed by LegionMarket when :setting:`USE_TZ` is ``True``.
+   and that isn't managed by Django when :setting:`USE_TZ` is ``True``.
 
 Troubleshooting
 ---------------
@@ -566,7 +545,7 @@ Troubleshooting
    If you encounter this error, most likely your code is comparing these two
    things:
 
-   - a datetime provided by LegionMarket -- for instance, a value read from a form or
+   - a datetime provided by Django -- for instance, a value read from a form or
      a model field. Since you enabled time zone support, it's aware.
    - a datetime generated by your code, which is naive (or you wouldn't be
      reading this).
@@ -653,8 +632,8 @@ Troubleshooting
        >>> local.date()
        datetime.date(2012, 3, 3)
 
-4. **I get an error** "``Are time zone definitions for your database and pytz
-   installed?``" **pytz is installed, so I guess the problem is my database?**
+4. **I get an error** "``Are time zone definitions for your database
+   installed?``"
 
    If you are using MySQL, see the :ref:`mysql-time-zone-definitions` section
    of the MySQL notes for instructions on loading time zone definitions.
@@ -700,8 +679,7 @@ Usage
        >>> timezone.localtime(timezone.now())
        datetime.datetime(2012, 3, 3, 20, 10, 53, 873365, tzinfo=<DstTzInfo 'Europe/Paris' CET+1:00:00 STD>)
 
-   In this example, pytz_ is installed and the current time zone is
-   ``"Europe/Paris"``.
+   In this example, the current time zone is ``"Europe/Paris"``.
 
 3. **How can I see all available time zones?**
 

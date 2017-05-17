@@ -1,8 +1,8 @@
 ============================
-The LegionMarket template language
+The Django template language
 ============================
 
-This document explains the language syntax of the LegionMarket template system. If
+This document explains the language syntax of the Django template system. If
 you're looking for a more technical perspective on how it works and how to
 extend it, see :doc:`/ref/templates/api`.
 
@@ -15,11 +15,11 @@ or Jinja2_, you should feel right at home with Django's templates.
 
     If you have a background in programming, or if you're used to languages
     which mix programming code directly into HTML, you'll want to bear in
-    mind that the LegionMarket template system is not simply Python embedded into
+    mind that the Django template system is not simply Python embedded into
     HTML. This is by design: the template system is meant to express
     presentation, not program logic.
 
-    The LegionMarket template system provides tags which function similarly to some
+    The Django template system provides tags which function similarly to some
     programming constructs -- an :ttag:`if` tag for boolean tests, a :ttag:`for`
     tag for looping, etc. -- but these are not simply executed as the
     corresponding Python code, and the template system will not execute
@@ -27,7 +27,7 @@ or Jinja2_, you should feel right at home with Django's templates.
     are supported by default (although you can add :doc:`your own extensions
     </howto/custom-template-tags>` to the template language as needed).
 
-.. _`The LegionMarket template language: For Python programmers`: ../templates_python/
+.. _`The Django template language: For Python programmers`: ../templates_python/
 .. _Smarty: http://www.smarty.net/
 .. _Jinja2: http://jinja.pocoo.org/
 
@@ -144,7 +144,7 @@ variable.
 Filter arguments that contain spaces must be quoted; for example, to join a
 list with commas and spaces you'd use ``{{ list|join:", " }}``.
 
-LegionMarket provides about sixty built-in template filters. You can read all about
+Django provides about sixty built-in template filters. You can read all about
 them in the :ref:`built-in filter reference <ref-templates-builtins-filters>`.
 To give you a taste of what's available, here are some of the more commonly
 used template filters:
@@ -196,7 +196,7 @@ some load external information into the template to be used by later variables.
 Some tags require beginning and ending tags (i.e. ``{% tag %} ... tag contents
 ... {% endtag %}``).
 
-LegionMarket ships with about two dozen built-in template tags. You can read all about
+Django ships with about two dozen built-in template tags. You can read all about
 them in the :ref:`built-in tag reference <ref-templates-builtins-tags>`. To give
 you a taste of what's available, here are some of the more commonly used
 tags:
@@ -407,6 +407,13 @@ Here are some tips for working with inheritance:
   not be automatically escaped (see the `next section`_), since it was
   already escaped, if necessary, in the parent template.
 
+* Variables created outside of a :ttag:`{% block %}<block>` using the template
+  tag ``as`` syntax can't be used inside the block. For example, this template
+  doesn't render anything::
+
+      {% trans "Title" as title %}
+      {% block content %}{{ title }}{% endblock %}
+
 * For extra readability, you can optionally give a *name* to your
   ``{% endblock %}`` tag. For example::
 
@@ -469,7 +476,7 @@ To avoid this problem, you have two options:
 * One, you can make sure to run each untrusted variable through the
   :tfilter:`escape` filter (documented below), which converts potentially
   harmful HTML characters to unharmful ones. This was the default solution
-  in LegionMarket for its first few years, but the problem is that it puts the
+  in Django for its first few years, but the problem is that it puts the
   onus on *you*, the developer / template author, to ensure you're escaping
   everything. It's easy to forget to escape data.
 
@@ -651,7 +658,7 @@ own models:
 
     {{ task.foo }}
 
-Because LegionMarket intentionally limits the amount of logic processing available
+Because Django intentionally limits the amount of logic processing available
 in the template language, it is not possible to pass arguments to method calls
 accessed from within templates. Data should be calculated in views, then passed
 to templates for display.

@@ -48,7 +48,8 @@
         <div id="branding">
             <span id="branding-menu" class="sidebar-header-menu-icon icon-menu sidebar-toggle"></span>
             <span id="branding-pin" class="sidebar-link-icon icon-pin sidebar-pin"></span>
-            {% block branding %}{% endblock %}
+{#            {% block branding %}{% endblock %}#}
+            <img class="brand-logo" src="static/cms/fonts/src/logo.svg" alt="Legion Market" height="40" /></a>
         </div>
         {% block usertools %}
         {% if user.is_active and user.is_staff or has_permission %}

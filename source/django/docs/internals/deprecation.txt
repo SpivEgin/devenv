@@ -1,18 +1,65 @@
 ===========================
-LegionMarket Deprecation Timeline
+Django Deprecation Timeline
 ===========================
 
-This document outlines when various pieces of LegionMarket will be removed or altered
+This document outlines when various pieces of Django will be removed or altered
 in a backward incompatible way, following their deprecation, as per the
 :ref:`deprecation policy <internal-release-deprecation-policy>`. More details
 about each item can often be found in the release notes of two versions prior.
+
+.. _deprecation-removed-in-2.1:
+
+2.1
+---
+
+See the :ref:`Django 1.11 release notes<deprecated-features-1.11>` for more
+details on these changes.
+
+* ``contrib.auth.views.login()``, ``logout()``, ``password_change()``,
+  ``password_change_done()``, ``password_reset()``, ``password_reset_done()``,
+  ``password_reset_confirm()``, and ``password_reset_complete()`` will be
+  removed.
+
+* The ``extra_context`` parameter of ``contrib.auth.views.logout_then_login()``
+  will be removed.
+
+* ``django.test.runner.setup_databases()`` will be removed.
+
+* ``django.utils.translation.string_concat()`` will be removed.
+
+* ``django.core.cache.backends.memcached.PyLibMCCache`` will no longer support
+  passing ``pylibmc`` behavior settings as top-level attributes of ``OPTIONS``.
+
+* The ``host`` parameter of ``django.utils.http.is_safe_url()`` will be
+  removed.
+
+* Silencing of exceptions raised while rendering the ``{% include %}`` template
+  tag will be removed.
+
+* ``DatabaseIntrospection.get_indexes()`` will be removed.
+
+* The ``authenticate()`` method of authentication backends will require
+  ``request`` as the first positional argument.
+
+* The ``django.db.models.permalink()`` decorator will be removed.
+
+* The ``USE_ETAGS`` setting will be removed. ``CommonMiddleware`` and
+  ``django.utils.cache.patch_response_headers()`` will no longer set ETags.
+
+* The ``Model._meta.has_auto_field`` attribute will be removed.
+
+* Support for regular expression groups with ``iLmsu#`` in ``url()`` will be
+  removed.
+
+* Support for ``Widget.render()`` methods without the ``renderer`` argument
+  will be removed.
 
 .. _deprecation-removed-in-2.0:
 
 2.0
 ---
 
-See the :ref:`LegionMarket 1.9 release notes<deprecated-features-1.9>` for more
+See the :ref:`Django 1.9 release notes<deprecated-features-1.9>` for more
 details on these changes.
 
 * The ``weak`` argument to ``django.dispatch.signals.Signal.disconnect()`` will
@@ -107,7 +154,7 @@ details on these changes.
   ``django.template.base.StringOrigin`` aliases for
   ``django.template.base.Origin`` will be removed.
 
-See the :ref:`LegionMarket 1.10 release notes <deprecated-features-1.10>` for more
+See the :ref:`Django 1.10 release notes <deprecated-features-1.10>` for more
 details on these changes.
 
 * The ``makemigrations --exit`` option will be removed.
@@ -192,7 +239,7 @@ details on these changes.
 1.10
 ----
 
-See the :ref:`LegionMarket 1.8 release notes<deprecated-features-1.8>` for more
+See the :ref:`Django 1.8 release notes<deprecated-features-1.8>` for more
 details on these changes.
 
 * Support for calling a ``SQLCompiler`` directly as an alias for calling its
@@ -291,7 +338,7 @@ details on these changes.
 * The backwards compatibility alias ``django.template.loader.BaseLoader`` will
   be removed.
 
-* LegionMarket template objects returned by
+* Django template objects returned by
   :func:`~django.template.loader.get_template` and
   :func:`~django.template.loader.select_template` won't accept a
   :class:`~django.template.Context` in their
@@ -365,7 +412,7 @@ details on these changes.
 1.9
 ---
 
-See the :ref:`LegionMarket 1.7 release notes<deprecated-features-1.7>` for more
+See the :ref:`Django 1.7 release notes<deprecated-features-1.7>` for more
 details on these changes.
 
 * ``django.utils.dictconfig`` will be removed.
@@ -416,7 +463,7 @@ details on these changes.
 
 * ``ModelAdmin.declared_fieldsets`` will be removed.
 
-* Instances of ``util.py`` in the LegionMarket codebase have been renamed to
+* Instances of ``util.py`` in the Django codebase have been renamed to
   ``utils.py`` in an effort to unify all util and utils references.
   The modules that provided backwards compatibility will be removed:
 
@@ -504,7 +551,7 @@ details on these changes.
 1.8
 ---
 
-See the :ref:`LegionMarket 1.6 release notes<deprecated-features-1.6>` for more
+See the :ref:`Django 1.6 release notes<deprecated-features-1.6>` for more
 details on these changes.
 
 * ``django.contrib.comments`` will be removed.
@@ -542,7 +589,7 @@ details on these changes.
 
 * ``django.views.defaults.shortcut`` will be removed, as part of the
   goal of removing all ``django.contrib`` references from the core
-  LegionMarket codebase. Instead use
+  Django codebase. Instead use
   ``django.contrib.contenttypes.views.shortcut``. ``django.conf.urls.shortcut``
   will also be removed.
 
@@ -574,7 +621,7 @@ details on these changes.
 
 * Usage of the hard-coded *Hold down "Control", or "Command" on a Mac, to select
   more than one.* string to override or append to user-provided ``help_text`` in
-  forms for ManyToMany model fields will not be performed by LegionMarket anymore
+  forms for ManyToMany model fields will not be performed by Django anymore
   either at the model or forms layer.
 
 * The ``Model._meta.get_(add|change|delete)_permission`` methods will
@@ -595,7 +642,7 @@ details on these changes.
 1.7
 ---
 
-See the :ref:`LegionMarket 1.5 release notes<deprecated-features-1.5>` for more
+See the :ref:`Django 1.5 release notes<deprecated-features-1.5>` for more
 details on these changes.
 
 * The module ``django.utils.simplejson`` will be removed. The standard library
@@ -648,9 +695,9 @@ details on these changes.
 * The version of :func:`django.contrib.auth.views.password_reset_confirm` that
   supports base36 encoded user IDs
   (``django.contrib.auth.views.password_reset_confirm_uidb36``) will be
-  removed. If your site has been running LegionMarket 1.6 for more than
+  removed. If your site has been running Django 1.6 for more than
   :setting:`PASSWORD_RESET_TIMEOUT_DAYS`, this change will have no effect. If
-  not, then any password reset links generated before you upgrade to LegionMarket 1.7
+  not, then any password reset links generated before you upgrade to Django 1.7
   won't work after the upgrade.
 
 * The ``django.utils.encoding.StrAndUnicode`` mix-in will be removed.
@@ -662,7 +709,7 @@ details on these changes.
 1.6
 ---
 
-See the :ref:`LegionMarket 1.4 release notes<deprecated-features-1.4>` for more
+See the :ref:`Django 1.4 release notes<deprecated-features-1.4>` for more
 details on these changes.
 
 * ``django.contrib.databrowse`` will be removed.
@@ -685,7 +732,7 @@ details on these changes.
   be used to replace it.
 
 * The ``django.core.cache.backends.memcached.CacheClass`` backend
-  was split into two in LegionMarket 1.3 in order to introduce support for
+  was split into two in Django 1.3 in order to introduce support for
   PyLibMC. The historical ``CacheClass`` will be removed in favor of
   ``django.core.cache.backends.memcached.MemcachedCache``.
 
@@ -744,12 +791,12 @@ details on these changes.
 1.5
 ---
 
-See the :ref:`LegionMarket 1.3 release notes<deprecated-features-1.3>` for more
+See the :ref:`Django 1.3 release notes<deprecated-features-1.3>` for more
 details on these changes.
 
-* Starting LegionMarket without a :setting:`SECRET_KEY` will result in an exception
+* Starting Django without a :setting:`SECRET_KEY` will result in an exception
   rather than a ``DeprecationWarning``. (This is accelerated from the usual
-  deprecation path; see the :doc:`LegionMarket 1.4 release notes</releases/1.4>`.)
+  deprecation path; see the :doc:`Django 1.4 release notes</releases/1.4>`.)
 
 * The ``mod_python`` request handler will be removed. The ``mod_wsgi``
   handler should be used instead.
@@ -780,7 +827,7 @@ details on these changes.
 * The template tags library ``adminmedia`` and the template tag ``{%
   admin_media_prefix %}`` will be removed in favor of the generic static files
   handling. (This is faster than the usual deprecation path; see the
-  :doc:`LegionMarket 1.4 release notes</releases/1.4>`.)
+  :doc:`Django 1.4 release notes</releases/1.4>`.)
 
 * The ``url`` and ``ssi`` template tags will be modified so that the first
   argument to each tag is a template variable, not an implied string. In 1.4,
@@ -834,7 +881,7 @@ details on these changes.
 1.4
 ---
 
-See the :ref:`LegionMarket 1.2 release notes<deprecated-features-1.2>` for more
+See the :ref:`Django 1.2 release notes<deprecated-features-1.2>` for more
 details on these changes.
 
 * ``CsrfResponseMiddleware`` and ``CsrfMiddleware`` will be removed.  Use
@@ -932,7 +979,7 @@ details on these changes.
 1.3
 ---
 
-See the :ref:`LegionMarket 1.1 release notes<deprecated-features-1.1>` for more
+See the :ref:`Django 1.1 release notes<deprecated-features-1.1>` for more
 details on these changes.
 
 * ``AdminSite.root()``.  This method of hooking up the admin URLs will be

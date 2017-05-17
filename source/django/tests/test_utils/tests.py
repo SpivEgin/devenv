@@ -5,6 +5,7 @@ import sys
 import unittest
 import warnings
 
+from django.conf import settings
 from django.conf.urls import url
 from django.contrib.staticfiles.finders import get_finder, get_finders
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -14,12 +15,13 @@ from django.forms import EmailField, IntegerField
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.test import (
-    SimpleTestCase, TestCase, ignore_warnings, skipIfDBFeature,
+    SimpleTestCase, TestCase, ignore_warnings, mock, skipIfDBFeature,
     skipUnlessDBFeature,
 )
 from django.test.html import HTMLParseError, parse_html
 from django.test.utils import (
     CaptureQueriesContext, isolate_apps, override_settings,
+    setup_test_environment,
 )
 from django.urls import NoReverseMatch, reverse
 from django.utils import six
@@ -105,20 +107,28 @@ class SkippingClassTestCase(SimpleTestCase):
             def test_dummy(self):
                 return
 
+        @skipUnlessDBFeature("missing")
         @skipIfDBFeature("__class__")
         class SkippedTests(unittest.TestCase):
             def test_will_be_skipped(self):
                 self.fail("We should never arrive here.")
 
+        @skipIfDBFeature("__dict__")
+        class SkippedTestsSubclass(SkippedTests):
+            pass
+
         test_suite = unittest.TestSuite()
         test_suite.addTest(NotSkippedTests('test_dummy'))
         try:
             test_suite.addTest(SkippedTests('test_will_be_skipped'))
+            test_suite.addTest(SkippedTestsSubclass('test_will_be_skipped'))
         except unittest.SkipTest:
             self.fail("SkipTest should not be raised at this stage")
         result = unittest.TextTestRunner(stream=six.StringIO()).run(test_suite)
-        self.assertEqual(result.testsRun, 2)
-        self.assertEqual(len(result.skipped), 1)
+        self.assertEqual(result.testsRun, 3)
+        self.assertEqual(len(result.skipped), 2)
+        self.assertEqual(result.skipped[0][1], 'Database has feature(s) __class__')
+        self.assertEqual(result.skipped[1][1], 'Database has feature(s) __class__')
 
 
 @override_settings(ROOT_URLCONF='test_utils.urls')
@@ -193,7 +203,7 @@ class AssertQuerysetEqualTests(TestCase):
 
     def test_repeated_values(self):
         """
-        Test that assertQuerysetEqual checks the number of appearance of each item
+        assertQuerysetEqual checks the number of appearance of each item
         when used with option ordered=False.
         """
         batmobile = Car.objects.create(name='Batmobile')
@@ -359,16 +369,15 @@ class AssertTemplateUsedContextManagerTests(SimpleTestCase):
             pass
 
     def test_error_message(self):
-        with six.assertRaisesRegex(self, AssertionError, r'^template_used/base\.html'):
+        with self.assertRaisesRegex(AssertionError, r'^template_used/base\.html'):
             with self.assertTemplateUsed('template_used/base.html'):
                 pass
 
-        with six.assertRaisesRegex(self, AssertionError, r'^template_used/base\.html'):
+        with self.assertRaisesRegex(AssertionError, r'^template_used/base\.html'):
             with self.assertTemplateUsed(template_name='template_used/base.html'):
                 pass
 
-        with six.assertRaisesRegex(
-                self, AssertionError, r'^template_used/base\.html.*template_used/alternative\.html$'):
+        with self.assertRaisesRegex(AssertionError, r'^template_used/base\.html.*template_used/alternative\.html$'):
             with self.assertTemplateUsed('template_used/base.html'):
                 render_to_string('template_used/alternative.html')
 
@@ -402,7 +411,7 @@ class AssertTemplateUsedContextManagerTests(SimpleTestCase):
         response = HttpResponse()
         error_msg = (
             'assertTemplateUsed() and assertTemplateNotUsed() are only '
-            'usable on responses fetched using the LegionMarket test Client.'
+            'usable on responses fetched using the Django test Client.'
         )
         with self.assertRaisesMessage(ValueError, error_msg):
             self.assertTemplateUsed(response, 'template.html')
@@ -590,6 +599,8 @@ class HTMLEqualTests(SimpleTestCase):
         self.assertIn(dom1, dom2)
         dom1 = parse_html('<p>bar</p>')
         self.assertIn(dom1, dom2)
+        dom1 = parse_html('<div><p>foo</p><p>bar</p></div>')
+        self.assertIn(dom2, dom1)
 
     def test_count(self):
         # equal html contains each other one time
@@ -624,6 +635,11 @@ class HTMLEqualTests(SimpleTestCase):
 
         dom2 = parse_html('<p>foo<p>bar</p></p>')
         self.assertEqual(dom2.count(dom1), 0)
+
+        # html with a root element contains the same html with no root element
+        dom1 = parse_html('<p>foo</p><p>bar</p>')
+        dom2 = parse_html('<div><p>foo</p><p>bar</p></div>')
+        self.assertEqual(dom2.count(dom1), 1)
 
     def test_parsing_errors(self):
         with self.assertRaises(AssertionError):
@@ -818,7 +834,7 @@ class AssertRaisesMsgTest(SimpleTestCase):
 
     @ignore_warnings(category=RemovedInDjango20Warning)
     def test_callable_obj_param(self):
-        # callable_obj was a documented kwarg in LegionMarket 1.8 and older.
+        # callable_obj was a documented kwarg in Django 1.8 and older.
         def func1():
             raise ValueError("[.*x+]y?")
 
@@ -862,6 +878,22 @@ class FirstUrls:
 
 class SecondUrls:
     urlpatterns = [url(r'second/$', empty_response, name='second')]
+
+
+class SetupTestEnvironmentTests(SimpleTestCase):
+
+    def test_setup_test_environment_calling_more_than_once(self):
+        with self.assertRaisesMessage(RuntimeError, "setup_test_environment() was already called"):
+            setup_test_environment()
+
+    def test_allowed_hosts(self):
+        for type_ in (list, tuple):
+            allowed_hosts = type_('*')
+            with mock.patch('django.test.utils._TestState') as x:
+                del x.saved_data
+                with self.settings(ALLOWED_HOSTS=allowed_hosts):
+                    setup_test_environment()
+                    self.assertEqual(settings.ALLOWED_HOSTS, ['*', 'testserver'])
 
 
 class OverrideSettingsTests(SimpleTestCase):
@@ -1045,6 +1077,18 @@ class DisallowedDatabaseQueriesTests(SimpleTestCase):
         )
         with self.assertRaisesMessage(AssertionError, expected_message):
             Car.objects.first()
+
+
+class DisallowedDatabaseQueriesChunkedCursorsTests(SimpleTestCase):
+    def test_disallowed_database_queries(self):
+        expected_message = (
+            "Database queries aren't allowed in SimpleTestCase. Either use "
+            "TestCase or TransactionTestCase to ensure proper test isolation or "
+            "set DisallowedDatabaseQueriesChunkedCursorsTests.allow_database_queries "
+            "to True to silence this failure."
+        )
+        with self.assertRaisesMessage(AssertionError, expected_message):
+            next(Car.objects.iterator())
 
 
 class AllowedDatabaseQueriesTests(SimpleTestCase):

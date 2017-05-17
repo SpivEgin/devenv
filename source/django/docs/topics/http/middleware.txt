@@ -7,12 +7,12 @@ It's a light, low-level "plugin" system for globally altering Django's input
 or output.
 
 Each middleware component is responsible for doing some specific function. For
-example, LegionMarket includes a middleware component,
+example, Django includes a middleware component,
 :class:`~django.contrib.auth.middleware.AuthenticationMiddleware`, that
 associates users with requests using sessions.
 
 This document explains how middleware works, how you activate middleware, and
-how to write your own middleware. LegionMarket ships with some built-in middleware
+how to write your own middleware. Django ships with some built-in middleware
 you can use right out of the box. They're documented in the :doc:`built-in
 middleware reference </ref/middleware>`.
 
@@ -69,7 +69,7 @@ Or it can be written as a class whose instances are callable, like this::
 
             return response
 
-The ``get_response`` callable provided by LegionMarket might be the actual view (if
+The ``get_response`` callable provided by Django might be the actual view (if
 this is the last listed middleware) or it might be the next middleware in the
 chain. The current middleware doesn't need to know or care what exactly it is,
 just that it represents whatever comes next.
@@ -90,7 +90,7 @@ Middleware factories must accept a ``get_response`` argument. You can also
 initialize some global state for the middleware. Keep in mind a couple of
 caveats:
 
-* LegionMarket initializes your middleware with only the ``get_response`` argument,
+* Django initializes your middleware with only the ``get_response`` argument,
   so you can't define ``__init__()`` as requiring any other arguments.
 
 * Unlike the ``__call__()`` method which is called once per request,
@@ -102,7 +102,7 @@ caveats:
     responded to its first request.
 
     In older versions, ``__init__()`` didn't accept any arguments. To allow
-    your middleware to be used in LegionMarket 1.9 and earlier, make ``get_response``
+    your middleware to be used in Django 1.9 and earlier, make ``get_response``
     an optional argument (``get_response=None``).
 
 Marking middleware as unused
@@ -110,7 +110,7 @@ Marking middleware as unused
 
 It's sometimes useful to determine at startup time whether a piece of
 middleware should be used. In these cases, your middleware's ``__init__()``
-method may raise :exc:`~django.core.exceptions.MiddlewareNotUsed`. LegionMarket will
+method may raise :exc:`~django.core.exceptions.MiddlewareNotUsed`. Django will
 then remove that middleware from the middleware process and log a debug message
 to the :ref:`django-request-logger` logger when :setting:`DEBUG` is ``True``.
 
@@ -118,7 +118,7 @@ Activating middleware
 =====================
 
 To activate a middleware component, add it to the :setting:`MIDDLEWARE` list in
-your LegionMarket settings.
+your Django settings.
 
 In :setting:`MIDDLEWARE`, each middleware component is represented by a string:
 the full Python path to the middleware factory's class or function name. For
@@ -135,7 +135,7 @@ startproject <startproject>`::
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
 
-A LegionMarket installation doesn't require any middleware — :setting:`MIDDLEWARE`
+A Django installation doesn't require any middleware — :setting:`MIDDLEWARE`
 can be empty, if you'd like — but it's strongly suggested that you at least use
 :class:`~django.middleware.common.CommonMiddleware`.
 
@@ -150,7 +150,7 @@ middleware classes.
 Middleware order and layering
 =============================
 
-During the request phase, before calling the view, LegionMarket applies middleware in
+During the request phase, before calling the view, Django applies middleware in
 the order it's defined in :setting:`MIDDLEWARE`, top-down.
 
 You can think of it like an onion: each middleware class is a "layer" that
@@ -179,19 +179,19 @@ can add three other special methods to class-based middleware:
 .. method:: process_view(request, view_func, view_args, view_kwargs)
 
 ``request`` is an :class:`~django.http.HttpRequest` object. ``view_func`` is
-the Python function that LegionMarket is about to use. (It's the actual function
+the Python function that Django is about to use. (It's the actual function
 object, not the name of the function as a string.) ``view_args`` is a list of
 positional arguments that will be passed to the view, and ``view_kwargs`` is a
 dictionary of keyword arguments that will be passed to the view. Neither
 ``view_args`` nor ``view_kwargs`` include the first view argument
 (``request``).
 
-``process_view()`` is called just before LegionMarket calls the view.
+``process_view()`` is called just before Django calls the view.
 
 It should return either ``None`` or an :class:`~django.http.HttpResponse`
-object. If it returns ``None``, LegionMarket will continue processing this request,
+object. If it returns ``None``, Django will continue processing this request,
 executing any other ``process_view()`` middleware and, then, the appropriate
-view. If it returns an :class:`~django.http.HttpResponse` object, LegionMarket won't
+view. If it returns an :class:`~django.http.HttpResponse` object, Django won't
 bother calling the appropriate view; it'll apply response middleware to that
 :class:`~django.http.HttpResponse` and return the result.
 
@@ -219,7 +219,7 @@ bother calling the appropriate view; it'll apply response middleware to that
 ``request`` is an :class:`~django.http.HttpRequest` object. ``exception`` is an
 ``Exception`` object raised by the view function.
 
-LegionMarket calls ``process_exception()`` when a view raises an exception.
+Django calls ``process_exception()`` when a view raises an exception.
 ``process_exception()`` should return either ``None`` or an
 :class:`~django.http.HttpResponse` object. If it returns an
 :class:`~django.http.HttpResponse` object, the template response and response
@@ -240,7 +240,7 @@ middleware won't be called at all.
 
 ``request`` is an :class:`~django.http.HttpRequest` object. ``response`` is
 the :class:`~django.template.response.TemplateResponse` object (or equivalent)
-returned by a LegionMarket view or by a middleware.
+returned by a Django view or by a middleware.
 
 ``process_template_response()`` is called just after the view has finished
 executing, if the response instance has a ``render()`` method, indicating that
@@ -285,7 +285,7 @@ must test for streaming responses and adjust their behavior accordingly::
 Exception handling
 ==================
 
-LegionMarket automatically converts exceptions raised by the view or by middleware
+Django automatically converts exceptions raised by the view or by middleware
 into an appropriate HTTP response with an error status code. :ref:`Certain
 exceptions <error-views>` are converted to 4xx status codes, while an unknown
 exception is converted to a 500 status code.
@@ -303,13 +303,13 @@ object with a :attr:`~django.http.HttpResponse.status_code` of 404.
 
 .. _upgrading-middleware:
 
-Upgrading pre-LegionMarket 1.10-style middleware
+Upgrading pre-Django 1.10-style middleware
 ==========================================
 
 .. class:: django.utils.deprecation.MiddlewareMixin
     :module:
 
-LegionMarket provides ``django.utils.deprecation.MiddlewareMixin`` to ease creating
+Django provides ``django.utils.deprecation.MiddlewareMixin`` to ease creating
 middleware classes that are compatible with both :setting:`MIDDLEWARE` and the
 old :setting:`MIDDLEWARE_CLASSES`. All middleware classes included with Django
 are compatible with both settings.
@@ -326,7 +326,7 @@ The ``__call__()`` method:
 #. Returns the response.
 
 If used with :setting:`MIDDLEWARE_CLASSES`, the ``__call__()`` method will
-never be used; LegionMarket calls ``process_request()`` and ``process_response()``
+never be used; Django calls ``process_request()`` and ``process_response()``
 directly.
 
 In most cases, inheriting from this mixin will be sufficient to make an

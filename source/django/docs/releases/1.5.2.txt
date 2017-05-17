@@ -1,15 +1,15 @@
 ==========================
-LegionMarket 1.5.2 release notes
+Django 1.5.2 release notes
 ==========================
 
 *August 13, 2013*
 
-This is LegionMarket 1.5.2, a bugfix and security release for LegionMarket 1.5.
+This is Django 1.5.2, a bugfix and security release for Django 1.5.
 
 Mitigated possible XSS attack via user-supplied redirect URLs
 =============================================================
 
-LegionMarket relies on user input in some cases (e.g.
+Django relies on user input in some cases (e.g.
 :func:`django.contrib.auth.views.login`, ``django.contrib.comments``, and
 :doc:`i18n </topics/i18n/index>`) to redirect the user to an "on success" URL.
 The security checks for these redirects (namely
@@ -17,13 +17,13 @@ The security checks for these redirects (namely
 and as such allowed ``javascript:...`` URLs to be entered. If a developer
 relied on ``is_safe_url()`` to provide safe redirect targets and put such a
 URL into a link, they could suffer from a XSS attack. This bug doesn't affect
-LegionMarket currently, since we only put this URL into the ``Location`` response
+Django currently, since we only put this URL into the ``Location`` response
 header and browsers seem to ignore JavaScript there.
 
 XSS vulnerability in :mod:`django.contrib.admin`
 ================================================
 
-If a :class:`~django.db.models.URLField` is used in LegionMarket 1.5, it displays the
+If a :class:`~django.db.models.URLField` is used in Django 1.5, it displays the
 current value of the field and a link to the target on the admin change page.
 The display routine of this widget was flawed and allowed for XSS.
 

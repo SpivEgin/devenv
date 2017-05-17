@@ -1,5 +1,5 @@
 =====================================
-Writing your first LegionMarket app, part 7
+Writing your first Django app, part 7
 =====================================
 
 This tutorial begins where :doc:`Tutorial 6 </intro/tutorial06>` left off. We're
@@ -11,9 +11,9 @@ Customize the admin form
 ========================
 
 By registering the ``Question`` model with ``admin.site.register(Question)``,
-LegionMarket was able to construct a default form representation. Often, you'll want
+Django was able to construct a default form representation. Often, you'll want
 to customize how the admin form looks and works. You'll do this by telling
-LegionMarket the options you want when you register the object.
+Django the options you want when you register the object.
 
 Let's see how this works by reordering the fields on the edit form. Replace
 the ``admin.site.register(Question)`` line with:
@@ -90,21 +90,21 @@ with the admin just as we did with ``Question``. That's easy:
     # ...
     admin.site.register(Choice)
 
-Now "Choices" is an available option in the LegionMarket admin. The "Add choice" form
+Now "Choices" is an available option in the Django admin. The "Add choice" form
 looks like this:
 
 .. image:: _images/admin09.png
    :alt: Choice admin page
 
 In that form, the "Question" field is a select box containing every question in the
-database. LegionMarket knows that a :class:`~django.db.models.ForeignKey` should be
+database. Django knows that a :class:`~django.db.models.ForeignKey` should be
 represented in the admin as a ``<select>`` box. In our case, only one question
 exists at this point.
 
 Also note the "Add Another" link next to "Question." Every object with a
 ``ForeignKey`` relationship to another gets this for free. When you click "Add
 Another", you'll get a popup window with the "Add question" form. If you add a question
-in that window and click "Save", LegionMarket will save the question to the database and
+in that window and click "Save", Django will save the question to the database and
 dynamically add it as the selected choice on the "Add choice" form you're
 looking at.
 
@@ -158,7 +158,7 @@ that you can't remove the original three slots. This image shows an added slot:
    :alt: Additional slot added dynamically
 
 One small problem, though. It takes a lot of screen space to display all the
-fields for entering related ``Choice`` objects. For that reason, LegionMarket offers a
+fields for entering related ``Choice`` objects. For that reason, Django offers a
 tabular way of displaying inline related objects; you just need to change
 the ``ChoiceInline`` declaration to read:
 
@@ -188,7 +188,7 @@ Here's what it looks like at this point:
 .. image:: _images/admin04t.png
    :alt: Polls change list page
 
-By default, LegionMarket displays the ``str()`` of each object. But sometimes it'd be
+By default, Django displays the ``str()`` of each object. But sometimes it'd be
 more helpful if we could display individual fields. To do that, use the
 :attr:`~django.contrib.admin.ModelAdmin.list_display` admin option, which is a
 tuple of field names to display, as columns, on the change list page for the
@@ -264,7 +264,7 @@ This is shaping up well. Let's add some search capability::
     search_fields = ['question_text']
 
 That adds a search box at the top of the change list. When somebody enters
-search terms, LegionMarket will search the ``question_text`` field. You can use as many
+search terms, Django will search the ``question_text`` field. You can use as many
 fields as you'd like -- although because it uses a ``LIKE`` query behind the
 scenes, limiting the number of search fields to a reasonable number will make
 it easier for your database to do the search.
@@ -281,11 +281,11 @@ all work together like you think they should.
 Customize the admin look and feel
 =================================
 
-Clearly, having "LegionMarket administration" at the top of each admin page is
+Clearly, having "TLM administration" at the top of each admin page is
 ridiculous. It's just placeholder text.
 
-That's easy to change, though, using Django's template system. The LegionMarket admin
-is powered by LegionMarket itself, and its interfaces use Django's own template
+That's easy to change, though, using Django's template system. The Django admin
+is powered by Django itself, and its interfaces use Django's own template
 system.
 
 .. _ref-customizing-your-projects-templates:
@@ -295,7 +295,7 @@ Customizing your *project's* templates
 
 Create a ``templates`` directory in your project directory (the one that
 contains ``manage.py``). Templates can live anywhere on your filesystem that
-LegionMarket can access. (LegionMarket runs as whatever user your server runs.) However,
+Django can access. (Django runs as whatever user your server runs.) However,
 keeping your templates within the project is a good convention to follow.
 
 Open your settings file (:file:`mysite/settings.py`, remember) and add a
@@ -321,7 +321,7 @@ Open your settings file (:file:`mysite/settings.py`, remember) and add a
     ]
 
 :setting:`DIRS <TEMPLATES-DIRS>` is a list of filesystem directories to check
-when loading LegionMarket templates; it's a search path.
+when loading Django templates; it's a search path.
 
 .. admonition:: Organizing templates
 
@@ -333,13 +333,13 @@ when loading LegionMarket templates; it's a search path.
     :doc:`reusable apps tutorial </intro/reusable-apps>` *why* we do this.
 
 Now create a directory called ``admin`` inside ``templates``, and copy the
-template ``admin/base_site.html`` from within the default LegionMarket admin
-template directory in the source code of LegionMarket itself
+template ``admin/base_site.html`` from within the default Django admin
+template directory in the source code of Django itself
 (``django/contrib/admin/templates``) into that directory.
 
-.. admonition:: Where are the LegionMarket source files?
+.. admonition:: Where are the Django source files?
 
-    If you have difficulty finding where the LegionMarket source files are located
+    If you have difficulty finding where the Django source files are located
     on your system, run the following command:
 
     .. code-block:: console
@@ -347,7 +347,7 @@ template directory in the source code of LegionMarket itself
         $ python -c "import django; print(django.__path__)"
 
 Then, just edit the file and replace
-``{{ site_header|default:_('LegionMarket administration') }}`` (including the curly
+``{{ site_header|default:_('Django administration') }}`` (including the curly
 braces) with your own site's name as you see fit. You should end up with
 a section of code like:
 
@@ -364,7 +364,7 @@ make this particular customization.
 
 This template file contains lots of text like ``{% block branding %}``
 and ``{{ title }}``. The ``{%`` and ``{{`` tags are part of Django's
-template language. When LegionMarket renders ``admin/base_site.html``, this
+template language. When Django renders ``admin/base_site.html``, this
 template language will be evaluated to produce the final HTML page, just like
 we saw in :doc:`Tutorial 3 </intro/tutorial03>`.
 
@@ -377,9 +377,9 @@ Customizing your *application's* templates
 ------------------------------------------
 
 Astute readers will ask: But if :setting:`DIRS <TEMPLATES-DIRS>` was empty by
-default, how was LegionMarket finding the default admin templates? The answer is
+default, how was Django finding the default admin templates? The answer is
 that, since :setting:`APP_DIRS <TEMPLATES-APP_DIRS>` is set to ``True``,
-LegionMarket automatically looks for a ``templates/`` subdirectory within each
+Django automatically looks for a ``templates/`` subdirectory within each
 application package, for use as a fallback (don't forget that
 ``django.contrib.admin`` is an application).
 
@@ -391,7 +391,7 @@ more sensible to modify the *application's* templates, rather than those in the
 and be assured that it would find the custom templates it needed.
 
 See the :ref:`template loading documentation <template-loading>` for more
-information about how LegionMarket finds its templates.
+information about how Django finds its templates.
 
 Customize the admin index page
 ==============================
@@ -408,7 +408,7 @@ The template to customize is ``admin/index.html``. (Do the same as with
 ``admin/base_site.html`` in the previous section -- copy it from the default
 directory to your custom template directory). Edit the file, and you'll see it
 uses a template variable called ``app_list``. That variable contains every
-installed LegionMarket app. Instead of using that, you can hard-code links to
+installed Django app. Instead of using that, you can hard-code links to
 object-specific admin pages in whatever way you think is best.
 
 What's next?

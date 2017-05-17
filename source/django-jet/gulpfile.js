@@ -119,7 +119,7 @@ gulp.task('vendor-translations', function() {
     )
 });
 
-gulp.task('locales', shell.task('python manage.py compilemessages', { quiet: true }));
+// gulp.task('locales', shell.task('python manage.py compilemessages', { quiet: true }));
 
 gulp.task('build', ['scripts', 'styles', 'vendor-styles', 'vendor-translations', 'locales']);
 

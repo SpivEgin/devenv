@@ -7,7 +7,7 @@ cwd=$(pwd)
 
 
 cd ${cwd}/source/django
-yarn install
+npm install
 python setup.py build && python setup.py install
 
 cd ${cwd}/source/django-oscar

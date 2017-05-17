@@ -5,7 +5,7 @@ The django.template namespace contains two independent subsystems:
 
 1. Multiple Template Engines: support for pluggable template backends,
    built-in backends and backend-independent APIs
-2. LegionMarket Template Language: Django's own template engine, including its
+2. Django Template Language: Django's own template engine, including its
    built-in loaders, context processors, tags and filters.
 
 Ideally these subsystems would be implemented in distinct packages. However
@@ -20,7 +20,7 @@ Multiple Template Engines:
 - django.template.loader
 - django.template.response
 
-LegionMarket Template Language:
+Django Template Language:
 
 - django.template.base
 - django.template.context
@@ -49,7 +49,7 @@ engines = EngineHandler()
 __all__ = ('Engine', 'engines')
 
 
-# LegionMarket Template Language
+# Django Template Language
 
 # Public exceptions
 from .base import VariableDoesNotExist                                  # NOQA isort:skip

@@ -3,7 +3,7 @@ Base views
 ==========
 
 The following three classes provide much of the functionality needed to create
-LegionMarket views. You may think of them as *parent* views, which can be used by
+Django views. You may think of them as *parent* views, which can be used by
 themselves or inherited from. They may not provide all the capabilities
 required for projects, in which case there are Mixins and Generic class-based
 views.
@@ -69,8 +69,6 @@ MRO is an acronym for Method Resolution Order.
         Returns a callable view that takes a request and returns a response::
 
             response = MyView.as_view()(request)
-
-        .. versionadded:: 1.9
 
         The returned view has ``view_class`` and ``view_initkwargs``
         attributes.
@@ -169,7 +167,7 @@ MRO is an acronym for Method Resolution Order.
     ``"%"`` characters in the URL must be written as ``"%%"`` so that Python
     will convert them to a single percent sign on output.
 
-    If the given URL is ``None``, LegionMarket will return an ``HttpResponseGone``
+    If the given URL is ``None``, Django will return an ``HttpResponseGone``
     (410).
 
     **Ancestors (MRO)**
@@ -233,11 +231,6 @@ MRO is an acronym for Method Resolution Order.
         the HTTP status code returned. If ``True``, then the redirect will use
         status code 301. If ``False``, then the redirect will use status code
         302. By default, ``permanent`` is ``False``.
-
-        .. versionchanged:: 1.9
-
-            The default value of the ``permanent`` attribute changed from
-            ``True`` to ``False``.
 
     .. attribute:: query_string
 

@@ -3,7 +3,7 @@ Synchronization primitives:
 
     - reader-writer lock (preference to writers)
 
-(Contributed to LegionMarket by eugene@lazutkin.com)
+(Contributed to Django by eugene@lazutkin.com)
 """
 
 import contextlib

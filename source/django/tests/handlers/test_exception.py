@@ -3,7 +3,6 @@ from django.test import SimpleTestCase, override_settings
 from django.test.client import FakePayload
 
 
-@override_settings(ROOT_URLCONF='handlers.urls')
 class ExceptionHandlerTests(SimpleTestCase):
 
     def get_suspicious_environ(self):
@@ -15,7 +14,6 @@ class ExceptionHandlerTests(SimpleTestCase):
             'wsgi.input': payload,
             'SERVER_NAME': 'test',
             'SERVER_PORT': '8000',
-            'PATH_INFO': '/malformed_post/',
         }
 
     @override_settings(DATA_UPLOAD_MAX_MEMORY_SIZE=12)

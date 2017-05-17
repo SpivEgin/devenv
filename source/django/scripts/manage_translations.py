@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# This python file contains utility scripts to manage LegionMarket translations.
+# This python file contains utility scripts to manage Django translations.
 # It has to be run inside the django git root directory.
 #
 # The following commands are available:
@@ -22,6 +22,8 @@ import os
 from argparse import ArgumentParser
 from subprocess import PIPE, Popen, call
 
+import django
+from django.conf import settings
 from django.core.management import call_command
 
 HAVE_JS = ['admin']
@@ -83,14 +85,16 @@ def update_catalogs(resources=None, languages=None):
     Update the en/LC_MESSAGES/django.po (main and contrib) files with
     new/updated translatable strings.
     """
+    settings.configure()
+    django.setup()
     if resources is not None:
         print("`update_catalogs` will always process all resources.")
     contrib_dirs = _get_locale_dirs(None, include_core=False)
 
     os.chdir(os.path.join(os.getcwd(), 'django'))
-    print("Updating en catalogs for LegionMarket and contrib apps...")
+    print("Updating en catalogs for Django and contrib apps...")
     call_command('makemessages', locale=['en'])
-    print("Updating en JS catalogs for LegionMarket and contrib apps...")
+    print("Updating en JS catalogs for Django and contrib apps...")
     call_command('makemessages', locale=['en'], domain='djangojs')
 
     # Output changed stats
@@ -102,7 +106,7 @@ def update_catalogs(resources=None, languages=None):
 def lang_stats(resources=None, languages=None):
     """
     Output language statistics of committed translation files for each
-    LegionMarket catalog.
+    Django catalog.
     If resources is provided, it should be a list of translation resource to
     limit the output (e.g. ['core', 'gis']).
     """

@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.6.3 release notes
+Django 1.6.3 release notes
 ==========================
 
 *April 21, 2014*
 
-LegionMarket 1.6.3 fixes several bugs in 1.6.2, including three security issues,
+Django 1.6.3 fixes several bugs in 1.6.2, including three security issues,
 and makes one backwards-incompatible change:
 
 Unexpected code execution using ``reverse()``
@@ -15,7 +15,7 @@ Django's URL handling is based on a mapping of regex patterns
 consists of matching a requested URL against those patterns to
 determine the appropriate view to invoke.
 
-LegionMarket also provides a convenience function -- ``reverse()`` -- which performs
+Django also provides a convenience function -- ``reverse()`` -- which performs
 this process in the opposite direction. The ``reverse()`` function takes
 information about a view and returns a URL which would invoke that view. Use
 of ``reverse()`` is encouraged for application developers, as the output of
@@ -23,7 +23,7 @@ of ``reverse()`` is encouraged for application developers, as the output of
 do not need to change other code when making changes to URLs.
 
 One argument signature for ``reverse()`` is to pass a dotted Python
-path to the desired view. In this situation, LegionMarket will import the
+path to the desired view. In this situation, Django will import the
 module indicated by that dotted path as part of generating the
 resulting URL. If such a module has import-time side effects, those
 side effects will occur.
@@ -47,7 +47,7 @@ the developer intended to be imported in this fashion can or will be imported.
 Caching of anonymous pages could reveal CSRF token
 ==================================================
 
-LegionMarket includes both a :doc:`caching framework </topics/cache>` and a system
+Django includes both a :doc:`caching framework </topics/cache>` and a system
 for :doc:`preventing cross-site request forgery (CSRF) attacks
 </ref/csrf/>`. The CSRF-protection system is based on a random nonce
 sent to the client in a cookie which must be sent by the client on future
@@ -113,7 +113,7 @@ Historically, queries that use
 :meth:`~django.db.models.query.QuerySet.select_for_update()` could be
 executed in autocommit mode, outside of a transaction. Before Django
 1.6, Django's automatic transactions mode allowed this to be used to
-lock records until the next write operation. LegionMarket 1.6 introduced
+lock records until the next write operation. Django 1.6 introduced
 database-level autocommit; since then, execution in such a context
 voids the effect of ``select_for_update()``. It is, therefore, assumed
 now to be an error and raises an exception.

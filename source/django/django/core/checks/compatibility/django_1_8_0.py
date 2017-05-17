@@ -18,7 +18,7 @@ def check_duplicate_template_settings(app_configs, **kwargs):
         defined = [value for value in values if getattr(settings, value, None)]
         if defined:
             return [Warning(
-                "The standalone TEMPLATE_* settings were deprecated in LegionMarket "
+                "The standalone TEMPLATE_* settings were deprecated in Django "
                 "1.8 and the TEMPLATES dictionary takes precedence. You must "
                 "put the values of the following settings into your default "
                 "TEMPLATES dict: %s." % ", ".join(defined),

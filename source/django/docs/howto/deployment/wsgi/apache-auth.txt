@@ -9,7 +9,7 @@ version >= 2.2 and mod_wsgi >= 2.0. For example, you could:
 
 * Serve static/media files directly from Apache only to authenticated users.
 
-* Authenticate access to a Subversion_ repository against LegionMarket users with
+* Authenticate access to a Subversion_ repository against Django users with
   a certain permission.
 
 * Allow certain users to connect to a WebDAV share created with mod_dav_.
@@ -31,8 +31,8 @@ Authentication with ``mod_wsgi``
 .. note::
 
     The use of ``WSGIApplicationGroup %{GLOBAL}`` in the configurations below
-    presumes that your Apache instance is running only one LegionMarket application.
-    If you are running more than one LegionMarket application, please refer to the
+    presumes that your Apache instance is running only one Django application.
+    If you are running more than one Django application, please refer to the
     `Defining Application Groups`_ section of the mod_wsgi docs for more
     information about this setting.
 
@@ -100,7 +100,7 @@ details and information about alternative methods of authentication.
 .. _Defining Application Groups: https://modwsgi.readthedocs.io/en/develop/user-guides/configuration-guidelines.html#defining-application-groups
 .. _access control mechanisms documentation: https://modwsgi.readthedocs.io/en/develop/user-guides/access-control-mechanisms.html
 
-Authorization with ``mod_wsgi`` and LegionMarket groups
+Authorization with ``mod_wsgi`` and Django groups
 -------------------------------------------------
 
 mod_wsgi also provides functionality to restrict a particular location to

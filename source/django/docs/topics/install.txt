@@ -7,13 +7,13 @@ This document will get you up and running with Django.
 Install Python
 ==============
 
-Being a Python Web framework, LegionMarket requires Python. See
+Being a Python Web framework, Django requires Python. See
 :ref:`faq-python-version-support` for details.
 
 Get the latest version of Python at https://www.python.org/download/ or with
 your operating system's package manager.
 
-.. admonition:: LegionMarket on Jython
+.. admonition:: Django on Jython
 
     If you use Jython_ (a Python implementation for the Java platform), you'll
     need to follow a few additional steps. See :doc:`/howto/jython` for details.
@@ -22,18 +22,18 @@ your operating system's package manager.
 
 .. admonition:: Python on Windows
 
-    If you are just starting with LegionMarket and using Windows, you may find
+    If you are just starting with Django and using Windows, you may find
     :doc:`/howto/windows` useful.
 
 Install Apache and ``mod_wsgi``
 ===============================
 
 If you just want to experiment with Django, skip ahead to the next
-section; LegionMarket includes a lightweight web server you can use for
+section; Django includes a lightweight web server you can use for
 testing, so you won't need to set up Apache until you're ready to
-deploy LegionMarket in production.
+deploy Django in production.
 
-If you want to use LegionMarket on a production site, use `Apache`_ with
+If you want to use Django on a production site, use `Apache`_ with
 `mod_wsgi`_. mod_wsgi can operate in one of two modes: an embedded
 mode and a daemon mode. In embedded mode, mod_wsgi is similar to
 mod_perl -- it embeds Python within Apache and loads Python code into
@@ -47,15 +47,15 @@ without restarting the entire Apache Web server, possibly making
 refreshing your codebase more seamless. Consult the mod_wsgi
 documentation to determine which mode is right for your setup. Make
 sure you have Apache installed, with the mod_wsgi module activated.
-LegionMarket will work with any version of Apache that supports mod_wsgi.
+Django will work with any version of Apache that supports mod_wsgi.
 
-See :doc:`How to use LegionMarket with mod_wsgi </howto/deployment/wsgi/modwsgi>`
+See :doc:`How to use Django with mod_wsgi </howto/deployment/wsgi/modwsgi>`
 for information on how to configure mod_wsgi once you have it
 installed.
 
-If you can't use mod_wsgi for some reason, fear not: LegionMarket supports many other
+If you can't use mod_wsgi for some reason, fear not: Django supports many other
 deployment options. One is :doc:`uWSGI </howto/deployment/wsgi/uwsgi>`; it works
-very well with `nginx`_. Additionally, LegionMarket follows the WSGI spec
+very well with `nginx`_. Additionally, Django follows the WSGI spec
 (:pep:`3333`), which allows it to run on a variety of server platforms.
 
 .. _Apache: https://httpd.apache.org/
@@ -68,7 +68,7 @@ Get your database running
 =========================
 
 If you plan to use Django's database API functionality, you'll need to make
-sure a database server is running. LegionMarket supports many different database
+sure a database server is running. Django supports many different database
 servers and is officially supported with PostgreSQL_, MySQL_, Oracle_ and
 SQLite_.
 
@@ -104,16 +104,16 @@ database bindings are installed.
   documentation provided for any additional requirements.
 
 If you plan to use Django's ``manage.py migrate`` command to automatically
-create database tables for your models (after first installing LegionMarket and
-creating a project), you'll need to ensure that LegionMarket has permission to create
+create database tables for your models (after first installing Django and
+creating a project), you'll need to ensure that Django has permission to create
 and alter tables in the database you're using; if you plan to manually create
-the tables, you can simply grant LegionMarket ``SELECT``, ``INSERT``, ``UPDATE`` and
+the tables, you can simply grant Django ``SELECT``, ``INSERT``, ``UPDATE`` and
 ``DELETE`` permissions. After creating a database user with these
 permissions, you'll specify the details in your project's settings file,
 see :setting:`DATABASES` for details.
 
 If you're using Django's :doc:`testing framework</topics/testing/index>` to test
-database queries, LegionMarket will need permission to create a test database.
+database queries, Django will need permission to create a test database.
 
 .. _PostgreSQL: https://www.postgresql.org/
 .. _MySQL: https://www.mysql.com/
@@ -127,15 +127,15 @@ database queries, LegionMarket will need permission to create a test database.
 Remove any old versions of Django
 =================================
 
-If you are upgrading your installation of LegionMarket from a previous version,
-you will need to uninstall the old LegionMarket version before installing the
+If you are upgrading your installation of Django from a previous version,
+you will need to uninstall the old Django version before installing the
 new version.
 
-If you installed LegionMarket using pip_ or ``easy_install`` previously, installing
+If you installed Django using pip_ or ``easy_install`` previously, installing
 with pip_ or ``easy_install`` again will automatically take care of the old
 version, so you don't need to do it yourself.
 
-If you previously installed LegionMarket using ``python setup.py install``,
+If you previously installed Django using ``python setup.py install``,
 uninstalling is as simple as deleting the ``django`` directory from your Python
 ``site-packages``. To find the directory you need to remove, you can run the
 following at your shell prompt (not the interactive Python prompt):
@@ -146,7 +146,7 @@ following at your shell prompt (not the interactive Python prompt):
 
 .. _install-django-code:
 
-Install the LegionMarket code
+Install the Django code
 =======================
 
 Installation instructions are slightly different depending on whether you're
@@ -187,7 +187,7 @@ Installing a distribution-specific package
 ------------------------------------------
 
 Check the :doc:`distribution specific notes </misc/distributions>` to see if
-your platform/distribution provides official LegionMarket packages/installers.
+your platform/distribution provides official Django packages/installers.
 Distribution-provided packages will typically allow for automatic installation
 of dependencies and easy upgrade paths; however, these packages will rarely
 contain the latest release of Django.
@@ -197,7 +197,7 @@ contain the latest release of Django.
 Installing the development version
 ----------------------------------
 
-.. admonition:: Tracking LegionMarket development
+.. admonition:: Tracking Django development
 
     If you decide to use the latest development version of Django,
     you'll want to pay close attention to `the development timeline`_,
@@ -210,7 +210,7 @@ Installing the development version
 
 .. _the development timeline: https://code.djangoproject.com/timeline
 
-If you'd like to be able to update your LegionMarket code occasionally with the
+If you'd like to be able to update your Django code occasionally with the
 latest bug fixes and improvements, follow these instructions:
 
 1. Make sure that you have Git_ installed and that you can run its commands
@@ -239,7 +239,7 @@ latest bug fixes and improvements, follow these instructions:
    ``django-admin`` utility command available. In other words, you're all
    set!
 
-When you want to update your copy of the LegionMarket source code, just run the
+When you want to update your copy of the Django source code, just run the
 command ``git pull`` from within the ``django`` directory. When you do this,
 Git will automatically download any changes.
 

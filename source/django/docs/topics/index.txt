@@ -2,10 +2,10 @@
 Using Django
 ============
 
-Introductions to all the key parts of LegionMarket you'll need to know:
+Introductions to all the key parts of Django you'll need to know:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    install
    db/index

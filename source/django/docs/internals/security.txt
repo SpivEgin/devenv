@@ -17,15 +17,14 @@ Reporting security issues
 **Short version: please report security issues by emailing
 security@djangoproject.com**.
 
-Most normal bugs in LegionMarket are reported to `our public Trac instance`_, but
+Most normal bugs in Django are reported to `our public Trac instance`_, but
 due to the sensitive nature of security issues, we ask that they **not** be
 publicly reported in this fashion.
 
-Instead, if you believe you've found something in LegionMarket which has security
+Instead, if you believe you've found something in Django which has security
 implications, please send a description of the issue via email to
-``security@djangoproject.com``. Mail sent to that address reaches a
-:ref:`subset of the core team <security-team-list>`, who can forward security
-issues into the private team's mailing list for broader discussion if needed.
+``security@djangoproject.com``. Mail sent to that address reaches the `security
+team <https://www.djangoproject.com/foundation/teams/#security-team>`_.
 
 Once you've submitted an issue via email, you should receive an acknowledgment
 from a member of the security team within 48 hours, and depending on the
@@ -44,7 +43,7 @@ action to be taken, you may receive further followup emails.
 Supported versions
 ==================
 
-At any given time, the LegionMarket team provides official security support
+At any given time, the Django team provides official security support
 for several versions of Django:
 
 * The `master development branch`_, hosted on GitHub, which will become the
@@ -53,10 +52,10 @@ for several versions of Django:
   are fixed in public without going through the :ref:`disclosure process
   <security-disclosure>`.
 
-* The two most recent LegionMarket release series receive security
+* The two most recent Django release series receive security
   support. For example, during the development cycle leading to the
-  release of LegionMarket 1.5, support will be provided for LegionMarket 1.4 and
-  LegionMarket 1.3. Upon the release of LegionMarket 1.5, LegionMarket 1.3's security
+  release of Django 1.5, support will be provided for Django 1.4 and
+  Django 1.3. Upon the release of Django 1.5, Django 1.3's security
   support will end.
 
 * :term:`Long-term support release`\s will receive security updates for a
@@ -72,7 +71,7 @@ will not issue patches or new releases for those versions.
 
 .. _security-disclosure:
 
-How LegionMarket discloses security issues
+How Django discloses security issues
 ====================================
 
 Our process for taking a security issue from private discussion to
@@ -83,7 +82,7 @@ Approximately one week before public disclosure, we send two notifications:
 First, we notify |django-announce| of the date and approximate time of the
 upcoming security release, as well as the severity of the issues. This is to
 aid organizations that need to ensure they have staff available to handle
-triaging our announcement and upgrade LegionMarket as needed. Severity levels are:
+triaging our announcement and upgrade Django as needed. Severity levels are:
 
 **High**:
 
@@ -106,7 +105,7 @@ triaging our announcement and upgrade LegionMarket as needed. Severity levels ar
 Second, we notify a list of :ref:`people and organizations
 <security-notifications>`, primarily composed of operating-system vendors and
 other distributors of Django. This email is signed with the PGP key of someone
-from :ref:`Django's release team <releasers-list>` and consists of:
+from `Django's release team`_ and consists of:
 
 * A full description of the issue and the affected versions of Django.
 
@@ -114,7 +113,7 @@ from :ref:`Django's release team <releasers-list>` and consists of:
 
 * The patch(es), if any, that will be applied to Django.
 
-* The date on which the LegionMarket team will apply these patches, issue
+* The date on which the Django team will apply these patches, issue
   new releases and publicly disclose the issue.
 
 On the day of disclosure, we will take the following steps:
@@ -122,10 +121,10 @@ On the day of disclosure, we will take the following steps:
 1. Apply the relevant patch(es) to Django's codebase.
 
 2. Issue the relevant release(s), by placing new packages on `the
-   Python Package Index`_ and on the LegionMarket website, and tagging the
+   Python Package Index`_ and on the Django website, and tagging the
    new release(s) in Django's git repository.
 
-3. Post a public entry on `the official LegionMarket development blog`_,
+3. Post a public entry on `the official Django development blog`_,
    describing the issue and its resolution in detail, pointing to the
    relevant patches and new releases, and crediting the reporter of
    the issue (if the reporter wishes to be publicly identified).
@@ -134,7 +133,7 @@ On the day of disclosure, we will take the following steps:
    mailing lists that links to the blog post.
 
 .. _the Python Package Index: https://pypi.python.org/pypi
-.. _the official LegionMarket development blog: https://www.djangoproject.com/weblog/
+.. _the official Django development blog: https://www.djangoproject.com/weblog/
 
 If a reported issue is believed to be particularly time-sensitive --
 due to a known exploit in the wild, for example -- the time between
@@ -147,8 +146,10 @@ may privately contact and discuss those issues with the appropriate
 maintainers, and coordinate our own disclosure and resolution with
 theirs.
 
-The LegionMarket team also maintains an :doc:`archive of security issues
+The Django team also maintains an :doc:`archive of security issues
 disclosed in Django</releases/security>`.
+
+.. _Django's release team: https://www.djangoproject.com/foundation/teams/#releasers-team
 
 .. _security-notifications:
 
@@ -161,16 +162,16 @@ notification of security issues is not and will not be made public.
 We also aim to keep this list as small as effectively possible, in
 order to better manage the flow of confidential information prior to
 disclosure. As such, our notification list is *not* simply a list of
-users of Django, and merely being a user of LegionMarket is not sufficient
+users of Django, and merely being a user of Django is not sufficient
 reason to be placed on the notification list.
 
 In broad terms, recipients of security notifications fall into three
 groups:
 
-1. Operating-system vendors and other distributors of LegionMarket who
+1. Operating-system vendors and other distributors of Django who
    provide a suitably-generic (i.e., *not* an individual's personal
    email address) contact address for reporting issues with their
-   LegionMarket package, or for general security reporting. In either case,
+   Django package, or for general security reporting. In either case,
    such addresses **must not** forward to public mailing lists or bug
    trackers. Addresses which forward to the private email of an
    individual maintainer or security-response contact are acceptable,
@@ -182,7 +183,7 @@ groups:
    on these notifications.
 
 3. On a case-by-case basis, other entities who, in the judgment of the
-   LegionMarket development team, need to be made aware of a pending
+   Django development team, need to be made aware of a pending
    security issue. Typically, membership in this group will consist of
    some of the largest and/or most likely to be severely impacted
    known users or distributors of Django, and will require a
@@ -231,5 +232,5 @@ of your request within 30 days.
 
 Please also bear in mind that for any individual or organization,
 receiving security notifications is a privilege granted at the sole
-discretion of the LegionMarket development team, and that this privilege can
+discretion of the Django development team, and that this privilege can
 be revoked at any time, with or without explanation.

@@ -133,7 +133,7 @@ class ExecutorTests(MigrationTestBase):
     })
     def test_empty_plan(self):
         """
-        Tests that re-planning a full migration of a fully-migrated set doesn't
+        Re-planning a full migration of a fully-migrated set doesn't
         perform spurious unmigrations and remigrations.
 
         There was previously a bug where the executor just always performed the
@@ -404,7 +404,7 @@ class ExecutorTests(MigrationTestBase):
     )
     def test_unrelated_model_lookups_forwards(self):
         """
-        #24123 - Tests that all models of apps already applied which are
+        #24123 - All models of apps already applied which are
         unrelated to the first app being applied are part of the initial model
         state.
         """
@@ -449,7 +449,7 @@ class ExecutorTests(MigrationTestBase):
     )
     def test_unrelated_model_lookups_backwards(self):
         """
-        #24123 - Tests that all models of apps being unapplied which are
+        #24123 - All models of apps being unapplied which are
         unrelated to the first app being unapplied are part of the initial
         model state.
         """
@@ -512,6 +512,9 @@ class ExecutorTests(MigrationTestBase):
             ('mutate_state_a', None),
         ])
         self.assertIn('added', dict(state.models['mutate_state_b', 'b'].fields))
+        executor.migrate([
+            ('mutate_state_b', None),
+        ])
 
     @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations"})
     def test_process_callback(self):
@@ -592,6 +595,7 @@ class ExecutorTests(MigrationTestBase):
                 editor.execute(editor.sql_delete_table % {"table": "author_app_author"})
             self.assertTableNotExists("author_app_author")
             self.assertTableNotExists("book_app_book")
+            executor.migrate([("author_app", None)], fake=True)
 
     @override_settings(MIGRATION_MODULES={"migrations": "migrations.test_migrations_squashed"})
     def test_apply_all_replaced_marks_replacement_as_applied(self):
@@ -686,7 +690,7 @@ class ExecutorUnitTests(TestCase):
         self.assertEqual(plan, [(a2_impl, True)])
 
     def test_minimize_rollbacks_branchy(self):
-        """
+        r"""
         Minimize rollbacks when target has multiple in-app children.
 
         a: 1 <---- 3 <--\
@@ -731,7 +735,7 @@ class ExecutorUnitTests(TestCase):
         self.assertEqual(plan, exp)
 
     def test_backwards_nothing_to_do(self):
-        """
+        r"""
         If the current state satisfies the given target, do nothing.
 
         a: 1 <--- 2

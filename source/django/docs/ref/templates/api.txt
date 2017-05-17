@@ -1,15 +1,15 @@
 ====================================================
-The LegionMarket template language: for Python programmers
+The Django template language: for Python programmers
 ====================================================
 
 .. currentmodule:: django.template
 
-This document explains the LegionMarket template system from a technical
+This document explains the Django template system from a technical
 perspective -- how it works and how to extend it. If you're just looking for
 reference on the language syntax, see :doc:`/ref/templates/language`.
 
 It assumes an understanding of templates, contexts, variables, tags, and
-rendering. Start with the :ref:`introduction to the LegionMarket template language
+rendering. Start with the :ref:`introduction to the Django template language
 <template-language-intro>` if you aren't familiar with these concepts.
 
 Overview
@@ -21,12 +21,12 @@ Using the template system in Python is a three-step process:
 2. You compile template code into a :class:`Template`.
 3. You render the template with a :class:`Context`.
 
-LegionMarket projects generally rely on the :ref:`high level, backend agnostic APIs
+Django projects generally rely on the :ref:`high level, backend agnostic APIs
 <template-engines>` for each of these steps instead of the template system's
 lower level APIs:
 
 1. For each :class:`~django.template.backends.django.DjangoTemplates` backend
-   in the :setting:`TEMPLATES` setting, LegionMarket instantiates an
+   in the :setting:`TEMPLATES` setting, Django instantiates an
    :class:`Engine`. :class:`~django.template.backends.django.DjangoTemplates`
    wraps :class:`Engine` and adapts it to the common template backend API.
 2. The :mod:`django.template.loader` module provides functions such as
@@ -103,7 +103,15 @@ what's passed by :class:`~django.template.backends.django.DjangoTemplates`.
       * ``'django.template.loaders.app_directories.Loader'`` if and only if
         ``app_dirs`` is ``True``.
 
+      If ``debug`` is ``False``, these loaders are wrapped in
+      :class:`django.template.loaders.cached.Loader`.
+
       See :ref:`template-loaders` for details.
+
+      .. versionchanged:: 1.11
+
+          Enabling of the cached template loader when ``debug`` is ``False``
+          was added.
 
     * ``string_if_invalid`` is the output, as a string, that the template
       system should use for invalid (e.g. misspelled) variables.
@@ -140,13 +148,9 @@ what's passed by :class:`~django.template.backends.django.DjangoTemplates`.
       Tags and filters from built-in libraries can be used without first calling
       the :ttag:`{% load %}<load>` tag.
 
-.. versionadded:: 1.9
-
-    The ``libraries`` and ``builtins`` arguments were added.
-
 .. staticmethod:: Engine.get_default()
 
-    When a LegionMarket project configures one and only one
+    When a Django project configures one and only one
     :class:`~django.template.backends.django.DjangoTemplates` engine, this
     method returns the underlying :class:`Engine`. In other circumstances it
     will raise :exc:`~django.core.exceptions.ImproperlyConfigured`.
@@ -163,7 +167,7 @@ what's passed by :class:`~django.template.backends.django.DjangoTemplates`.
     Loads a template with the given name, compiles it and returns a
     :class:`Template` object.
 
-.. method:: Engine.select_template(self, template_name_list)
+.. method:: Engine.select_template(template_name_list)
 
     Like :meth:`~Engine.get_template`, except it takes a list of names
     and returns the first template that was found.
@@ -175,7 +179,7 @@ The recommended way to create a :class:`Template` is by calling the factory
 methods of the :class:`Engine`: :meth:`~Engine.get_template`,
 :meth:`~Engine.select_template` and :meth:`~Engine.from_string`.
 
-In a LegionMarket project where the :setting:`TEMPLATES` setting defines exactly one
+In a Django project where the :setting:`TEMPLATES` setting defines exactly one
 :class:`~django.template.backends.django.DjangoTemplates` engine, it's
 possible to instantiate a :class:`Template` directly.
 
@@ -313,9 +317,9 @@ straight lookups. Here are some things to keep in mind:
     "My name is ."
 
   Note that :exc:`django.core.exceptions.ObjectDoesNotExist`, which is the
-  base class for all LegionMarket database API ``DoesNotExist`` exceptions, has
-  ``silent_variable_failure = True``. So if you're using LegionMarket templates
-  with LegionMarket model objects, any ``DoesNotExist`` exception will fail
+  base class for all Django database API ``DoesNotExist`` exceptions, has
+  ``silent_variable_failure = True``. So if you're using Django templates
+  with Django model objects, any ``DoesNotExist`` exception will fail
   silently.
 
 * A variable can only be called if it has no required arguments. Otherwise,
@@ -329,7 +333,7 @@ straight lookups. Here are some things to keep in mind:
   to access them.
 
   A good example is the :meth:`~django.db.models.Model.delete` method on
-  each LegionMarket model object. The template system shouldn't be allowed to do
+  each Django model object. The template system shouldn't be allowed to do
   something like this::
 
     I will now delete this valuable data. {{ data.delete }}
@@ -339,7 +343,7 @@ straight lookups. Here are some things to keep in mind:
   ``alters_data=True`` set, and will instead replace the variable with
   ``string_if_invalid``, unconditionally.  The
   dynamically-generated :meth:`~django.db.models.Model.delete` and
-  :meth:`~django.db.models.Model.save` methods on LegionMarket model objects get
+  :meth:`~django.db.models.Model.save` methods on Django model objects get
   ``alters_data=True`` automatically. Example::
 
     def sensitive_function(self):
@@ -449,8 +453,6 @@ dictionary syntax::
 
 .. method:: Context.setdefault(key, default=None)
 
-    .. versionadded:: 1.9
-
     If ``key`` is in the context, returns its value. Otherwise inserts ``key``
     with a value of ``default`` and returns ``default``.
 
@@ -533,10 +535,6 @@ matching ``pop()`` is called.
     >>> c['foo']
     'first level'
 
-.. versionadded:: 1.9
-
-    The ability to use ``update()`` as a context manager was added.
-
 Using a ``Context`` as a stack comes in handy in :ref:`some custom template
 tags <howto-writing-custom-template-tags>`.
 
@@ -584,7 +582,7 @@ Using ``RequestContext``
 
 .. class:: RequestContext(request, dict_=None, processors=None)
 
-LegionMarket comes with a special ``Context`` class,
+Django comes with a special ``Context`` class,
 ``django.template.RequestContext``, that acts slightly differently from the
 normal ``django.template.Context``. The first difference is that it takes an
 :class:`~django.http.HttpRequest` as its first argument. For example::
@@ -637,7 +635,7 @@ below.
         request_context = RequestContext(request)
         request_context.push({"my_name": "Adrian"})
 
-    LegionMarket does this to allow context data to override context processors in
+    Django does this to allow context data to override context processors in
     APIs such as :func:`~django.shortcuts.render` and
     :class:`~django.template.response.TemplateResponse`.
 
@@ -786,7 +784,7 @@ Generally, you'll store templates in files on your filesystem rather than
 using the low-level :class:`~django.template.Template` API yourself. Save
 templates in a directory specified as a **template directory**.
 
-LegionMarket searches for template directories in a number of places, depending on
+Django searches for template directories in a number of places, depending on
 your template loading settings (see "Loader types" below), but the most basic
 way of specifying template directories is by using the :setting:`DIRS
 <TEMPLATES-DIRS>` option.
@@ -794,7 +792,7 @@ way of specifying template directories is by using the :setting:`DIRS
 The :setting:`DIRS <TEMPLATES-DIRS>` option
 -------------------------------------------
 
-Tell LegionMarket what your template directories are by using the :setting:`DIRS
+Tell Django what your template directories are by using the :setting:`DIRS
 <TEMPLATES-DIRS>` option in the :setting:`TEMPLATES` setting in your settings
 file — or the ``dirs`` argument of :class:`~django.template.Engine`. This
 should be set to a list of strings that contain full paths to your template
@@ -821,7 +819,7 @@ Note that these paths should use Unix-style forward slashes, even on Windows.
 Loader types
 ------------
 
-By default, LegionMarket uses a filesystem-based template loader, but LegionMarket comes
+By default, Django uses a filesystem-based template loader, but Django comes
 with a few other template loaders, which know how to load templates from other
 sources.
 
@@ -849,16 +847,36 @@ loaders that come with Django:
             'DIRS': [os.path.join(BASE_DIR, 'templates')],
         }]
 
+    You can also override ``'DIRS'`` and specify specific directories for a
+    particular filesystem loader::
+
+        TEMPLATES = [{
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'OPTIONS': {
+                'loaders': [
+                    (
+                        'django.template.loaders.filesystem.Loader',
+                        [os.path.join(BASE_DIR, 'templates')],
+                    ),
+                ],
+            },
+        }]
+
+    .. versionchanged:: 1.11
+
+        The ability to specify directories for a particular filesystem loader
+        was added.
+
 ``django.template.loaders.app_directories.Loader``
 
 .. class:: app_directories.Loader
 
-    Loads templates from LegionMarket apps on the filesystem. For each app in
+    Loads templates from Django apps on the filesystem. For each app in
     :setting:`INSTALLED_APPS`, the loader looks for a ``templates``
-    subdirectory. If the directory exists, LegionMarket looks for templates in there.
+    subdirectory. If the directory exists, Django looks for templates in there.
 
     This means you can store templates with your individual apps. This also
-    makes it easy to distribute LegionMarket apps with default templates.
+    makes it easy to distribute Django apps with default templates.
 
     For example, for this setting::
 
@@ -873,7 +891,7 @@ loaders that come with Django:
     ... and will use the one it finds first.
 
     The order of :setting:`INSTALLED_APPS` is significant! For example, if you
-    want to customize the LegionMarket admin, you might choose to override the
+    want to customize the Django admin, you might choose to override the
     standard ``admin/base_site.html`` template, from ``django.contrib.admin``,
     with your own ``admin/base_site.html`` in ``myproject.polls``. You must
     then make sure that your ``myproject.polls`` comes *before*
@@ -909,18 +927,22 @@ loaders that come with Django:
 
 .. class:: cached.Loader
 
-    By default, the templating system will read and compile your templates every
-    time they need to be rendered. While the LegionMarket templating system is quite
-    fast, the overhead from reading and compiling templates can add up.
+    By default (when :setting:`DEBUG` is ``True``), the template system reads
+    and compiles your templates every time they're rendered. While the Django
+    template system is quite fast, the overhead from reading and compiling
+    templates can add up.
 
-    The cached template loader is a class-based loader that you configure with
-    a list of other loaders that it should wrap. The wrapped loaders are used to
-    locate unknown templates when they are first encountered. The cached loader
-    then stores the compiled ``Template`` in memory. The cached ``Template``
-    instance is returned for subsequent requests to load the same template.
+    You configure the cached template loader with a list of other loaders that
+    it should wrap. The wrapped loaders are used to locate unknown templates
+    when they're first encountered. The cached loader then stores the compiled
+    ``Template`` in memory. The cached ``Template`` instance is returned for
+    subsequent requests to load the same template.
 
-    For example, to enable template caching with the ``filesystem`` and
-    ``app_directories`` template loaders you might use the following settings::
+    This loader is automatically enabled if :setting:`DEBUG` is ``False`` and
+    :setting:`OPTIONS['loaders'] <TEMPLATES-OPTIONS>` isn't specified.
+
+    You can also enable template caching with some custom template loaders
+    using settings like this::
 
         TEMPLATES = [{
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -930,6 +952,7 @@ loaders that come with Django:
                     ('django.template.loaders.cached.Loader', [
                         'django.template.loaders.filesystem.Loader',
                         'django.template.loaders.app_directories.Loader',
+                        'path.to.custom.Loader',
                     ]),
                 ],
             },
@@ -937,14 +960,17 @@ loaders that come with Django:
 
     .. note::
 
-        All of the built-in LegionMarket template tags are safe to use with the
+        All of the built-in Django template tags are safe to use with the
         cached loader, but if you're using custom template tags that come from
         third party packages, or that you wrote yourself, you should ensure
         that the ``Node`` implementation for each tag is thread-safe. For more
         information, see :ref:`template tag thread safety considerations
         <template_tag_thread_safety>`.
 
-    This loader is disabled by default.
+    .. versionchanged:: 1.11
+
+        The automatic enabling of the cached template loader when ``debug`` is
+        ``False`` was added.
 
 ``django.template.loaders.locmem.Loader``
 
@@ -967,7 +993,7 @@ loaders that come with Django:
 
     This loader is disabled by default.
 
-LegionMarket uses the template loaders in order according to the ``'loaders'``
+Django uses the template loaders in order according to the ``'loaders'``
 option. It uses each loader until a loader finds a match.
 
 .. _custom-template-loaders:
@@ -981,11 +1007,6 @@ It's possible to load templates from additional sources using custom template
 loaders. Custom ``Loader`` classes should inherit from
 ``django.template.loaders.base.Loader`` and define the ``get_contents()`` and
 ``get_template_sources()`` methods.
-
-.. versionchanged:: 1.9
-
-    In previous versions of Django, custom loaders defined a single method:
-    ``load_template_source()``.
 
 Loader methods
 --------------
@@ -1080,13 +1101,6 @@ Template origin
 
 Templates have an ``origin`` containing attributes depending on the source
 they are loaded from.
-
-.. versionchanged:: 1.9
-
-    LegionMarket used to create an origin based on
-    ``django.template.loader.LoaderOrigin`` or
-    ``django.template.base.StringOrigin``. These have been replaced by
-    ``django.template.base.Origin``.
 
 .. class:: Origin
 

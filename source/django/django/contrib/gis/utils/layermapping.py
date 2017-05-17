@@ -1,9 +1,9 @@
-# LayerMapping -- A LegionMarket Model/OGR Layer Mapping Utility
+# LayerMapping -- A Django Model/OGR Layer Mapping Utility
 """
  The LayerMapping class provides a way to map the contents of OGR
- vector files (e.g. SHP files) to Geographic-enabled LegionMarket models.
+ vector files (e.g. SHP files) to Geographic-enabled Django models.
 
- For more information, please consult the GeoLegionMarket documentation:
+ For more information, please consult the GeoDjango documentation:
    https://docs.djangoproject.com/en/dev/ref/contrib/gis/layermapping/
 """
 import sys
@@ -46,7 +46,7 @@ class MissingForeignKey(LayerMapError):
 
 
 class LayerMapping(object):
-    "A class that maps OGR Layers to GeoLegionMarket Models."
+    "A class that maps OGR Layers to GeoDjango Models."
 
     # Acceptable 'base' types for a multi-geometry type.
     MULTI_TYPES = {1: OGRGeomType('MultiPoint'),
@@ -57,7 +57,7 @@ class LayerMapping(object):
                    OGRGeomType('Polygon25D').num: OGRGeomType('MultiPolygon25D'),
                    }
 
-    # Acceptable LegionMarket field types and corresponding acceptable OGR
+    # Acceptable Django field types and corresponding acceptable OGR
     # counterparts.
     FIELD_TYPES = {
         models.AutoField: OFTInteger,
@@ -197,7 +197,7 @@ class LayerMapping(object):
             except FieldDoesNotExist:
                 raise LayerMapError('Given mapping field "%s" not in given Model fields.' % field_name)
 
-            # Getting the string name for the LegionMarket field class (e.g., 'PointField').
+            # Getting the string name for the Django field class (e.g., 'PointField').
             fld_name = model_field.__class__.__name__
 
             if isinstance(model_field, GeometryField):
@@ -245,15 +245,15 @@ class LayerMapping(object):
             else:
                 # Is the model field type supported by LayerMapping?
                 if model_field.__class__ not in self.FIELD_TYPES:
-                    raise LayerMapError('LegionMarket field type "%s" has no OGR mapping (yet).' % fld_name)
+                    raise LayerMapError('Django field type "%s" has no OGR mapping (yet).' % fld_name)
 
                 # Is the OGR field in the Layer?
                 idx = check_ogr_fld(ogr_name)
                 ogr_field = ogr_field_types[idx]
 
-                # Can the OGR field type be mapped to the LegionMarket field type?
+                # Can the OGR field type be mapped to the Django field type?
                 if not issubclass(ogr_field, self.FIELD_TYPES[model_field.__class__]):
-                    raise LayerMapError('OGR field "%s" (of type %s) cannot be mapped to LegionMarket %s.' %
+                    raise LayerMapError('OGR field "%s" (of type %s) cannot be mapped to Django %s.' %
                                         (ogr_field, ogr_field.__name__, fld_name))
                 fields_val = model_field
 

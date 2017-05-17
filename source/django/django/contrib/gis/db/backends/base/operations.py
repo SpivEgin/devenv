@@ -50,7 +50,7 @@ class BaseSpatialOperations(object):
 
     geom_func_prefix = ''
 
-    # Mapping between LegionMarket function names and backend names, when names do not
+    # Mapping between Django function names and backend names, when names do not
     # match; used in spatial_function_name().
     function_names = {}
 
@@ -82,9 +82,6 @@ class BaseSpatialOperations(object):
 
     def convert_extent3d(self, box, srid):
         raise NotImplementedError('Aggregate 3D extent not implemented for this spatial backend.')
-
-    def convert_geom(self, geom_val, geom_field):
-        raise NotImplementedError('Aggregate method not implemented for this spatial backend.')
 
     # For quoting column values, rather than columns.
     def geo_quote_name(self, name):

@@ -65,6 +65,7 @@ class StateTests(SimpleTestCase):
                 apps = new_apps
                 verbose_name = "tome"
                 db_table = "test_tome"
+                indexes = [models.Index(fields=['title'])]
 
         class Food(models.Model):
 
@@ -116,6 +117,8 @@ class StateTests(SimpleTestCase):
         food_no_managers_state = project_state.models['migrations', 'foodnomanagers']
         food_no_default_manager_state = project_state.models['migrations', 'foodnodefaultmanager']
         food_order_manager_state = project_state.models['migrations', 'foodorderedmanagers']
+        book_index = models.Index(fields=['title'])
+        book_index.set_name_with_model(Book)
 
         self.assertEqual(author_state.app_label, "migrations")
         self.assertEqual(author_state.name, "Author")
@@ -125,7 +128,7 @@ class StateTests(SimpleTestCase):
         self.assertIs(author_state.fields[3][1].null, True)
         self.assertEqual(
             author_state.options,
-            {"unique_together": {("name", "bio")}, "index_together": {("bio", "age")}}
+            {"unique_together": {("name", "bio")}, "index_together": {("bio", "age")}, "indexes": []}
         )
         self.assertEqual(author_state.bases, (models.Model, ))
 
@@ -135,13 +138,16 @@ class StateTests(SimpleTestCase):
         self.assertEqual(book_state.fields[1][1].max_length, 1000)
         self.assertIs(book_state.fields[2][1].null, False)
         self.assertEqual(book_state.fields[3][1].__class__.__name__, "ManyToManyField")
-        self.assertEqual(book_state.options, {"verbose_name": "tome", "db_table": "test_tome"})
+        self.assertEqual(
+            book_state.options,
+            {"verbose_name": "tome", "db_table": "test_tome", "indexes": [book_index]},
+        )
         self.assertEqual(book_state.bases, (models.Model, ))
 
         self.assertEqual(author_proxy_state.app_label, "migrations")
         self.assertEqual(author_proxy_state.name, "AuthorProxy")
         self.assertEqual(author_proxy_state.fields, [])
-        self.assertEqual(author_proxy_state.options, {"proxy": True, "ordering": ["name"]})
+        self.assertEqual(author_proxy_state.options, {"proxy": True, "ordering": ["name"], "indexes": []})
         self.assertEqual(author_proxy_state.bases, ("migrations.author", ))
 
         self.assertEqual(sub_author_state.app_label, "migrations")
@@ -441,7 +447,7 @@ class StateTests(SimpleTestCase):
 
     def test_render_project_dependencies(self):
         """
-        Tests that the ProjectState render method correctly renders models
+        The ProjectState render method correctly renders models
         to account for inter-model base dependencies.
         """
         new_apps = Apps()
@@ -500,7 +506,7 @@ class StateTests(SimpleTestCase):
 
     def test_render_unique_app_labels(self):
         """
-        Tests that the ProjectState render method doesn't raise an
+        The ProjectState render method doesn't raise an
         ImproperlyConfigured exception about unique labels if two dotted app
         names have the same last part.
         """
@@ -551,7 +557,7 @@ class StateTests(SimpleTestCase):
         model_a_old = old_state.apps.get_model('something', 'A')
         model_b_old = old_state.apps.get_model('something', 'B')
         model_c_old = old_state.apps.get_model('something', 'C')
-        # Check that the relations between the old models are correct
+        # The relations between the old models are correct
         self.assertIs(model_a_old._meta.get_field('b').related_model, model_b_old)
         self.assertIs(model_b_old._meta.get_field('a_ptr').related_model, model_a_old)
 
@@ -565,14 +571,14 @@ class StateTests(SimpleTestCase):
         model_b_new = project_state.apps.get_model('something', 'B')
         model_c_new = project_state.apps.get_model('something', 'C')
 
-        # Check that all models have changed
+        # All models have changed
         self.assertIsNot(model_a_old, model_a_new)
         self.assertIsNot(model_b_old, model_b_new)
         self.assertIsNot(model_c_old, model_c_new)
-        # Check that the relations between the old models still hold
+        # The relations between the old models still hold
         self.assertIs(model_a_old._meta.get_field('b').related_model, model_b_old)
         self.assertIs(model_b_old._meta.get_field('a_ptr').related_model, model_a_old)
-        # Check that the relations between the new models correct
+        # The relations between the new models correct
         self.assertIs(model_a_new._meta.get_field('b').related_model, model_b_new)
         self.assertIs(model_b_new._meta.get_field('a_ptr').related_model, model_a_new)
         self.assertIs(model_a_new._meta.get_field('from_c').related_model, model_c_new)
@@ -580,7 +586,7 @@ class StateTests(SimpleTestCase):
 
     def test_remove_relations(self):
         """
-        #24225 - Tests that relations between models are updated while
+        #24225 - Relations between models are updated while
         remaining the relations and references for models of an old state.
         """
         new_apps = Apps()
@@ -608,7 +614,7 @@ class StateTests(SimpleTestCase):
 
         operation = RemoveField("b", "to_a")
         operation.state_forwards("something", project_state)
-        # Tests that model from old_state still has the relation
+        # Model from old_state still has the relation
         model_a_old = get_model_a(old_state)
         model_a_new = get_model_a(project_state)
         self.assertIsNot(model_a_old, model_a_new)
@@ -662,7 +668,7 @@ class StateTests(SimpleTestCase):
         model_a_new = get_model_a(project_state)
         self.assertIsNot(model_a_old, model_a_new)
 
-        # Tests that the old model's _meta is still consistent
+        # The old model's _meta is still consistent
         field_to_a_old = model_a_old._meta.get_field("to_a")
         self.assertEqual(field_to_a_old.m2m_field_name(), "from_a")
         self.assertEqual(field_to_a_old.m2m_reverse_field_name(), "to_a")
@@ -670,7 +676,7 @@ class StateTests(SimpleTestCase):
         self.assertIs(field_to_a_old.remote_field.through._meta.get_field('to_a').related_model, model_a_old)
         self.assertIs(field_to_a_old.remote_field.through._meta.get_field('from_a').related_model, model_a_old)
 
-        # Tests that the new model's _meta is still consistent
+        # The new model's _meta is still consistent
         field_to_a_new = model_a_new._meta.get_field("to_a")
         self.assertEqual(field_to_a_new.m2m_field_name(), "from_a")
         self.assertEqual(field_to_a_new.m2m_reverse_field_name(), "to_a")
@@ -680,9 +686,8 @@ class StateTests(SimpleTestCase):
 
     def test_equality(self):
         """
-        Tests that == and != are implemented correctly.
+        == and != are implemented correctly.
         """
-
         # Test two things that should be equal
         project_state = ProjectState()
         project_state.add_model(ModelState(
@@ -801,7 +806,7 @@ class StateTests(SimpleTestCase):
 
     def test_real_apps(self):
         """
-        Tests that including real apps can resolve dangling FK errors.
+        Including real apps can resolve dangling FK errors.
         This test relies on the fact that contenttypes is always loaded.
         """
         new_apps = Apps()
@@ -861,7 +866,7 @@ class StateTests(SimpleTestCase):
 
     def test_manager_refer_correct_model_version(self):
         """
-        #24147 - Tests that managers refer to the correct version of a
+        #24147 - Managers refer to the correct version of a
         historical model
         """
         project_state = ProjectState()
@@ -947,9 +952,16 @@ class ModelStateTests(SimpleTestCase):
         ):
             ModelState('app', 'Model', [('field', field)])
 
+    def test_sanity_index_name(self):
+        field = models.IntegerField()
+        options = {'indexes': [models.Index(fields=['field'])]}
+        msg = "Indexes passed to ModelState require a name attribute. <Index: fields='field'> doesn't have one."
+        with self.assertRaisesMessage(ValueError, msg):
+            ModelState('app', 'Model', [('field', field)], options=options)
+
     def test_fields_immutability(self):
         """
-        Tests that rendering a model state doesn't alter its internal fields.
+        Rendering a model state doesn't alter its internal fields.
         """
         apps = Apps()
         field = models.CharField(max_length=1)
@@ -991,7 +1003,7 @@ class ModelStateTests(SimpleTestCase):
         self.assertEqual(author_state.fields[1][1].max_length, 255)
         self.assertIs(author_state.fields[2][1].null, False)
         self.assertIs(author_state.fields[3][1].null, True)
-        self.assertEqual(author_state.options, {'swappable': 'TEST_SWAPPABLE_MODEL'})
+        self.assertEqual(author_state.options, {'swappable': 'TEST_SWAPPABLE_MODEL', 'indexes': []})
         self.assertEqual(author_state.bases, (models.Model, ))
         self.assertEqual(author_state.managers, [])
 
@@ -1031,6 +1043,46 @@ class ModelStateTests(SimpleTestCase):
 
         state = ModelState.from_model(PrivateFieldModel)
         self.assertNotIn('order_with_respect_to', state.options)
+
+    @isolate_apps('migrations')
+    def test_abstract_model_children_inherit_indexes(self):
+        class Abstract(models.Model):
+            name = models.CharField(max_length=50)
+
+            class Meta:
+                app_label = 'migrations'
+                abstract = True
+                indexes = [models.indexes.Index(fields=['name'])]
+
+        class Child1(Abstract):
+            pass
+
+        class Child2(Abstract):
+            pass
+
+        child1_state = ModelState.from_model(Child1)
+        child2_state = ModelState.from_model(Child2)
+        index_names = [index.name for index in child1_state.options['indexes']]
+        self.assertEqual(index_names, ['migrations__name_b0afd7_idx'])
+        index_names = [index.name for index in child2_state.options['indexes']]
+        self.assertEqual(index_names, ['migrations__name_016466_idx'])
+
+        # Modifying the state doesn't modify the index on the model.
+        child1_state.options['indexes'][0].name = 'bar'
+        self.assertEqual(Child1._meta.indexes[0].name, 'migrations__name_b0afd7_idx')
+
+    @isolate_apps('migrations')
+    def test_explicit_index_name(self):
+        class TestModel(models.Model):
+            name = models.CharField(max_length=50)
+
+            class Meta:
+                app_label = 'migrations'
+                indexes = [models.indexes.Index(fields=['name'], name='foo_idx')]
+
+        model_state = ModelState.from_model(TestModel)
+        index_names = [index.name for index in model_state.options['indexes']]
+        self.assertEqual(index_names, ['foo_idx'])
 
 
 class RelatedModelsTests(SimpleTestCase):

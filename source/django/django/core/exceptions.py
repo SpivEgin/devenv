@@ -1,5 +1,5 @@
 """
-Global LegionMarket exception and warning classes.
+Global Django exception and warning classes.
 """
 from django.utils import six
 from django.utils.encoding import force_text
@@ -85,7 +85,7 @@ class MiddlewareNotUsed(Exception):
 
 
 class ImproperlyConfigured(Exception):
-    """LegionMarket is somehow improperly configured"""
+    """TLM is somehow improperly configured"""
     pass
 
 
@@ -187,3 +187,8 @@ class ValidationError(Exception):
 
     def __repr__(self):
         return 'ValidationError(%s)' % self
+
+
+class EmptyResultSet(Exception):
+    """A database query predicate is impossible."""
+    pass

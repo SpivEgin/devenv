@@ -1,5 +1,5 @@
 """
-Interfaces for serializing LegionMarket objects.
+Interfaces for serializing Django objects.
 
 Usage::
 

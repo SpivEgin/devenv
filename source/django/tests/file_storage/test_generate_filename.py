@@ -48,7 +48,7 @@ class GenerateFilenameStorageTests(SimpleTestCase):
         self.assertEqual(
             warns[0].message.args[0],
             'FileField now delegates file name and folder processing to the '
-            'storage. get_directory_name() will be removed in LegionMarket 2.0.'
+            'storage. get_directory_name() will be removed in Django 2.0.'
         )
 
     def test_filefield_get_filename_deprecation(self):
@@ -61,7 +61,7 @@ class GenerateFilenameStorageTests(SimpleTestCase):
         self.assertEqual(
             warns[0].message.args[0],
             'FileField now delegates file name and folder processing to the '
-            'storage. get_filename() will be removed in LegionMarket 2.0.'
+            'storage. get_filename() will be removed in Django 2.0.'
         )
 
     def test_filefield_generate_filename(self):

@@ -22,11 +22,11 @@ it should be doing.
 
 The best part is, it's really easy.
 
-The preferred way to write tests in LegionMarket is using the :mod:`unittest` module
+The preferred way to write tests in Django is using the :mod:`unittest` module
 built in to the Python standard library. This is covered in detail in the
 :doc:`overview` document.
 
-You can also use any *other* Python test framework; LegionMarket provides an API and
+You can also use any *other* Python test framework; Django provides an API and
 tools for that kind of integration. They are described in the
 :ref:`other-testing-frameworks` section of :doc:`advanced`.
 

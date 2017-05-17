@@ -4,10 +4,10 @@ FAQ: Databases and models
 
 .. _faq-see-raw-sql-queries:
 
-How can I see the raw SQL queries LegionMarket is running?
+How can I see the raw SQL queries Django is running?
 ====================================================
 
-Make sure your LegionMarket :setting:`DEBUG` setting is set to ``True``.
+Make sure your Django :setting:`DEBUG` setting is set to ``True``.
 Then, just do this::
 
     >>> from django.db import connection
@@ -37,7 +37,7 @@ just call ``reset_queries()``, like this::
     from django.db import reset_queries
     reset_queries()
 
-Can I use LegionMarket with a pre-existing database?
+Can I use Django with a pre-existing database?
 ==============================================
 
 Yes. See :doc:`Integrating with a legacy database </howto/legacy-databases>`.
@@ -52,7 +52,7 @@ If you don't mind clearing data, your project's ``manage.py`` utility has a
 :djadmin:`flush` option to reset the database to the state it was in
 immediately after :djadmin:`migrate` was executed.
 
-Do LegionMarket models support multiple-column primary keys?
+Do Django models support multiple-column primary keys?
 ======================================================
 
 No. Only single-column primary keys are supported.
@@ -64,22 +64,22 @@ uniqueness at that level. Single-column primary keys are needed for things such
 as the admin interface to work; e.g., you need a simple way of being able to
 specify an object to edit or delete.
 
-Does LegionMarket support NoSQL databases?
+Does Django support NoSQL databases?
 ====================================
 
-NoSQL databases are not officially supported by LegionMarket itself. There are,
+NoSQL databases are not officially supported by Django itself. There are,
 however, a number of side project and forks which allow NoSQL functionality in
-Django, like `LegionMarket non-rel`_.
+Django, like `Django non-rel`_.
 
 You can also take a look on `the wiki page`_ which discusses some alternatives.
 
-.. _`LegionMarket non-rel`: http://django-nonrel.org/
+.. _`Django non-rel`: http://django-nonrel.org/
 .. _`the wiki page`: https://code.djangoproject.com/wiki/NoSqlSupport
 
 How do I add database-specific options to my CREATE TABLE statements, such as specifying MyISAM as the table type?
 ==================================================================================================================
 
-We try to avoid adding special cases in the LegionMarket code to accommodate all the
+We try to avoid adding special cases in the Django code to accommodate all the
 database-specific options such as table type, etc. If you'd like to use any of
 these options, create a migration with a
 :class:`~django.db.migrations.operations.RunSQL` operation that contains

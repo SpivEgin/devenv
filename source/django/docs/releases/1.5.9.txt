@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.5.9 release notes
+Django 1.5.9 release notes
 ==========================
 
 *August 20, 2014*
 
-LegionMarket 1.5.9 fixes several security issues in 1.5.8.
+Django 1.5.9 fixes several security issues in 1.5.8.
 
 ``reverse()`` could generate URLs pointing to other hosts
 =========================================================
@@ -51,7 +51,7 @@ a failed login attempt.
 Data leakage via query string manipulation in ``contrib.admin``
 ===============================================================
 
-In older versions of LegionMarket it was possible to reveal any field's data by
+In older versions of Django it was possible to reveal any field's data by
 modifying the "popup" and "to_field" parameters of the query string on an admin
 change form page. For example, requesting a URL like
 ``/admin/auth/user/?pop=1&t=password`` and viewing the page's HTML allowed

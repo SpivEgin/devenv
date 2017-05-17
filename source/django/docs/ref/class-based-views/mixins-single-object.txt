@@ -140,7 +140,7 @@ Single object mixins
     that operate upon a single object instance. Requires that the view it is
     mixed with provides ``self.object``, the object instance that the view is
     operating on. ``self.object`` will usually be, but is not required to be,
-    an instance of a LegionMarket model. It may be ``None`` if the view is in the
+    an instance of a Django model. It may be ``None`` if the view is in the
     process of constructing a new instance.
 
     **Extends**

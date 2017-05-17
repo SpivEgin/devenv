@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import codecs
+import datetime
 import os
 import shutil
 import tempfile
@@ -13,9 +14,9 @@ from django.contrib.staticfiles import storage
 from django.contrib.staticfiles.management.commands import collectstatic
 from django.core.exceptions import ImproperlyConfigured
 from django.core.management import call_command
-from django.test import override_settings
+from django.test import mock, override_settings
 from django.test.utils import extend_sys_path
-from django.utils import six
+from django.utils import six, timezone
 from django.utils._os import symlinks_supported
 from django.utils.encoding import force_text
 from django.utils.functional import empty
@@ -45,7 +46,7 @@ class TestFindStatic(TestDefaults, CollectionTestCase):
 
     def test_all_files(self):
         """
-        Test that findstatic returns all candidate files if run without --first and -v1.
+        findstatic returns all candidate files if run without --first and -v1.
         """
         result = call_command('findstatic', 'test/file.txt', verbosity=1, stdout=six.StringIO())
         lines = [l.strip() for l in result.split('\n')]
@@ -55,7 +56,7 @@ class TestFindStatic(TestDefaults, CollectionTestCase):
 
     def test_all_files_less_verbose(self):
         """
-        Test that findstatic returns all candidate files if run without --first and -v0.
+        findstatic returns all candidate files if run without --first and -v0.
         """
         result = call_command('findstatic', 'test/file.txt', verbosity=0, stdout=six.StringIO())
         lines = [l.strip() for l in result.split('\n')]
@@ -65,7 +66,7 @@ class TestFindStatic(TestDefaults, CollectionTestCase):
 
     def test_all_files_more_verbose(self):
         """
-        Test that findstatic returns all candidate files if run without --first and -v2.
+        findstatic returns all candidate files if run without --first and -v2.
         Also, test that findstatic returns the searched locations with -v2.
         """
         result = call_command('findstatic', 'test/file.txt', verbosity=2, stdout=six.StringIO())
@@ -140,7 +141,7 @@ class TestCollection(TestDefaults, CollectionTestCase):
     """
     def test_ignore(self):
         """
-        Test that -i patterns are ignored.
+        -i patterns are ignored.
         """
         self.assertFileNotFound('test/test.ignoreme')
 
@@ -174,6 +175,61 @@ class TestCollectionClear(CollectionTestCase):
     def test_handle_path_notimplemented(self):
         self.run_collectstatic()
         self.assertFileNotFound('cleared.txt')
+
+
+class TestInteractiveMessages(CollectionTestCase):
+    overwrite_warning_msg = "This will overwrite existing files!"
+    delete_warning_msg = "This will DELETE ALL FILES in this location!"
+    files_copied_msg = "static files copied"
+
+    @staticmethod
+    def mock_input(stdout):
+        def _input(msg):
+            # Python 2 reads bytes from the console output, use bytes for the StringIO
+            stdout.write(msg.encode('utf-8') if six.PY2 else msg)
+            return 'yes'
+        return _input
+
+    def test_warning_when_clearing_staticdir(self):
+        stdout = six.StringIO()
+        self.run_collectstatic()
+        with mock.patch('django.contrib.staticfiles.management.commands.collectstatic.input',
+                        side_effect=self.mock_input(stdout)):
+            call_command('collectstatic', interactive=True, clear=True, stdout=stdout)
+
+        output = force_text(stdout.getvalue())
+        self.assertNotIn(self.overwrite_warning_msg, output)
+        self.assertIn(self.delete_warning_msg, output)
+
+    def test_warning_when_overwriting_files_in_staticdir(self):
+        stdout = six.StringIO()
+        self.run_collectstatic()
+        with mock.patch('django.contrib.staticfiles.management.commands.collectstatic.input',
+                        side_effect=self.mock_input(stdout)):
+            call_command('collectstatic', interactive=True, stdout=stdout)
+        output = force_text(stdout.getvalue())
+        self.assertIn(self.overwrite_warning_msg, output)
+        self.assertNotIn(self.delete_warning_msg, output)
+
+    def test_no_warning_when_staticdir_does_not_exist(self):
+        stdout = six.StringIO()
+        shutil.rmtree(six.text_type(settings.STATIC_ROOT))
+        call_command('collectstatic', interactive=True, stdout=stdout)
+        output = force_text(stdout.getvalue())
+        self.assertNotIn(self.overwrite_warning_msg, output)
+        self.assertNotIn(self.delete_warning_msg, output)
+        self.assertIn(self.files_copied_msg, output)
+
+    def test_no_warning_for_empty_staticdir(self):
+        stdout = six.StringIO()
+        static_dir = tempfile.mkdtemp(prefix='collectstatic_empty_staticdir_test')
+        with override_settings(STATIC_ROOT=static_dir):
+            call_command('collectstatic', interactive=True, stdout=stdout)
+        shutil.rmtree(six.text_type(static_dir))
+        output = force_text(stdout.getvalue())
+        self.assertNotIn(self.overwrite_warning_msg, output)
+        self.assertNotIn(self.delete_warning_msg, output)
+        self.assertIn(self.files_copied_msg, output)
 
 
 class TestCollectionExcludeNoDefaultIgnore(TestDefaults, CollectionTestCase):
@@ -332,9 +388,15 @@ class TestCollectionOverwriteWarning(CollectionTestCase):
 @override_settings(STATICFILES_STORAGE='staticfiles_tests.storage.DummyStorage')
 class TestCollectionNonLocalStorage(TestNoFilesCreated, CollectionTestCase):
     """
-    Tests for #15035
+    Tests for a Storage that implements get_modified_time() but not path()
+    (#15035).
     """
-    pass
+    def test_storage_properties(self):
+        # Properties of the Storage as described in the ticket.
+        storage = DummyStorage()
+        self.assertEqual(storage.get_modified_time('name'), datetime.datetime(1970, 1, 1, tzinfo=timezone.utc))
+        with self.assertRaisesMessage(NotImplementedError, "This backend doesn't support absolute paths."):
+            storage.path('name')
 
 
 class TestCollectionNeverCopyStorage(CollectionTestCase):

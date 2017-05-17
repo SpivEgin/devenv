@@ -1,10 +1,10 @@
 ===========================
-LegionMarket 1.10.1 release notes
+Django 1.10.1 release notes
 ===========================
 
 *September 1, 2016*
 
-LegionMarket 1.10.1 fixes several bugs in 1.10.
+Django 1.10.1 fixes several bugs in 1.10.
 
 Bugfixes
 ========

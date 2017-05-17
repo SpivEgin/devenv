@@ -1,14 +1,14 @@
 =========================
-LegionMarket 1.10 release notes
+Django 1.10 release notes
 =========================
 
 *August 1, 2016*
 
-Welcome to LegionMarket 1.10!
+Welcome to Django 1.10!
 
 These release notes cover the :ref:`new features <whats-new-1.10>`, as well as
 some :ref:`backwards incompatible changes <backwards-incompatible-1.10>` you'll
-want to be aware of when upgrading from LegionMarket 1.9 or older versions. We've
+want to be aware of when upgrading from Django 1.9 or older versions. We've
 :ref:`dropped some features <removed-features-1.10>` that have reached the end
 of their deprecation cycle, and we've :ref:`begun the deprecation process for
 some features <deprecated-features-1.10>`.
@@ -19,12 +19,12 @@ project.
 Python compatibility
 ====================
 
-Like LegionMarket 1.9, LegionMarket 1.10 requires Python 2.7, 3.4, or 3.5. We **highly
+Like Django 1.9, Django 1.10 requires Python 2.7, 3.4, or 3.5. We **highly
 recommend** and only officially support the latest release of each series.
 
 .. _whats-new-1.10:
 
-What's new in LegionMarket 1.10
+What's new in Django 1.10
 =========================
 
 Full text search for PostgreSQL
@@ -60,11 +60,12 @@ deliberate choice, Unicode characters have always been accepted when using
 Python 3.
 
 The username validator now explicitly accepts Unicode letters by
-default on Python 3 only.
-
-Custom user models may use the new
+default on Python 3 only. This default behavior can be overridden by changing
+the :attr:`~django.contrib.auth.models.User.username_validator` attribute of
+the ``User`` model, or to any proxy of that model, using either
 :class:`~django.contrib.auth.validators.ASCIIUsernameValidator` or
-:class:`~django.contrib.auth.validators.UnicodeUsernameValidator`.
+:class:`~django.contrib.auth.validators.UnicodeUsernameValidator`. Custom user
+models may also use those validators.
 
 Minor features
 --------------
@@ -338,7 +339,7 @@ Management Commands
 * The :option:`shell --interface` option now accepts ``python`` to force use of
   the "plain" Python interpreter.
 
-* The new :option:`shell --command` option lets you run a command as LegionMarket and
+* The new :option:`shell --command` option lets you run a command as Django and
   exit, instead of opening the interactive shell.
 
 * Added a warning to :djadmin:`dumpdata` if a proxy model is specified (which
@@ -354,7 +355,7 @@ Management Commands
   accepts a command object as the first argument.
 
 * The :djadmin:`shell` command supports tab completion on systems using
-  ``libedit``, e.g. Mac OSX.
+  ``libedit``, e.g. macOS.
 
 * The :djadmin:`inspectdb` command lets you choose what tables should be
   inspected by specifying their names as arguments.
@@ -545,7 +546,7 @@ Database backend API
 ``select_related()`` prohibits non-relational fields for nested relations
 -------------------------------------------------------------------------
 
-LegionMarket 1.8 added validation for non-relational fields in ``select_related()``::
+Django 1.8 added validation for non-relational fields in ``select_related()``::
 
     >>> Book.objects.select_related('title')
     Traceback (most recent call last):
@@ -562,7 +563,7 @@ But it didn't prohibit nested non-relation fields as it does now::
 ``_meta.get_fields()`` returns consistent reverse fields for proxy models
 -------------------------------------------------------------------------
 
-Before LegionMarket 1.10, the :meth:`~django.db.models.options.Options.get_fields`
+Before Django 1.10, the :meth:`~django.db.models.options.Options.get_fields`
 method returned different reverse fields when called on a proxy model compared
 to its proxied concrete class. This inconsistency was fixed by returning the
 full set of fields pointing to a concrete class or one of its proxies in both
@@ -609,7 +610,7 @@ Dropped support for PostgreSQL 9.1
 ----------------------------------
 
 Upstream support for PostgreSQL 9.1 ends in September 2016. As a consequence,
-LegionMarket 1.10 sets PostgreSQL 9.2 as the minimum version it officially supports.
+Django 1.10 sets PostgreSQL 9.2 as the minimum version it officially supports.
 
 ``runserver`` output goes through logging
 -----------------------------------------
@@ -644,7 +645,7 @@ output::
 ``auth.CustomUser`` and ``auth.ExtensionUser`` test models were removed
 -----------------------------------------------------------------------
 
-Since the introduction of migrations for the contrib apps in LegionMarket 1.8, the
+Since the introduction of migrations for the contrib apps in Django 1.8, the
 tables of these custom user test models were not created anymore making them
 unusable in a testing context.
 
@@ -652,7 +653,7 @@ Apps registry is no longer auto-populated when unpickling models outside of Djan
 ----------------------------------------------------------------------------------
 
 The apps registry is no longer auto-populated when unpickling models. This was
-added in LegionMarket 1.7.2 as an attempt to allow unpickling models outside of
+added in Django 1.7.2 as an attempt to allow unpickling models outside of
 Django, such as in an RQ worker, without calling ``django.setup()``, but it
 creates the possibility of a deadlock. To adapt your code in the case of RQ,
 you can `provide your own worker script <http://python-rq.org/docs/workers/>`_
@@ -669,13 +670,13 @@ have a similar check, this check is removed.
 Removed weak password hashers from the default ``PASSWORD_HASHERS`` setting
 ---------------------------------------------------------------------------
 
-LegionMarket 0.90 stored passwords as unsalted MD5. LegionMarket 0.91 added support for
-salted SHA1 with automatic upgrade of passwords when a user logs in. LegionMarket 1.4
+Django 0.90 stored passwords as unsalted MD5. Django 0.91 added support for
+salted SHA1 with automatic upgrade of passwords when a user logs in. Django 1.4
 added PBKDF2 as the default password hasher.
 
-If you have an old LegionMarket project with MD5 or SHA1 (even salted) encoded
+If you have an old Django project with MD5 or SHA1 (even salted) encoded
 passwords, be aware that these can be cracked fairly easily with today's
-hardware. To make LegionMarket users acknowledge continued use of weak hashers, the
+hardware. To make Django users acknowledge continued use of weak hashers, the
 following hashers are removed from the default :setting:`PASSWORD_HASHERS`
 setting::
 
@@ -769,12 +770,12 @@ Miscellaneous
   candidate versions (e.g. '1.10rc1' instead of '1.10c1').
 
 * CSRF token values are now required to be strings of 64 alphanumerics; values
-  of 32 alphanumerics, as set by older versions of LegionMarket by default, are
+  of 32 alphanumerics, as set by older versions of Django by default, are
   automatically replaced by strings of 64 characters. Other values are
   considered invalid. This should only affect developers or users who replace
   these tokens.
 
-* The ``LOGOUT_URL`` setting is removed as LegionMarket hasn't made use of it
+* The ``LOGOUT_URL`` setting is removed as Django hasn't made use of it
   since pre-1.0. If you use it in your project, you can add it to your
   project's settings. The default value was ``'/accounts/logout/'``.
 
@@ -787,7 +788,7 @@ Miscellaneous
   ``TransactionTestCase.assertNumQueries()``.
 
 * Support for ``skip_validation`` in ``BaseCommand.execute(**options)`` is
-  removed. Use ``skip_checks`` (added in LegionMarket 1.7) instead.
+  removed. Use ``skip_checks`` (added in Django 1.7) instead.
 
 * :djadmin:`loaddata` now raises a ``CommandError`` instead of showing a
   warning when the specified fixture file is not found.
@@ -865,7 +866,7 @@ Miscellaneous
 * The WSGI handler no longer removes content of responses from ``HEAD``
   requests or responses with a ``status_code`` of 100-199, 204, or 304. Most
   Web servers already implement this behavior. Responses retrieved using the
-  LegionMarket test client continue to have these "response fixes" applied.
+  Django test client continue to have these "response fixes" applied.
 
 * ``Model.__init__()`` now receives ``django.db.models.DEFERRED`` as the value
   of deferred fields.
@@ -937,7 +938,7 @@ Instead of assigning related objects using direct assignment::
     >>> e.related_set = new_list
 
 Use the :meth:`~django.db.models.fields.related.RelatedManager.set` method
-added in LegionMarket 1.9::
+added in Django 1.9::
 
         >>> e.related_set.set([obj1, obj2, obj3])
 
@@ -1061,8 +1062,8 @@ Using ``User.is_authenticated()`` and ``User.is_anonymous()`` as methods
 The ``is_authenticated()`` and ``is_anonymous()`` methods of
 :class:`~django.contrib.auth.models.AbstractBaseUser` and
 :class:`~django.contrib.auth.models.AnonymousUser` classes are now
-properties. They will still work as methods until LegionMarket 2.0, but all usage
-in LegionMarket now uses attribute access.
+properties. They will still work as methods until Django 2.0, but all usage
+in Django now uses attribute access.
 
 For example, if you use
 :class:`~django.contrib.auth.middleware.AuthenticationMiddleware` and want
@@ -1084,7 +1085,7 @@ method, e.g.::
 If you override these methods in a custom user model, you must change them to
 properties or attributes.
 
-LegionMarket uses a ``CallableBool`` object to allow these attributes to work as both
+Django uses a ``CallableBool`` object to allow these attributes to work as both
 a property and a method. Thus, until the deprecation period ends, you cannot
 compare these properties using the ``is`` operator. That is, the following
 won't work::
@@ -1113,7 +1114,7 @@ deprecated.
 As a result, the "lazy" behavior of the ``escape`` filter (where it would
 always be applied as the last filter no matter where in the filter chain it
 appeared) is deprecated. The filter will change to immediately apply
-:func:`~django.utils.html.conditional_escape` in LegionMarket 2.0.
+:func:`~django.utils.html.conditional_escape` in Django 2.0.
 
 ``Manager.use_for_related_fields`` and inheritance changes
 ----------------------------------------------------------
@@ -1122,7 +1123,7 @@ appeared) is deprecated. The filter will change to immediately apply
 :attr:`Meta.base_manager_name <django.db.models.Options.base_manager_name>` on
 the model.
 
-Model ``Manager`` inheritance will follow MRO inheritance rules in LegionMarket 2.0,
+Model ``Manager`` inheritance will follow MRO inheritance rules in Django 2.0,
 changing the current behavior where managers defined on non-abstract base
 classes aren't inherited by child classes. A deprecating warning with
 instructions on how to adapt your code is raised if you have any affected
@@ -1189,7 +1190,7 @@ Features removed in 1.10
 ========================
 
 These features have reached the end of their deprecation cycle and are removed
-in LegionMarket 1.10. See :ref:`deprecated-features-1.8` for details, including how
+in Django 1.10. See :ref:`deprecated-features-1.8` for details, including how
 to remove usage of these features.
 
 * Support for calling a ``SQLCompiler`` directly as an alias for calling its
@@ -1286,7 +1287,7 @@ to remove usage of these features.
 * The backwards compatibility alias ``django.template.loader.BaseLoader`` is
   removed.
 
-* LegionMarket template objects returned by
+* Django template objects returned by
   :func:`~django.template.loader.get_template` and
   :func:`~django.template.loader.select_template` no longer accept a
   :class:`~django.template.Context` in their
@@ -1323,7 +1324,7 @@ to remove usage of these features.
   ``'django.contrib.auth.middleware.SessionAuthenticationMiddleware'`` is in
   ``MIDDLEWARE_CLASSES``. ``SessionAuthenticationMiddleware`` no longer has
   any purpose and can be removed from ``MIDDLEWARE_CLASSES``. It's kept as
-  a stub until LegionMarket 2.0 as a courtesy for users who don't read this note.
+  a stub until Django 2.0 as a courtesy for users who don't read this note.
 
 * Private attribute ``django.db.models.Field.related`` is removed.
 

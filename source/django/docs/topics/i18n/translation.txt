@@ -7,32 +7,32 @@ Translation
 Overview
 ========
 
-In order to make a LegionMarket project translatable, you have to add a minimal
+In order to make a Django project translatable, you have to add a minimal
 number of hooks to your Python code and templates. These hooks are called
 :term:`translation strings <translation string>`. They tell Django: "This text
 should be translated into the end user's language, if a translation for this
 text is available in that language." It's your responsibility to mark
 translatable strings; the system can only translate strings it knows about.
 
-LegionMarket then provides utilities to extract the translation strings into a
+Django then provides utilities to extract the translation strings into a
 :term:`message file`. This file is a convenient way for translators to provide
 the equivalent of the translation strings in the target language. Once the
 translators have filled in the message file, it must be compiled. This process
 relies on the GNU gettext toolset.
 
-Once this is done, LegionMarket takes care of translating Web apps on the fly in each
+Once this is done, Django takes care of translating Web apps on the fly in each
 available language, according to users' language preferences.
 
 Django's internationalization hooks are on by default, and that means there's a
 bit of i18n-related overhead in certain places of the framework. If you don't
 use internationalization, you should take the two seconds to set
-:setting:`USE_I18N = False <USE_I18N>` in your settings file. Then LegionMarket will
+:setting:`USE_I18N = False <USE_I18N>` in your settings file. Then Django will
 make some optimizations so as not to load the internationalization machinery.
 
 .. note::
 
     There is also an independent but related :setting:`USE_L10N` setting that
-    controls if LegionMarket should implement format localization. See
+    controls if Django should implement format localization. See
     :doc:`/topics/i18n/formatting` for more details.
 
 .. note::
@@ -188,7 +188,7 @@ pluralized messages.
 ``ungettext`` takes three arguments: the singular translation string, the plural
 translation string and the number of objects.
 
-This function is useful when you need your LegionMarket application to be localizable
+This function is useful when you need your Django application to be localizable
 to languages where the number and complexity of `plural forms
 <https://www.gnu.org/software/gettext/manual/gettext.html#Plural-forms>`_ is
 greater than the two forms used in English ('object' for the singular and
@@ -273,8 +273,8 @@ In a case like this, consider something like the following::
 
 .. note:: Plural form and po files
 
-    LegionMarket does not support custom plural equations in po files. As all
-    translation catalogs are merged, only the plural form for the main LegionMarket po
+    Django does not support custom plural equations in po files. As all
+    translation catalogs are merged, only the plural form for the main Django po
     file (in ``django/conf/locale/<lang_code>/LC_MESSAGES/django.po``) is
     considered. Plural forms in all other po files are ignored. Therefore, you
     should not use different plural equations in your project or application po
@@ -341,7 +341,7 @@ This is essential when calls to these functions are located in code paths that
 are executed at module load time.
 
 This is something that can easily happen when defining models, forms and
-model forms, because LegionMarket implements these such that their fields are
+model forms, because Django implements these such that their fields are
 actually class-level attributes. For that reason, make sure to use lazy
 translations in the following cases:
 
@@ -371,7 +371,7 @@ their :attr:`~django.db.models.Options.verbose_name` options::
         )
 
 Just like you would do in :attr:`~django.db.models.Options.verbose_name` you
-should provide a lowercase verbose name text for the relation as LegionMarket will
+should provide a lowercase verbose name text for the relation as Django will
 automatically titlecase it when required.
 
 Model verbose names values
@@ -381,7 +381,7 @@ It is recommended to always provide explicit
 :attr:`~django.db.models.Options.verbose_name` and
 :attr:`~django.db.models.Options.verbose_name_plural` options rather than
 relying on the fallback English-centric and somewhat naïve determination of
-verbose names LegionMarket performs by looking at the model's class name::
+verbose names Django performs by looking at the model's class name::
 
     from django.db import models
     from django.utils.translation import ugettext_lazy as _
@@ -396,7 +396,7 @@ verbose names LegionMarket performs by looking at the model's class name::
 Model methods ``short_description`` attribute values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For model methods, you can provide translations to LegionMarket and the admin site
+For model methods, you can provide translations to Django and the admin site
 with the ``short_description`` attribute::
 
     from django.db import models
@@ -418,7 +418,7 @@ Working with lazy translation objects
 -------------------------------------
 
 The result of a ``ugettext_lazy()`` call can be used wherever you would use a
-unicode string (a :class:`str` object) in other LegionMarket code, but it may not
+unicode string (a :class:`str` object) in other Django code, but it may not
 work with arbitrary Python code. For example, the following won't work because
 the `requests <https://pypi.python.org/pypi/requests/>`_ library doesn't handle
 ``ugettext_lazy`` objects::
@@ -427,7 +427,7 @@ the `requests <https://pypi.python.org/pypi/requests/>`_ library doesn't handle
     requests.post('https://example.com/send', data={'body': body})
 
 You can avoid such problems by casting ``ugettext_lazy()`` objects to text
-strings before passing them to non-LegionMarket code::
+strings before passing them to non-Django code::
 
     requests.post('https://example.com/send', data={'body': str(body)})
 
@@ -506,21 +506,22 @@ directly with the ``number`` argument::
                 raise forms.ValidationError(self.error_message % number)
 
 
-Joining strings: ``string_concat()``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Formatting strings: ``format_lazy()``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Standard Python string joins (``''.join([...])``) will not work on lists
-containing lazy translation objects. Instead, you can use
-:func:`django.utils.translation.string_concat()`, which creates a lazy object
-that concatenates its contents *and* converts them to strings only when the
-result is included in a string. For example::
+Python's :meth:`str.format()` method will not work when either the
+``format_string`` or any of the arguments to :meth:`str.format()`
+contains lazy translation objects. Instead, you can use
+:func:`django.utils.text.format_lazy()`, which creates a lazy object
+that runs the ``str.format()`` method only when the result is included
+in a string. For example::
 
-    from django.utils.translation import string_concat
+    from django.utils.text import format_lazy
     from django.utils.translation import ugettext_lazy
     ...
     name = ugettext_lazy('John Lennon')
     instrument = ugettext_lazy('guitar')
-    result = string_concat(name, ': ', instrument)
+    result = format_lazy('{name}: {instrument}', name=name, instrument=instrument)
 
 In this case, the lazy translations in ``result`` will only be converted to
 strings when ``result`` itself is used in a string (usually at template
@@ -566,10 +567,6 @@ attribute is True only for bi-directional languages.
 The source of the language information is the ``django.conf.locale`` module.
 Similar access to this information is available for template code. See below.
 
-.. versionchanged:: 1.9
-
-    The ``'name_translated'`` attribute was added.
-
 .. _specifying-translation-strings-in-template-code:
 
 Internationalization: in template code
@@ -577,7 +574,7 @@ Internationalization: in template code
 
 .. highlightlang:: html+django
 
-Translations in :doc:`LegionMarket templates </ref/templates/language>` uses two template
+Translations in :doc:`Django templates </ref/templates/language>` uses two template
 tags and a slightly different syntax than in Python code. To give your template
 access to these tags, put ``{% load i18n %}`` toward the top of your template.
 As with all template tags, this tag needs to be loaded in all templates which
@@ -734,10 +731,6 @@ use the following syntax::
 In practice you'll use this to get a string you can use in multiple places in a
 template or so you can use the output as an argument for other template tags or
 filters.
-
-.. versionchanged:: 1.9
-
-    The ``asvar`` syntax was added.
 
 ``{% blocktrans %}`` also supports :ref:`contextual
 markers<contextual-markers>` using the ``context`` keyword:
@@ -925,10 +918,6 @@ You can then access the information::
     Bi-directional: {{ lang.bidi }}
     Name in the active language: {{ lang.name_translated }}
 
-.. versionadded:: 1.9
-
-   The ``name_translated`` attribute was added.
-
 .. templatetag:: get_language_info_list
 
 ``get_language_info_list``
@@ -969,12 +958,6 @@ There are also simple filters available for convenience:
 * ``{{ LANGUAGE_CODE|language_bidi }}`` (False)
 * ``{{ LANGUAGE_CODE|language_name_translated }}`` ("německy", when active language is Czech)
 
-.. versionadded:: 1.9
-
-   The ``language_name_translated`` filter was added.
-
-.. _LegionMarket templates: ../templates_python/
-
 Internationalization: in JavaScript code
 ========================================
 
@@ -990,7 +973,7 @@ Adding translations to JavaScript poses some problems:
 * The translation catalogs for JavaScript should be kept as small as
   possible.
 
-LegionMarket provides an integrated solution for these problems: It passes the
+Django provides an integrated solution for these problems: It passes the
 translations into JavaScript, so you can call ``gettext``, etc., from within
 JavaScript.
 
@@ -1074,13 +1057,13 @@ The ``javascript_catalog`` view
 .. deprecated:: 1.10
 
     ``javascript_catalog()`` is deprecated in favor of
-    :class:`JavaScriptCatalog` and will be removed in LegionMarket 2.0.
+    :class:`JavaScriptCatalog` and will be removed in Django 2.0.
 
 The main solution to these problems is the
 :meth:`django.views.i18n.javascript_catalog` view, which sends out a JavaScript
 code library with functions that mimic the ``gettext`` interface, plus an array
 of translation strings. Those translation strings are taken from applications or
-LegionMarket core, according to what you specify in either the ``info_dict`` or the
+Django core, according to what you specify in either the ``info_dict`` or the
 URL. Paths listed in :setting:`LOCALE_PATHS` are also included.
 
 You hook it up like this::
@@ -1140,11 +1123,6 @@ your sites::
 If you use more than one ``javascript_catalog`` on a site and some of them
 define the same strings, the strings in the catalog that was loaded last take
 precedence.
-
-.. versionchanged:: 1.9
-
-    Before LegionMarket 1.9, the catalogs completely overwrote each other and you
-    could only use one at a time.
 
 The JavaScript translations found in the paths listed in the
 :setting:`LOCALE_PATHS` setting are also always included. To keep consistency
@@ -1351,14 +1329,12 @@ The ``JSONCatalog`` view
 The ``json_catalog`` view
 -------------------------
 
-.. versionadded:: 1.9
-
 .. function:: json_catalog(request, domain='djangojs', packages=None)
 
 .. deprecated:: 1.10
 
     ``json_catalog()`` is deprecated in favor of :class:`JSONCatalog` and will
-    be removed in LegionMarket 2.0.
+    be removed in Django 2.0.
 
 In order to use another client-side library to handle translations, you may
 want to take advantage of the ``json_catalog()`` view. It's similar to
@@ -1425,8 +1401,8 @@ URL::
     ]
 
 Client-side caching will save bandwidth and make your site load faster. If
-you're using ETags (:setting:`USE_ETAGS = True <USE_ETAGS>`), you're already
-covered. Otherwise, you can apply :ref:`conditional decorators
+you're using ETags (:class:`~django.middleware.http.ConditionalGetMiddleware`),
+you're already covered. Otherwise, you can apply :ref:`conditional decorators
 <conditional-decorators>`. In the following example, the cache is invalidated
 whenever you restart your application server::
 
@@ -1455,7 +1431,7 @@ Internationalization: in URL patterns
 
 .. module:: django.conf.urls.i18n
 
-LegionMarket provides two mechanisms to internationalize URL patterns:
+Django provides two mechanisms to internationalize URL patterns:
 
 * Adding the language prefix to the root of the URL patterns to make it
   possible for :class:`~django.middleware.locale.LocaleMiddleware` to detect
@@ -1476,7 +1452,7 @@ Language prefix in URL patterns
 
 .. function:: i18n_patterns(*urls, prefix_default_language=True)
 
-This function can be used in a root URLconf and LegionMarket will automatically
+This function can be used in a root URLconf and Django will automatically
 prepend the current active language code to all URL patterns defined within
 :func:`~django.conf.urls.i18n.i18n_patterns`.
 
@@ -1508,7 +1484,7 @@ Example URL patterns::
         url(r'^news/', include(news_patterns, namespace='news')),
     )
 
-After defining these URL patterns, LegionMarket will automatically add the
+After defining these URL patterns, Django will automatically add the
 language prefix to the URL patterns that were added by the ``i18n_patterns``
 function. Example::
 
@@ -1651,7 +1627,7 @@ file is a plain-text file, representing a single language, that contains all
 available translation strings and how they should be represented in the given
 language. Message files have a ``.po`` file extension.
 
-LegionMarket comes with a tool, :djadmin:`django-admin makemessages
+Django comes with a tool, :djadmin:`django-admin makemessages
 <makemessages>`, that automates the creation and upkeep of these files.
 
 .. admonition:: Gettext utilities
@@ -1672,9 +1648,9 @@ German or ``id`` for Indonesian.
 
 The script should be run from one of two places:
 
-* The root directory of your LegionMarket project (the one that contains
+* The root directory of your Django project (the one that contains
   ``manage.py``).
-* The root directory of one of your LegionMarket apps.
+* The root directory of one of your Django apps.
 
 The script runs over your project source tree or your application source tree
 and pulls out all strings marked for translation (see
@@ -1756,7 +1732,7 @@ information, but the bulk of the file is a list of **messages** -- simple
 mappings between translation strings and the actual translated text for the
 particular language.
 
-For example, if your LegionMarket app contained a translation string for the text
+For example, if your Django app contained a translation string for the text
 ``"Welcome to my site."``, like so::
 
     _("Welcome to my site.")
@@ -1793,7 +1769,7 @@ otherwise, they'll be tacked together without whitespace!
     allow non-ASCII source strings in Django's core and your applications, you
     **must** use UTF-8 as the encoding for your PO files (the default when PO
     files are created).  This means that everybody will be using the same
-    encoding, which is important when LegionMarket processes the PO files.
+    encoding, which is important when Django processes the PO files.
 
 To reexamine all source code and templates for new translation strings and
 update all message files for **all** languages, run this::
@@ -1817,11 +1793,6 @@ which you ran :djadmin:`django-admin makemessages <makemessages>`, run
 
 That's it. Your translations are ready for use.
 
-.. versionchanged:: 1.9
-
-    ``compilemessages`` now matches the operation of :djadmin:`makemessages`,
-    scanning the project tree for ``.po`` files to compile.
-
 .. admonition:: Working on Windows?
 
    If you're using Windows and need to install the GNU gettext utilities so
@@ -1830,7 +1801,7 @@ That's it. Your translations are ready for use.
 
 .. admonition:: .po files: Encoding and BOM usage.
 
-   LegionMarket only supports ``.po`` files encoded in UTF-8 and without any BOM
+   Django only supports ``.po`` files encoded in UTF-8 and without any BOM
    (Byte Order Mark) so if your text editor adds such marks to the beginning of
    files by default then you will need to reconfigure it.
 
@@ -1864,7 +1835,7 @@ literals::
 Creating message files from JavaScript source code
 --------------------------------------------------
 
-You create and update the message files the same way as the other LegionMarket message
+You create and update the message files the same way as the other Django message
 files -- with the :djadmin:`django-admin makemessages <makemessages>` tool.
 The only difference is you need to explicitly specify what in gettext parlance
 is known as a domain in this case the ``djangojs`` domain, by providing a ``-d
@@ -1874,7 +1845,7 @@ djangojs`` parameter, like this::
 
 This would create or update the message file for JavaScript for German. After
 updating message files, just run :djadmin:`django-admin compilemessages
-<compilemessages>` the same way as you do with normal LegionMarket message files.
+<compilemessages>` the same way as you do with normal Django message files.
 
 .. _gettext_on_windows:
 
@@ -1943,7 +1914,7 @@ The ``set_language`` redirect view
 
 .. function:: set_language(request)
 
-As a convenience, LegionMarket comes with a view, :func:`django.views.i18n.set_language`,
+As a convenience, Django comes with a view, :func:`django.views.i18n.set_language`,
 that sets a user's language preference and redirects to a given URL or, by default,
 back to the previous page.
 
@@ -1965,10 +1936,10 @@ saves the language choice in the user's session. Otherwise, it saves the
 language choice in a cookie that is by default named ``django_language``.
 (The name can be changed through the :setting:`LANGUAGE_COOKIE_NAME` setting.)
 
-After setting the language choice, LegionMarket looks for a ``next`` parameter in the
-``POST`` or ``GET`` data. If that is found and LegionMarket considers it to be a safe
+After setting the language choice, Django looks for a ``next`` parameter in the
+``POST`` or ``GET`` data. If that is found and Django considers it to be a safe
 URL (i.e. it doesn't point to a different host and uses a safe scheme), a
-redirect to that URL will be performed. Otherwise, LegionMarket may fall back to
+redirect to that URL will be performed. Otherwise, Django may fall back to
 redirecting the user to the URL from the ``Referer`` header or, if it is not
 set, to ``/``, depending on the nature of the request:
 
@@ -1994,7 +1965,7 @@ Here's example HTML template code:
             {% get_available_languages as LANGUAGES %}
             {% get_language_info_list for LANGUAGES as languages %}
             {% for language in languages %}
-                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
                     {{ language.name_local }} ({{ language.code }})
                 </option>
             {% endfor %}
@@ -2002,7 +1973,7 @@ Here's example HTML template code:
         <input type="submit" value="Go" />
     </form>
 
-In this example, LegionMarket looks up the URL of the page to which the user will be
+In this example, Django looks up the URL of the page to which the user will be
 redirected in the ``redirect_to`` context variable.
 
 .. _explicitly-setting-the-active-language:
@@ -2042,10 +2013,10 @@ is configured in :setting:`LANGUAGE_COOKIE_NAME`. For example::
 Using translations outside views and templates
 ----------------------------------------------
 
-While LegionMarket provides a rich set of i18n tools for use in views and templates,
-it does not restrict the usage to Django-specific code. The LegionMarket translation
+While Django provides a rich set of i18n tools for use in views and templates,
+it does not restrict the usage to Django-specific code. The Django translation
 mechanisms can be used to translate arbitrary texts to any language that is
-supported by LegionMarket (as long as an appropriate translation catalog exists, of
+supported by Django (as long as an appropriate translation catalog exists, of
 course). You can load a translation catalog, activate it and translate text to
 language of your choice, but remember to switch back to original language, as
 activating a translation catalog is done on per-thread basis and such change
@@ -2099,12 +2070,12 @@ Implementation notes
 
 .. _specialties-of-django-i18n:
 
-Specialties of LegionMarket translation
+Specialties of Django translation
 ---------------------------------
 
 Django's translation machinery uses the standard ``gettext`` module that comes
 with Python. If you know ``gettext``, you might note these specialties in the
-way LegionMarket does translation:
+way Django does translation:
 
 * The string domain is ``django`` or ``djangojs``. This string domain is
   used to differentiate between different programs that store their data
@@ -2113,27 +2084,27 @@ way LegionMarket does translation:
   and is loaded into the global translation catalogs. The ``djangojs``
   domain is only used for JavaScript translation catalogs to make sure
   that those are as small as possible.
-* LegionMarket doesn't use ``xgettext`` alone. It uses Python wrappers around
+* Django doesn't use ``xgettext`` alone. It uses Python wrappers around
   ``xgettext`` and ``msgfmt``. This is mostly for convenience.
 
 .. _how-django-discovers-language-preference:
 
-How LegionMarket discovers language preference
+How Django discovers language preference
 ----------------------------------------
 
 Once you've prepared your translations -- or, if you just want to use the
-translations that come with LegionMarket -- you'll just need to activate translation
+translations that come with Django -- you'll just need to activate translation
 for your app.
 
-Behind the scenes, LegionMarket has a very flexible model of deciding which language
+Behind the scenes, Django has a very flexible model of deciding which language
 should be used -- installation-wide, for a particular user, or both.
 
 To set an installation-wide language preference, set :setting:`LANGUAGE_CODE`.
-LegionMarket uses this language as the default translation -- the final attempt if no
+Django uses this language as the default translation -- the final attempt if no
 better matching translation is found through one of the methods employed by the
 locale middleware (see below).
 
-If all you want is to run LegionMarket with your native language all you need to do
+If all you want is to run Django with your native language all you need to do
 is set :setting:`LANGUAGE_CODE` and make sure the corresponding :term:`message
 files <message file>` and their compiled versions (``.mo``) exist.
 
@@ -2182,7 +2153,7 @@ following this algorithm:
 
 * Failing that, it looks at the ``Accept-Language`` HTTP header. This
   header is sent by your browser and tells the server which language(s) you
-  prefer, in order by priority. LegionMarket tries each language in the header
+  prefer, in order by priority. Django tries each language in the header
   until it finds one with available translations.
 
 * Failing that, it uses the global :setting:`LANGUAGE_CODE` setting.
@@ -2196,8 +2167,8 @@ Notes:
   Brazilian Portuguese is ``pt-br``.
 
 * If a base language is available but the sublanguage specified is not,
-  LegionMarket uses the base language. For example, if a user specifies ``de-at``
-  (Austrian German) but LegionMarket only has ``de`` available, LegionMarket uses
+  Django uses the base language. For example, if a user specifies ``de-at``
+  (Austrian German) but Django only has ``de`` available, Django uses
   ``de``.
 
 * Only languages listed in the :setting:`LANGUAGES` setting can be selected.
@@ -2252,10 +2223,10 @@ in ``request.LANGUAGE_CODE``.
 
 .. _how-django-discovers-translations:
 
-How LegionMarket discovers translations
+How Django discovers translations
 ---------------------------------
 
-At runtime, LegionMarket builds an in-memory unified catalog of literals-translations.
+At runtime, Django builds an in-memory unified catalog of literals-translations.
 To achieve this it looks for translations by following this algorithm regarding
 the order in which it examines the different file paths to load the compiled
 :term:`message files <message file>` (``.mo``) and the precedence of multiple
@@ -2304,7 +2275,7 @@ the directories in your :setting:`LOCALE_PATHS` setting.
 Using a non-English base language
 ---------------------------------
 
-LegionMarket makes the general assumption that the original strings in a translatable
+Django makes the general assumption that the original strings in a translatable
 project are written in English. You can choose another language, but you must be
 aware of certain limitations:
 

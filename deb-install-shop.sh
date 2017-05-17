@@ -5,17 +5,13 @@ pip3 uninstall -y django-cms django-shop django-jet pinax-stripe
 
 cwd=$(pwd)
 
-cd ${cwd}/source/django-shop
-yarn install
-python setup.py build && python setup.py install
-
 cd ${cwd}/source/django-jet
 yarn install
 python setup.py build && python setup.py install
 
 pip3 uninstall -y django
 cd ${cwd}/source/django
-yarn install
+npm install
 python setup.py build && python setup.py install
 
 pip uninstall -y django-cms
@@ -31,3 +27,5 @@ python setup.py build && python setup.py install
 cd ${cwd}/source/django-admin-interface
 yarn install
 python setup.py build && python setup.py install
+
+pip3 install djangorestframework==3.5.2

@@ -54,16 +54,16 @@ msgid "Support"
 msgstr "支持"
 
 #: dashboard.py:263
-msgid "The Legion Market documentation"
+msgid "TLM documentation"
 msgstr "Django文档"
 
 #: dashboard.py:268
-msgid "The Legion Market \"django-users\" mailing list"
-msgstr "The Legion Market \"django-users\" 邮件列表"
+msgid "TLM \"django-users\" mailing list"
+msgstr "TLM \"django-users\" 邮件列表"
 
 #: dashboard.py:273
-msgid "The Legion Market irc channel"
-msgstr "The Legion Market IRC频道"
+msgid "TLM irc channel"
+msgstr "TLM IRC频道"
 
 #: dashboard.py:288
 msgid "Application models"

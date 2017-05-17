@@ -3,7 +3,7 @@ Managing static files (e.g. images, JavaScript, CSS)
 ====================================================
 
 Websites generally need to serve additional files such as images, JavaScript,
-or CSS. In Django, we refer to these files as "static files".  LegionMarket provides
+or CSS. In Django, we refer to these files as "static files".  Django provides
 :mod:`django.contrib.staticfiles` to help you manage them.
 
 This page describes how you can serve these static files.
@@ -53,7 +53,7 @@ Configuring static files
 Your project will probably also have static assets that aren't tied to a
 particular app. In addition to using a ``static/`` directory inside your apps,
 you can define a list of directories (:setting:`STATICFILES_DIRS`) in your
-settings file where LegionMarket will also look for static files. For example::
+settings file where Django will also look for static files. For example::
 
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "static"),
@@ -67,10 +67,10 @@ details on how ``staticfiles`` finds your files.
 
     Now we *might* be able to get away with putting our static files directly
     in ``my_app/static/`` (rather than creating another ``my_app``
-    subdirectory), but it would actually be a bad idea. LegionMarket will use the
+    subdirectory), but it would actually be a bad idea. Django will use the
     first static file it finds whose name matches, and if you had a static file
-    with the same name in a *different* application, LegionMarket would be unable to
-    distinguish between them. We need to be able to point LegionMarket at the right
+    with the same name in a *different* application, Django would be unable to
+    distinguish between them. We need to be able to point Django at the right
     one, and the easiest way to ensure this is by *namespacing* them. That is,
     by putting those static files inside *another* directory named for the
     application itself.
@@ -84,7 +84,7 @@ If you use :mod:`django.contrib.staticfiles` as explained above,
 :djadmin:`runserver` will do this automatically when :setting:`DEBUG` is set
 to ``True``. If you don't have ``django.contrib.staticfiles`` in
 :setting:`INSTALLED_APPS`, you can still manually serve static files using the
-:func:`django.contrib.staticfiles.views.serve` view.
+:func:`django.views.static.serve` view.
 
 This is not suitable for production use! For some common deployment
 strategies, see :doc:`/howto/static-files/deployment`.
@@ -115,8 +115,7 @@ Serving files uploaded by a user during development
 ===================================================
 
 During development, you can serve user-uploaded media files from
-:setting:`MEDIA_ROOT` using the :func:`django.contrib.staticfiles.views.serve`
-view.
+:setting:`MEDIA_ROOT` using the :func:`django.views.static.serve` view.
 
 This is not suitable for production use! For some common deployment
 strategies, see :doc:`/howto/static-files/deployment`.

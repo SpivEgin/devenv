@@ -7,7 +7,9 @@ from django.contrib.contenttypes.admin import GenericStackedInline
 from django.core import checks
 from django.test import SimpleTestCase, override_settings
 
-from .models import Album, Book, City, Influence, Song, State, TwoAlbumFKAndAnE
+from .models import (
+    Album, Author, Book, City, Influence, Song, State, TwoAlbumFKAndAnE,
+)
 
 
 class SongForm(forms.ModelForm):
@@ -43,7 +45,6 @@ class MyAdmin(admin.ModelAdmin):
 )
 class SystemChecksTestCase(SimpleTestCase):
 
-    @override_settings(DEBUG=True)
     def test_checks_are_performed(self):
         admin.site.register(Song, MyAdmin)
         try:
@@ -52,7 +53,6 @@ class SystemChecksTestCase(SimpleTestCase):
             self.assertEqual(errors, expected)
         finally:
             admin.site.unregister(Song)
-            admin.sites.system_check_errors = []
 
     @override_settings(INSTALLED_APPS=['django.contrib.admin'])
     def test_contenttypes_dependency(self):
@@ -92,7 +92,6 @@ class SystemChecksTestCase(SimpleTestCase):
         ]
         self.assertEqual(errors, expected)
 
-    @override_settings(DEBUG=True)
     def test_custom_adminsite(self):
         class CustomAdminSite(admin.AdminSite):
             pass
@@ -105,7 +104,26 @@ class SystemChecksTestCase(SimpleTestCase):
             self.assertEqual(errors, expected)
         finally:
             custom_site.unregister(Song)
-            admin.sites.system_check_errors = []
+
+    def test_allows_checks_relying_on_other_modeladmins(self):
+        class MyBookAdmin(admin.ModelAdmin):
+            def check(self, **kwargs):
+                errors = super(MyBookAdmin, self).check(**kwargs)
+                author_admin = self.admin_site._registry.get(Author)
+                if author_admin is None:
+                    errors.append('AuthorAdmin missing!')
+                return errors
+
+        class MyAuthorAdmin(admin.ModelAdmin):
+            pass
+
+        admin.site.register(Book, MyBookAdmin)
+        admin.site.register(Author, MyAuthorAdmin)
+        try:
+            self.assertEqual(admin.site.check(None), [])
+        finally:
+            admin.site.unregister(Book)
+            admin.site.unregister(Author)
 
     def test_field_name_not_in_list_display(self):
         class SongAdmin(admin.ModelAdmin):
@@ -165,16 +183,15 @@ class SystemChecksTestCase(SimpleTestCase):
 
     def test_custom_get_form_with_fieldsets(self):
         """
-        Ensure that the fieldsets checks are skipped when the ModelAdmin.get_form() method
+        The fieldsets checks are skipped when the ModelAdmin.get_form() method
         is overridden.
-        Refs #19445.
         """
         errors = ValidFormFieldsets(Song, AdminSite()).check()
         self.assertEqual(errors, [])
 
     def test_fieldsets_fields_non_tuple(self):
         """
-        Tests for a tuple/list for the first fieldset's fields.
+        The first fieldset's fields must be a list/tuple.
         """
         class NotATupleAdmin(admin.ModelAdmin):
             list_display = ["pk", "title"]
@@ -197,7 +214,7 @@ class SystemChecksTestCase(SimpleTestCase):
 
     def test_nonfirst_fieldset(self):
         """
-        Tests for a tuple/list for the second fieldset's fields.
+        The second fieldset's fields must be a list/tuple.
         """
         class NotATupleAdmin(admin.ModelAdmin):
             fieldsets = [
@@ -309,7 +326,7 @@ class SystemChecksTestCase(SimpleTestCase):
 
     def test_generic_inline_model_admin_non_generic_model(self):
         """
-        Ensure that a model without a GenericForeignKey raises problems if it's included
+        A model without a GenericForeignKey raises problems if it's included
         in an GenericInlineModelAdmin definition.
         """
         class BookInline(GenericStackedInline):

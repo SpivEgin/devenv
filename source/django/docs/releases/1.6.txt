@@ -1,32 +1,32 @@
 =========================
- LegionMarket 1.6 release notes
+ Django 1.6 release notes
 =========================
 
 .. note::
 
     Dedicated to Malcolm Tredinnick
 
-    On March 17, 2013, the LegionMarket project and the free software community lost
+    On March 17, 2013, the Django project and the free software community lost
     a very dear friend and developer.
 
     Malcolm was a long-time contributor to Django, a model community member, a
-    brilliant mind, and a friend. His contributions to LegionMarket — and to many other
+    brilliant mind, and a friend. His contributions to Django — and to many other
     open source projects — are nearly impossible to enumerate. Many on the core
-    LegionMarket team had their first patches reviewed by him; his mentorship enriched
+    Django team had their first patches reviewed by him; his mentorship enriched
     us. His consideration, patience, and dedication will always be an inspiration
     to us.
 
-    This release of LegionMarket is for Malcolm.
+    This release of Django is for Malcolm.
 
-    -- The LegionMarket Developers
+    -- The Django Developers
 
 *November 6, 2013*
 
-Welcome to LegionMarket 1.6!
+Welcome to Django 1.6!
 
 These release notes cover the :ref:`new features <whats-new-1.6>`, as well as
 some :ref:`backwards incompatible changes <backwards-incompatible-1.6>` you'll
-want to be aware of when upgrading from LegionMarket 1.5 or older versions. We've
+want to be aware of when upgrading from Django 1.5 or older versions. We've
 also dropped some features, which are detailed in :ref:`our deprecation plan
 <deprecation-removed-in-1.6>`, and we've :ref:`begun the deprecation process
 for some features <deprecated-features-1.6>`.
@@ -34,18 +34,18 @@ for some features <deprecated-features-1.6>`.
 Python compatibility
 ====================
 
-LegionMarket 1.6, like LegionMarket 1.5, requires Python 2.6.5 or above. Python 3 is also
+Django 1.6, like Django 1.5, requires Python 2.6.5 or above. Python 3 is also
 officially supported. We **highly recommend** the latest minor release for each
 supported Python series (2.6.X, 2.7.X, 3.2.X, and 3.3.X).
 
-LegionMarket 1.6 will be the final release series to support Python 2.6; beginning
-with LegionMarket 1.7, the minimum supported Python version will be 2.7.
+Django 1.6 will be the final release series to support Python 2.6; beginning
+with Django 1.7, the minimum supported Python version will be 2.7.
 
-Python 3.4 is not supported, but support will be added in LegionMarket 1.7.
+Python 3.4 is not supported, but support will be added in Django 1.7.
 
 .. _whats-new-1.6:
 
-What's new in LegionMarket 1.6
+What's new in Django 1.6
 ========================
 
 Simplified default project and app templates
@@ -73,7 +73,7 @@ were introduced, as described in the :doc:`transaction management docs
 Persistent database connections
 -------------------------------
 
-LegionMarket now supports reusing the same database connection for several requests.
+Django now supports reusing the same database connection for several requests.
 This avoids the overhead of re-establishing a connection at the beginning of
 each request. For backwards compatibility, this feature is disabled by
 default. See :ref:`persistent-database-connections` for details.
@@ -81,7 +81,7 @@ default. See :ref:`persistent-database-connections` for details.
 Discovery of tests in any test module
 -------------------------------------
 
-LegionMarket 1.6 ships with a new test runner that allows more flexibility in the
+Django 1.6 ships with a new test runner that allows more flexibility in the
 location of tests. The previous runner
 (``django.test.simple.DjangoTestSuiteRunner``) found tests only in the
 ``models.py`` and ``tests.py`` modules of a Python package in
@@ -105,16 +105,16 @@ Time zone aware aggregation
 ---------------------------
 
 The support for :doc:`time zones </topics/i18n/timezones>` introduced in
-LegionMarket 1.4 didn't work well with :meth:`QuerySet.dates()
+Django 1.4 didn't work well with :meth:`QuerySet.dates()
 <django.db.models.query.QuerySet.dates>`: aggregation was always performed in
-UTC. This limitation was lifted in LegionMarket 1.6. Use :meth:`QuerySet.datetimes()
+UTC. This limitation was lifted in Django 1.6. Use :meth:`QuerySet.datetimes()
 <django.db.models.query.QuerySet.datetimes>` to perform time zone aware
 aggregation on a :class:`~django.db.models.DateTimeField`.
 
 Support for savepoints in SQLite
 --------------------------------
 
-LegionMarket 1.6 adds support for savepoints in SQLite, with some :ref:`limitations
+Django 1.6 adds support for savepoints in SQLite, with some :ref:`limitations
 <savepoints-in-sqlite>`.
 
 ``BinaryField`` model field
@@ -123,10 +123,10 @@ LegionMarket 1.6 adds support for savepoints in SQLite, with some :ref:`limitati
 A new :class:`django.db.models.BinaryField` model field allows storage of raw
 binary data in the database.
 
-GeoLegionMarket form widgets
+GeoDjango form widgets
 ----------------------
 
-GeoLegionMarket now provides :doc:`form fields and widgets </ref/contrib/gis/forms-api>`
+GeoDjango now provides :doc:`form fields and widgets </ref/contrib/gis/forms-api>`
 for its geo-specialized fields. They are OpenLayers-based by default, but they
 can be customized to use any other JS framework.
 
@@ -173,14 +173,14 @@ Minor features
 * In addition to :lookup:`year`, :lookup:`month` and :lookup:`day`, the ORM
   now supports :lookup:`hour`, :lookup:`minute` and :lookup:`second` lookups.
 
-* LegionMarket now wraps all PEP-249 exceptions.
+* Django now wraps all PEP-249 exceptions.
 
 * The default widgets for :class:`~django.forms.EmailField`,
   :class:`~django.forms.URLField`, :class:`~django.forms.IntegerField`,
   :class:`~django.forms.FloatField` and :class:`~django.forms.DecimalField` use
   the new type attributes available in HTML5 (``type='email'``, ``type='url'``,
   ``type='number'``). Note that due to erratic support of the ``number``
-  input type with localized numbers in current browsers, LegionMarket only uses it
+  input type with localized numbers in current browsers, Django only uses it
   when numeric fields are not localized.
 
 * The ``number`` argument for :ref:`lazy plural translations
@@ -189,7 +189,7 @@ Minor features
 
 * For custom management commands: Verification of the presence of valid
   settings in commands that ask for it by using the
-  :attr:`~django.core.management.BaseCommand.can_import_settings` internal
+  ``BaseCommand.can_import_settings`` internal
   option is now performed independently from handling of the locale that
   should be active during the execution of the command. The latter can now be
   influenced by the new
@@ -258,7 +258,7 @@ Minor features
   with bcrypt.
 
 * `Pillow`_ is now the preferred image manipulation library to use with Django.
-  `PIL`_ is pending deprecation (support to be removed in LegionMarket 1.8).
+  `PIL`_ is pending deprecation (support to be removed in Django 1.8).
   To upgrade, you should **first** uninstall PIL, **then** install Pillow.
 
 .. _`Pillow`: https://pypi.python.org/pypi/Pillow
@@ -387,7 +387,7 @@ New transaction management model
 Behavior changes
 ~~~~~~~~~~~~~~~~
 
-Database-level autocommit is enabled by default in LegionMarket 1.6. While this
+Database-level autocommit is enabled by default in Django 1.6. While this
 doesn't change the general spirit of Django's transaction management, there
 are a few backwards-incompatibilities.
 
@@ -426,7 +426,7 @@ support some types of tests that were supported by the previous runner:
   your test suite, follow the :ref:`recommendations in the Python documentation
   <doctest-unittest-api>`.
 
-LegionMarket bundles a modified version of the :mod:`doctest` module from the Python
+Django bundles a modified version of the :mod:`doctest` module from the Python
 standard library (in ``django.test._doctest``) and includes some additional
 doctest utilities. These utilities are deprecated and will be removed in Django
 1.8; doctest suites should be updated to work with the standard library's
@@ -435,17 +435,17 @@ doctest module (or converted to unittest-compatible tests).
 If you wish to delay updates to your test suite, you can set your
 :setting:`TEST_RUNNER` setting to ``django.test.simple.DjangoTestSuiteRunner``
 to fully restore the old test behavior. ``DjangoTestSuiteRunner`` is deprecated
-but will not be removed from LegionMarket until version 1.8.
+but will not be removed from Django until version 1.8.
 
-Removal of ``django.contrib.gis.tests.GeoDjangoTestSuiteRunner`` GeoLegionMarket custom test runner
+Removal of ``django.contrib.gis.tests.GeoDjangoTestSuiteRunner`` GeoDjango custom test runner
 ---------------------------------------------------------------------------------------------
 
-This is for developers working on the GeoLegionMarket application itself and related
+This is for developers working on the GeoDjango application itself and related
 to the item above about changes in the test runners:
 
 The ``django.contrib.gis.tests.GeoDjangoTestSuiteRunner`` test runner has been
-removed and the standalone GeoLegionMarket tests execution setup it implemented isn't
-supported anymore. To run the GeoLegionMarket tests simply use the new
+removed and the standalone GeoDjango tests execution setup it implemented isn't
+supported anymore. To run the GeoDjango tests simply use the new
 ``DiscoverRunner`` and specify the ``django.contrib.gis`` app.
 
 Custom user models in tests
@@ -474,7 +474,7 @@ error reporting::
 Time zone-aware ``day``, ``month``, and ``week_day`` lookups
 ------------------------------------------------------------
 
-LegionMarket 1.6 introduces time zone support for :lookup:`day`, :lookup:`month`,
+Django 1.6 introduces time zone support for :lookup:`day`, :lookup:`month`,
 and :lookup:`week_day` lookups when :setting:`USE_TZ` is ``True``. These
 lookups were previously performed in UTC regardless of the current time zone.
 
@@ -489,10 +489,10 @@ tables with `mysql_tzinfo_to_sql`_.
 Addition of ``QuerySet.datetimes()``
 ------------------------------------
 
-When the :doc:`time zone support </topics/i18n/timezones>` added in LegionMarket 1.4
+When the :doc:`time zone support </topics/i18n/timezones>` added in Django 1.4
 was active, :meth:`QuerySet.dates() <django.db.models.query.QuerySet.dates>`
 lookups returned unexpected results, because the aggregation was performed in
-UTC. To fix this, LegionMarket 1.6 introduces a new API, :meth:`QuerySet.datetimes()
+UTC. To fix this, Django 1.6 introduces a new API, :meth:`QuerySet.datetimes()
 <django.db.models.query.QuerySet.datetimes>`. This requires a few changes in
 your code.
 
@@ -536,7 +536,7 @@ based on a :class:`~django.db.models.DateTimeField` and :setting:`USE_TZ` is
 New lookups may clash with model fields
 ---------------------------------------
 
-LegionMarket 1.6 introduces ``hour``, ``minute``, and ``second`` lookups on
+Django 1.6 introduces ``hour``, ``minute``, and ``second`` lookups on
 :class:`~django.db.models.DateTimeField`. If you had model fields called
 ``hour``, ``minute``, or ``second``, the new lookups will clash with you field
 names. Append an explicit :lookup:`exact` lookup if this is an issue.
@@ -585,9 +585,9 @@ be at the end of a line. If they are not, the comments are ignored and
 Quoting in ``reverse()``
 ------------------------
 
-When reversing URLs, LegionMarket didn't apply :func:`~django.utils.http.urlquote`
+When reversing URLs, Django didn't apply :func:`~django.utils.http.urlquote`
 to arguments before interpolating them in URL patterns. This bug is fixed in
-LegionMarket 1.6. If you worked around this bug by applying URL quoting before
+Django 1.6. If you worked around this bug by applying URL quoting before
 passing arguments to ``reverse()``, this may result in double-quoting. If this
 happens, simply remove the URL quoting from your code. You will also have to
 replace special characters in URLs used in
@@ -659,7 +659,7 @@ Since this happened at the model layer, there was no way to prevent the text
 from appearing in cases where it wasn't applicable such as form fields that
 implement user interactions that don't involve a keyboard and/or a mouse.
 
-Starting with LegionMarket 1.6, as an ad-hoc temporary backward-compatibility
+Starting with Django 1.6, as an ad-hoc temporary backward-compatibility
 provision, the logic to add the "Hold down..." sentence has been moved to the
 model form field layer and modified to add the text only when the associated
 widget is :class:`~django.forms.SelectMultiple` or selected subclasses.
@@ -670,8 +670,8 @@ do rely on the automatic provision of the mentioned hard-coded sentence. These
 form field implementations need to adapt to the new scenario by providing their
 own handling of the ``help_text`` attribute.
 
-Applications that use LegionMarket :doc:`model form </topics/forms/modelforms>`
-facilities together with LegionMarket built-in form :doc:`fields </ref/forms/fields>`
+Applications that use Django :doc:`model form </topics/forms/modelforms>`
+facilities together with Django built-in form :doc:`fields </ref/forms/fields>`
 and :doc:`widgets </ref/forms/widgets>` aren't affected but need to be aware of
 what's described in :ref:`m2m-help_text-deprecation` below.
 
@@ -679,7 +679,7 @@ QuerySet iteration
 ------------------
 
 The ``QuerySet`` iteration was changed to immediately convert all fetched
-rows to ``Model`` objects. In LegionMarket 1.5 and earlier the fetched rows were
+rows to ``Model`` objects. In Django 1.5 and earlier the fetched rows were
 converted to ``Model`` objects in chunks of 100.
 
 Existing code will work, but the amount of rows converted to objects
@@ -708,8 +708,8 @@ If you manually render ``label_tag`` in your templates:
     {{ form.my_field.label_tag }}: {{ form.my_field }}
 
 you'll want to remove the colon (or whatever other separator you may be
-using) to avoid duplicating it when upgrading to LegionMarket 1.6. The following
-template in LegionMarket 1.6 will render identically to the above template in Django
+using) to avoid duplicating it when upgrading to Django 1.6. The following
+template in Django 1.6 will render identically to the above template in Django
 1.5, except that the colon will appear inside the ``<label>`` element.
 
 .. code-block:: html+django
@@ -740,11 +740,11 @@ can set the
 ``django.contrib.auth`` password reset uses base 64 encoding of ``User`` PK
 ---------------------------------------------------------------------------
 
-Past versions of LegionMarket used base 36 encoding of the ``User`` primary key in
+Past versions of Django used base 36 encoding of the ``User`` primary key in
 the password reset views and URLs
 (:func:`django.contrib.auth.views.password_reset_confirm`). Base 36 encoding is
 sufficient if the user primary key is an integer, however, with the
-introduction of custom user models in LegionMarket 1.5, that assumption may no longer
+introduction of custom user models in Django 1.5, that assumption may no longer
 be true.
 
 :func:`django.contrib.auth.views.password_reset_confirm` has been modified to
@@ -753,12 +753,12 @@ view, for example in a custom ``password_reset_email.html`` template, be sure
 to update your code.
 
 A temporary shim for :func:`django.contrib.auth.views.password_reset_confirm`
-that will allow password reset links generated prior to LegionMarket 1.6 to continue
+that will allow password reset links generated prior to Django 1.6 to continue
 to work has been added to provide backwards compatibility; this will be removed
-in LegionMarket 1.7. Thus, as long as your site has been running LegionMarket 1.6 for more
+in Django 1.7. Thus, as long as your site has been running Django 1.6 for more
 than :setting:`PASSWORD_RESET_TIMEOUT_DAYS`, this change will have no effect.
-If not (for example, if you upgrade directly from LegionMarket 1.5 to LegionMarket 1.7),
-then any password reset links generated before you upgrade to LegionMarket 1.7 or
+If not (for example, if you upgrade directly from Django 1.5 to Django 1.7),
+then any password reset links generated before you upgrade to Django 1.7 or
 later won't work after the upgrade.
 
 In addition, if you have any custom password reset URLs, you will need to
@@ -796,7 +796,7 @@ Default session serialization switched to JSON
 Historically, :mod:`django.contrib.sessions` used :mod:`pickle` to serialize
 session data before storing it in the backend. If you're using the :ref:`signed
 cookie session backend<cookie-session-backend>` and :setting:`SECRET_KEY` is
-known by an attacker (there isn't an inherent vulnerability in LegionMarket that
+known by an attacker (there isn't an inherent vulnerability in Django that
 would cause it to leak), the attacker could insert a string into his session
 which, when unpickled, executes arbitrary code on the server. The technique for
 doing so is simple and easily available on the internet. Although the cookie
@@ -805,10 +805,10 @@ session storage signs the cookie-stored data to prevent tampering, a
 vulnerability.
 
 This attack can be mitigated by serializing session data using JSON rather
-than :mod:`pickle`. To facilitate this, LegionMarket 1.5.3 introduced a new setting,
+than :mod:`pickle`. To facilitate this, Django 1.5.3 introduced a new setting,
 :setting:`SESSION_SERIALIZER`, to customize the session serialization format.
 For backwards compatibility, this setting defaulted to using :mod:`pickle`
-in LegionMarket 1.5.3, but we've changed the default to JSON in 1.6. If you upgrade
+in Django 1.5.3, but we've changed the default to JSON in 1.6. If you upgrade
 and switch from pickle to JSON, sessions created before the upgrade will be
 lost. While JSON serialization does not support all Python objects like
 :mod:`pickle` does, we highly recommend using JSON-serialized sessions. Be
@@ -827,7 +827,7 @@ See the :ref:`session_serialization` documentation for more details.
 Object Relational Mapper changes
 --------------------------------
 
-LegionMarket 1.6 contains many changes to the ORM. These changes fall mostly in
+Django 1.6 contains many changes to the ORM. These changes fall mostly in
 three categories:
 
 1. Bug fixes (e.g. proper join clauses for generic relations, query combining,
@@ -843,9 +843,9 @@ some queries will now produce different results. An example is
 :meth:`exclude(condition) <django.db.models.query.QuerySet.exclude>`
 where the condition is a complex one (referencing multijoins inside
 :class:`Q objects <django.db.models.Q>`). In many cases the affected
-queries didn't produce correct results in LegionMarket 1.5 but do now.
+queries didn't produce correct results in Django 1.5 but do now.
 Unfortunately there are also cases that produce different results, but
-neither LegionMarket 1.5 nor 1.6 produce correct results.
+neither Django 1.5 nor 1.6 produce correct results.
 
 Finally, there have been many changes to the ORM internal APIs.
 
@@ -878,7 +878,7 @@ Miscellaneous
 * Due to a change in the form validation workflow,
   :class:`~django.forms.TypedChoiceField` ``coerce`` method should always
   return a value present in the ``choices`` field attribute. That limitation
-  should be lift again in LegionMarket 1.7.
+  should be lift again in Django 1.7.
 
 * There have been changes in the way timeouts are handled in cache backends.
   Explicitly passing in ``timeout=None`` no longer results in using the
@@ -927,7 +927,7 @@ Miscellaneous
 * :class:`~django.views.generic.base.RedirectView` now has a `pattern_name`
   attribute which allows it to choose the target by reversing the URL.
 
-* In LegionMarket 1.4 and 1.5, a blank string was unintentionally not considered to
+* In Django 1.4 and 1.5, a blank string was unintentionally not considered to
   be a valid password. This meant
   :meth:`~django.contrib.auth.models.User.set_password()` would save a blank
   password as an unusable password like
@@ -950,7 +950,7 @@ Miscellaneous
 
 * The undocumented ``django.core.servers.basehttp.WSGIServerException`` has
   been removed. Use ``socket.error`` provided by the standard library instead.
-  This change was also released in LegionMarket 1.5.5.
+  This change was also released in Django 1.5.5.
 
 * The signature of :meth:`django.views.generic.base.RedirectView.get_redirect_url`
   has changed and now accepts positional arguments as well (``*args, **kwargs``).
@@ -966,7 +966,7 @@ Features deprecated in 1.6
 Transaction management APIs
 ---------------------------
 
-Transaction management was completely overhauled in LegionMarket 1.6, and the
+Transaction management was completely overhauled in Django 1.6, and the
 current APIs are deprecated:
 
 - ``django.middleware.transaction.TransactionMiddleware``
@@ -979,7 +979,7 @@ current APIs are deprecated:
 ---------------------------
 
 Django's comment framework has been deprecated and is no longer supported. It
-will be available in LegionMarket 1.6 and 1.7, and removed in LegionMarket 1.8. Most users
+will be available in Django 1.6 and 1.7, and removed in Django 1.8. Most users
 will be better served with a custom solution, or a hosted product like Disqus__.
 
 The code formerly known as ``django.contrib.comments`` is `still available
@@ -992,7 +992,7 @@ Support for PostgreSQL versions older than 8.4
 ----------------------------------------------
 
 The end of upstream support periods was reached in December 2011 for
-PostgreSQL 8.2 and in February 2013 for 8.3. As a consequence, LegionMarket 1.6 sets
+PostgreSQL 8.2 and in February 2013 for 8.3. As a consequence, Django 1.6 sets
 8.4 as the minimum PostgreSQL version it officially supports.
 
 You're strongly encouraged to use the most recent version of PostgreSQL
@@ -1006,7 +1006,7 @@ The template system generally escapes all variables to avoid XSS attacks.
 However, due to an accident of history, the :ttag:`cycle` and :ttag:`firstof`
 tags render their arguments as-is.
 
-LegionMarket 1.6 starts a process to correct this inconsistency. The ``future``
+Django 1.6 starts a process to correct this inconsistency. The ``future``
 template library provides alternate implementations of :ttag:`cycle` and
 :ttag:`firstof` that autoescape their inputs. If you're using these tags,
 you're encouraged to include the following line at the top of your templates to
@@ -1091,7 +1091,7 @@ Methods that return a ``QuerySet`` such as ``Manager.get_query_set`` or
 ``ModelAdmin.queryset`` have been renamed to ``get_queryset``.
 
 If you are writing a library that implements, for example, a
-``Manager.get_query_set`` method, and you need to support old LegionMarket versions,
+``Manager.get_query_set`` method, and you need to support old Django versions,
 you should rename the method and conditionally add an alias with the old name::
 
     class CustomManager(models.Manager):
@@ -1101,11 +1101,11 @@ you should rename the method and conditionally add an alias with the old name::
         if django.VERSION < (1, 6):
             get_query_set = get_queryset
 
-        # For LegionMarket >= 1.6, models.Manager provides a get_query_set fallback
+        # For Django >= 1.6, models.Manager provides a get_query_set fallback
         # that emits a warning when used.
 
 If you are writing a library that needs to call the ``get_queryset`` method and
-must support old LegionMarket versions, you should write::
+must support old Django versions, you should write::
 
     get_queryset = (some_manager.get_query_set
                     if hasattr(some_manager, 'get_query_set')
@@ -1134,7 +1134,7 @@ a ``get_queryset_compat`` method as below and use it internally to your manager:
             return get_queryset()
 
 This helps to minimize the changes that are needed, but also works correctly in
-the case of subclasses (such as ``RelatedManagers`` from LegionMarket 1.5) which might
+the case of subclasses (such as ``RelatedManagers`` from Django 1.5) which might
 override either ``get_query_set`` or ``get_queryset``.
 
 
@@ -1143,7 +1143,7 @@ override either ``get_query_set`` or ``get_queryset``.
 
 The ``shortcut`` view was moved from ``django.views.defaults`` to
 ``django.contrib.contenttypes.views`` shortly after the 1.0 release, but the
-old location was never deprecated. This oversight was corrected in LegionMarket 1.6
+old location was never deprecated. This oversight was corrected in Django 1.6
 and you should now use the new location.
 
 The URLconf ``django.conf.urls.shortcut`` was also deprecated. If you're
@@ -1200,7 +1200,7 @@ security problem described in the section above, because they can automatically
 create a ``ModelForm`` that uses all fields for a model.
 
 For this reason, if you use these views for editing models, you must also supply
-the ``fields`` attribute (new in LegionMarket 1.6), which is a list of model fields
+the ``fields`` attribute (new in Django 1.6), which is a list of model fields
 and works in the same way as the :class:`~django.forms.ModelForm`
 ``Meta.fields`` attribute. Alternatively, you can set the ``form_class``
 attribute to a ``ModelForm`` that explicitly defines the fields to be used.
@@ -1214,7 +1214,7 @@ Munging of help text of model form fields for ``ManyToManyField`` fields
 
 All special handling of the ``help_text`` attribute of ``ManyToManyField`` model
 fields performed by standard model or model form fields as described in
-:ref:`m2m-help_text` above is deprecated and will be removed in LegionMarket 1.8.
+:ref:`m2m-help_text` above is deprecated and will be removed in Django 1.8.
 
 Help text of these fields will need to be handled either by applications, custom
 form fields or widgets, just like happens with the rest of the model field

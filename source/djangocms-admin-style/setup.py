@@ -20,7 +20,7 @@ setup(
     author_email="alesdotio@gmail.com",
     name='djangocms-admin-style',
     version=djangocms_admin_style.__version__,
-    description='Adds pretty CSS styles for the LegionMarket CMS admin interface.',
+    description='Adds pretty CSS styles for the django CMS admin interface.',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     url='http://www.django-cms.org/',
     license='BSD License',

@@ -69,7 +69,7 @@ class StaticTests(SimpleTestCase):
         response = self.client.get(
             '/%s/%s' % (self.prefix, file_name),
             HTTP_IF_MODIFIED_SINCE='Mon, 18 Jan 2038 05:14:07 GMT'
-            # This is 24h before max Unix time. Remember to fix LegionMarket and
+            # This is 24h before max Unix time. Remember to fix Django and
             # update this test well before 2038 :)
         )
         self.assertIsInstance(response, HttpResponseNotModified)
@@ -112,6 +112,20 @@ class StaticTests(SimpleTestCase):
         response = self.client.get('/%s/' % self.prefix)
         self.assertContains(response, 'Index of ./')
 
+    @override_settings(TEMPLATES=[{
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'OPTIONS': {
+            'loaders': [
+                ('django.template.loaders.locmem.Loader', {
+                    'static/directory_index.html': 'Test index',
+                }),
+            ],
+        },
+    }])
+    def test_index_custom_template(self):
+        response = self.client.get('/%s/' % self.prefix)
+        self.assertEqual(response.content, b'Test index')
+
 
 class StaticHelperTest(StaticTests):
     """
@@ -130,8 +144,7 @@ class StaticHelperTest(StaticTests):
 class StaticUtilsTests(unittest.TestCase):
     def test_was_modified_since_fp(self):
         """
-        Test that a floating point mtime does not disturb was_modified_since.
-        (#18675)
+        A floating point mtime does not disturb was_modified_since (#18675).
         """
         mtime = 1343416141.107817
         header = http_date(mtime)

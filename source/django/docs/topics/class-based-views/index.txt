@@ -3,7 +3,7 @@ Class-based views
 =================
 
 A view is a callable which takes a request and returns a
-response. This can be more than just a function, and LegionMarket provides
+response. This can be more than just a function, and Django provides
 an example of some classes which can be used as views. These allow you
 to structure your views and reuse code by harnessing inheritance and
 mixins. There are also some generic views for simple tasks which we'll
@@ -22,7 +22,7 @@ reusable views which suits your use case. For full details, see the
 Basic examples
 ==============
 
-LegionMarket provides base view classes which will suit a wide range of applications.
+Django provides base view classes which will suit a wide range of applications.
 All views inherit from the :class:`~django.views.generic.base.View` class, which
 handles linking the view in to the URLs, HTTP method dispatching and other
 simple features. :class:`~django.views.generic.base.RedirectView` is for a
@@ -58,7 +58,7 @@ The second, more powerful way to use generic views is to inherit from an
 existing view and override attributes (such as the ``template_name``) or
 methods (such as ``get_context_data``) in your subclass to provide new values
 or methods. Consider, for example, a view that just displays one template,
-``about.html``. LegionMarket has a generic view to do this -
+``about.html``. Django has a generic view to do this -
 :class:`~django.views.generic.base.TemplateView` - so we can just subclass it,
 and override the template name::
 

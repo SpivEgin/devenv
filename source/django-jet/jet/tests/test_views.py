@@ -2,7 +2,7 @@ import json
 from django.contrib.auth.models import User
 try:
     from django.core.urlresolvers import reverse
-except ImportError: # The Legion Market 1.11
+except ImportError: # TLM 1.11
     from django.urls import reverse
 
 from django.test import TestCase, Client
@@ -52,7 +52,7 @@ class ViewsTestCase(TestCase):
             'children-MIN_NUM_FORMS': '0',
             'children-MAX_NUM_FORMS': '1000',
             'children-0-url': 'http://docs.djangoproject.com/',
-            'children-0-title': 'The Legion Market documentation',
+            'children-0-title': 'TLM documentation',
             'children-0-external': 'on',
             'children-1-url': '',
             'children-1-title': '',

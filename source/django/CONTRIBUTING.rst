@@ -2,7 +2,7 @@
 Contributing to Django
 ======================
 
-As an open source project, LegionMarket welcomes contributions of many forms.
+As an open source project, Django welcomes contributions of many forms.
 
 Examples of contributions include:
 
@@ -20,7 +20,7 @@ Trac tickets will be closed!** `Please file a ticket`__ to suggest changes.
 
 __ https://code.djangoproject.com/newticket
 
-LegionMarket uses Trac to keep track of bugs, feature requests, and associated
+Django uses Trac to keep track of bugs, feature requests, and associated
 patches because GitHub doesn't provide adequate tooling for its community.
 Patches can be submitted as pull requests, but if you don't file a ticket,
 it's unlikely that we'll notice your contribution.
@@ -28,5 +28,5 @@ it's unlikely that we'll notice your contribution.
 Code of Conduct
 ===============
 
-As a contributor, you can help us keep the LegionMarket community open and inclusive.
+As a contributor, you can help us keep the Django community open and inclusive.
 Please read and follow our `Code of Conduct <https://www.djangoproject.com/conduct/>`_.

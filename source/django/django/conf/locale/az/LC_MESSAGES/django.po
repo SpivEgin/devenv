@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Emin Mastizada <emin@linux.com>, 2015-2016
@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: django\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-29 20:57+0200\n"
-"PO-Revision-Date: 2016-08-05 11:00+0000\n"
-"Last-Translator: Emin Mastizada <emin@linux.com>\n"
+"POT-Creation-Date: 2017-01-19 16:49+0100\n"
+"PO-Revision-Date: 2017-01-20 09:03+0000\n"
+"Last-Translator: Jannis Leidel <jannis@leidel.info>\n"
 "Language-Team: Azerbaijani (http://www.transifex.com/django/django/language/"
 "az/)\n"
 "MIME-Version: 1.0\n"
@@ -294,6 +294,15 @@ msgstr "Statik Fayllar"
 msgid "Syndication"
 msgstr "Sindikasiya"
 
+msgid "That page number is not an integer"
+msgstr ""
+
+msgid "That page number is less than 1"
+msgstr ""
+
+msgid "That page contains no results"
+msgstr ""
+
 msgid "Enter a valid value."
 msgstr "Düzgün qiymət daxil edin."
 
@@ -392,6 +401,12 @@ msgid_plural ""
 "Ensure that there are no more than %(max)s digits before the decimal point."
 msgstr[0] "Onluq hissədən əvvəl %(max)s rəqəmdən çox olmadığına əmin olun."
 msgstr[1] "Onluq hissədən əvvəl %(max)s rəqəmdən çox olmadığına əmin olun."
+
+#, python-format
+msgid ""
+"File extension '%(extension)s' is not allowed. Allowed extensions are: "
+"'%(allowed_extensions)s'."
+msgstr ""
 
 msgid "and"
 msgstr "və"
@@ -729,14 +744,14 @@ msgstr ""
 "%(datetime)s %(current_timezone)s zaman qurşağında ifadə oluna bilmir; ya "
 "duallıq, ya da yanlışlıq var."
 
+msgid "Clear"
+msgstr "Təmizlə"
+
 msgid "Currently"
 msgstr "Hal-hazırda"
 
 msgid "Change"
 msgstr "Dəyiş"
-
-msgid "Clear"
-msgstr "Təmizlə"
 
 msgid "Unknown"
 msgstr "Məlum deyil"
@@ -1098,16 +1113,16 @@ msgid "It worked!"
 msgstr "İşlədi!"
 
 msgid "Congratulations on your first Django-powered page."
-msgstr "İlk LegionMarket ilə işləyən səhifəniz münasibəti ilə təbrik edirik."
+msgstr "İlk Django ilə işləyən səhifəniz münasibəti ilə təbrik edirik."
 
 msgid ""
-"Of course, you haven't actually done any work yet. Next, start your first "
-"app by running <code>python manage.py startapp [app_label]</code>."
+"Next, start your first app by running <code>python manage.py startapp "
+"[app_label]</code>."
 msgstr ""
 
 msgid ""
 "You're seeing this message because you have <code>DEBUG = True</code> in "
-"your LegionMarket settings file and you haven't configured any URLs. Get to work!"
+"your Django settings file and you haven't configured any URLs. Get to work!"
 msgstr ""
 
 msgid "No year specified"

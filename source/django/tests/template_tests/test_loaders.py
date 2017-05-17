@@ -279,7 +279,7 @@ class FileSystemLoaderTests(SimpleTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.engine = Engine(dirs=[TEMPLATE_DIR])
+        cls.engine = Engine(dirs=[TEMPLATE_DIR], loaders=['django.template.loaders.filesystem.Loader'])
         super(FileSystemLoaderTests, cls).setUpClass()
 
     @contextmanager
@@ -311,6 +311,17 @@ class FileSystemLoaderTests(SimpleTestCase):
         self.assertEqual(template.origin.template_name, 'index.html')
         self.assertEqual(template.origin.loader, self.engine.template_loaders[0])
         self.assertEqual(template.origin.loader_name, 'django.template.loaders.filesystem.Loader')
+
+    def test_loaders_dirs(self):
+        engine = Engine(loaders=[('django.template.loaders.filesystem.Loader', [TEMPLATE_DIR])])
+        template = engine.get_template('index.html')
+        self.assertEqual(template.origin.name, os.path.join(TEMPLATE_DIR, 'index.html'))
+
+    def test_loaders_dirs_empty(self):
+        """An empty dirs list in loaders overrides top level dirs."""
+        engine = Engine(dirs=[TEMPLATE_DIR], loaders=[('django.template.loaders.filesystem.Loader', [])])
+        with self.assertRaises(TemplateDoesNotExist):
+            engine.get_template('index.html')
 
     @ignore_warnings(category=RemovedInDjango20Warning)
     def test_load_template_source(self):

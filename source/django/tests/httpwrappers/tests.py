@@ -8,7 +8,7 @@ import pickle
 import unittest
 import uuid
 
-from django.core.exceptions import SuspiciousOperation
+from django.core.exceptions import DisallowedRedirect, SuspiciousOperation
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signals import request_finished
 from django.db import close_old_connections
@@ -25,7 +25,7 @@ from django.utils.encoding import force_str
 from django.utils.functional import lazystr
 
 
-class QueryDictTests(unittest.TestCase):
+class QueryDictTests(SimpleTestCase):
     def test_create_with_no_args(self):
         self.assertEqual(QueryDict(), QueryDict(str('')))
 
@@ -271,6 +271,44 @@ class QueryDictTests(unittest.TestCase):
         self.assertEqual(copy.copy(q).encoding, 'iso-8859-15')
         self.assertEqual(copy.deepcopy(q).encoding, 'iso-8859-15')
 
+    def test_querydict_fromkeys(self):
+        self.assertEqual(QueryDict.fromkeys(['key1', 'key2', 'key3']), QueryDict('key1&key2&key3'))
+
+    def test_fromkeys_with_nonempty_value(self):
+        self.assertEqual(
+            QueryDict.fromkeys(['key1', 'key2', 'key3'], value='val'),
+            QueryDict('key1=val&key2=val&key3=val')
+        )
+
+    def test_fromkeys_is_immutable_by_default(self):
+        # Match behavior of __init__() which is also immutable by default.
+        q = QueryDict.fromkeys(['key1', 'key2', 'key3'])
+        with self.assertRaisesMessage(AttributeError, 'This QueryDict instance is immutable'):
+            q['key4'] = 'nope'
+
+    def test_fromkeys_mutable_override(self):
+        q = QueryDict.fromkeys(['key1', 'key2', 'key3'], mutable=True)
+        q['key4'] = 'yep'
+        self.assertEqual(q, QueryDict('key1&key2&key3&key4=yep'))
+
+    def test_duplicates_in_fromkeys_iterable(self):
+        self.assertEqual(QueryDict.fromkeys('xyzzy'), QueryDict('x&y&z&z&y'))
+
+    def test_fromkeys_with_nondefault_encoding(self):
+        key_utf16 = b'\xff\xfe\x8e\x02\xdd\x01\x9e\x02'
+        value_utf16 = b'\xff\xfe\xdd\x01n\x00l\x00P\x02\x8c\x02'
+        q = QueryDict.fromkeys([key_utf16], value=value_utf16, encoding='utf-16')
+        expected = QueryDict('', mutable=True)
+        expected['ʎǝʞ'] = 'ǝnlɐʌ'
+        self.assertEqual(q, expected)
+
+    def test_fromkeys_empty_iterable(self):
+        self.assertEqual(QueryDict.fromkeys([]), QueryDict(''))
+
+    def test_fromkeys_noniterable(self):
+        with self.assertRaises(TypeError):
+            QueryDict.fromkeys(0)
+
 
 class HttpResponseTests(unittest.TestCase):
 
@@ -309,18 +347,18 @@ class HttpResponseTests(unittest.TestCase):
         r = HttpResponse()
         del r['Content-Type']
         r['foo'] = 'bar'
-        l = list(r.items())
-        self.assertEqual(len(l), 1)
-        self.assertEqual(l[0], ('foo', 'bar'))
-        self.assertIsInstance(l[0][0], str)
+        headers = list(r.items())
+        self.assertEqual(len(headers), 1)
+        self.assertEqual(headers[0], ('foo', 'bar'))
+        self.assertIsInstance(headers[0][0], str)
 
         r = HttpResponse()
         del r['Content-Type']
         r[b'foo'] = 'bar'
-        l = list(r.items())
-        self.assertEqual(len(l), 1)
-        self.assertEqual(l[0], ('foo', 'bar'))
-        self.assertIsInstance(l[0][0], str)
+        headers = list(r.items())
+        self.assertEqual(len(headers), 1)
+        self.assertEqual(headers[0], ('foo', 'bar'))
+        self.assertIsInstance(headers[0][0], str)
 
         r = HttpResponse()
         with self.assertRaises(UnicodeError):
@@ -460,14 +498,13 @@ class HttpResponseSubclassesTests(SimpleTestCase):
     def test_redirect(self):
         response = HttpResponseRedirect('/redirected/')
         self.assertEqual(response.status_code, 302)
-        # Test that standard HttpResponse init args can be used
+        # Standard HttpResponse init args can be used
         response = HttpResponseRedirect(
             '/redirected/',
             content='The resource has temporarily moved',
             content_type='text/html',
         )
         self.assertContains(response, 'The resource has temporarily moved', status_code=302)
-        # Test that url attribute is right
         self.assertEqual(response.url, response['Location'])
 
     def test_redirect_lazy(self):
@@ -480,6 +517,17 @@ class HttpResponseSubclassesTests(SimpleTestCase):
         expected = '<HttpResponseRedirect status_code=302, "text/html; charset=utf-8", url="/redirected/">'
         self.assertEqual(repr(response), expected)
 
+    def test_invalid_redirect_repr(self):
+        """
+        If HttpResponseRedirect raises DisallowedRedirect, its __repr__()
+        should work (in the debug view, for example).
+        """
+        response = HttpResponseRedirect.__new__(HttpResponseRedirect)
+        with self.assertRaisesMessage(DisallowedRedirect, "Unsafe redirect to URL with protocol 'ssh'"):
+            HttpResponseRedirect.__init__(response, 'ssh://foo')
+        expected = '<HttpResponseRedirect status_code=302, "text/html; charset=utf-8", url="ssh://foo">'
+        self.assertEqual(repr(response), expected)
+
     def test_not_modified(self):
         response = HttpResponseNotModified()
         self.assertEqual(response.status_code, 304)
@@ -488,10 +536,14 @@ class HttpResponseSubclassesTests(SimpleTestCase):
             response.content = "Hello dear"
         self.assertNotIn('content-type', response)
 
+    def test_not_modified_repr(self):
+        response = HttpResponseNotModified()
+        self.assertEqual(repr(response), '<HttpResponseNotModified status_code=304>')
+
     def test_not_allowed(self):
         response = HttpResponseNotAllowed(['GET'])
         self.assertEqual(response.status_code, 405)
-        # Test that standard HttpResponse init args can be used
+        # Standard HttpResponse init args can be used
         response = HttpResponseNotAllowed(['GET'], content='Only the GET method is allowed', content_type='text/html')
         self.assertContains(response, 'Only the GET method is allowed', status_code=405)
 
@@ -499,6 +551,11 @@ class HttpResponseSubclassesTests(SimpleTestCase):
         response = HttpResponseNotAllowed(['GET', 'OPTIONS'], content_type='text/plain')
         expected = '<HttpResponseNotAllowed [GET, OPTIONS] status_code=405, "text/plain">'
         self.assertEqual(repr(response), expected)
+
+    def test_not_allowed_repr_no_content_type(self):
+        response = HttpResponseNotAllowed(('GET', 'POST'))
+        del response['Content-Type']
+        self.assertEqual(repr(response), '<HttpResponseNotAllowed [GET, POST] status_code=405>')
 
 
 class JsonResponseTests(SimpleTestCase):
@@ -659,18 +716,14 @@ class FileCloseTests(SimpleTestCase):
 
 class CookieTests(unittest.TestCase):
     def test_encode(self):
-        """
-        Test that we don't output tricky characters in encoded value
-        """
+        """Semicolons and commas are encoded."""
         c = SimpleCookie()
         c['test'] = "An,awkward;value"
         self.assertNotIn(";", c.output().rstrip(';'))  # IE compat
         self.assertNotIn(",", c.output().rstrip(';'))  # Safari compat
 
     def test_decode(self):
-        """
-        Test that we can still preserve semi-colons and commas
-        """
+        """Semicolons and commas are decoded."""
         c = SimpleCookie()
         c['test'] = "An,awkward;value"
         c2 = SimpleCookie()
@@ -680,9 +733,6 @@ class CookieTests(unittest.TestCase):
         self.assertEqual(c['test'].value, c3['test'])
 
     def test_decode_2(self):
-        """
-        Test that we haven't broken normal encoding
-        """
         c = SimpleCookie()
         c['test'] = b"\xf0"
         c2 = SimpleCookie()
@@ -693,13 +743,13 @@ class CookieTests(unittest.TestCase):
 
     def test_nonstandard_keys(self):
         """
-        Test that a single non-standard cookie name doesn't affect all cookies. Ticket #13007.
+        A single non-standard cookie name doesn't affect all cookies (#13007).
         """
         self.assertIn('good_cookie', parse_cookie('good_cookie=yes;bad:cookie=yes').keys())
 
     def test_repeated_nonstandard_keys(self):
         """
-        Test that a repeated non-standard name doesn't affect all cookies. Ticket #15852
+        A repeated non-standard name doesn't affect all cookies (#15852).
         """
         self.assertIn('good_cookie', parse_cookie('a:=b; a:=c; good_cookie=yes').keys())
 
@@ -750,9 +800,6 @@ class CookieTests(unittest.TestCase):
         self.assertEqual(parse_cookie('  =  b  ;  ;  =  ;   c  =  ;  '), {'': 'b', 'c': ''})
 
     def test_httponly_after_load(self):
-        """
-        Test that we can use httponly attribute on cookies that we load
-        """
         c = SimpleCookie()
         c.load("name=val")
         c['name']['httponly'] = True

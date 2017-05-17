@@ -1,1 +1,1 @@
-# LegionMarket settings for {{ project_name }} test project.
+# Django settings for {{ project_name }} test project.

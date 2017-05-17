@@ -46,8 +46,6 @@ class SiteManager(models.Manager):
         except Site.DoesNotExist:
             # Fallback to looking up site after stripping port from the host.
             domain, port = split_domain_port(host)
-            if not port:
-                raise
             if domain not in SITE_CACHE:
                 SITE_CACHE[domain] = self.get(domain__iexact=domain)
             return SITE_CACHE[domain]
@@ -67,7 +65,7 @@ class SiteManager(models.Manager):
             return self._get_site_by_request(request)
 
         raise ImproperlyConfigured(
-            "You're using the LegionMarket \"sites framework\" without having "
+            "You're using the Django \"sites framework\" without having "
             "set the SITE_ID setting. Create a site in your database and "
             "set the SITE_ID setting or pass a request to "
             "Site.objects.get_current() to fix this error."
@@ -121,5 +119,7 @@ def clear_site_cache(sender, **kwargs):
         del SITE_CACHE[Site.objects.using(using).get(pk=instance.pk).domain]
     except (KeyError, Site.DoesNotExist):
         pass
+
+
 pre_save.connect(clear_site_cache, sender=Site)
 pre_delete.connect(clear_site_cache, sender=Site)

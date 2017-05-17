@@ -1,8 +1,8 @@
 Contributing
 ============
 
-The Legion Market JET is open-source and every member of the community can contribute to it. We are happy to see patches
-and improvements with The Legion Market JET. But please keep in mind that there are some guidelines you should follow.
+TLM JET is open-source and every member of the community can contribute to it. We are happy to see patches
+and improvements with TLM JET. But please keep in mind that there are some guidelines you should follow.
 
 .. _requirements:
 
@@ -17,7 +17,7 @@ Guidelines For Reporting An Issue/Feature
 -----------------------------------------
 
 So you've found a bug or have a great idea for a feature. Here's the steps you should take
-to help get it added/fixed in The Legion Market JET:
+to help get it added/fixed in TLM JET:
 
 * First check if there's an existing issue/pull request for this bug/feature. Issues can be found here
   https://github.com/geex-arts/django-jet/issues, PRs here https://github.com/geex-arts/django-jet/pulls
@@ -29,7 +29,7 @@ to help get it added/fixed in The Legion Market JET:
 
         * Python interpreter
         * Django
-        * The Legion Market JET
+        * TLM JET
         * Optionally of the other dependencies involved
 
   * It would be great if you also make a pull request which solves your issue
@@ -40,7 +40,7 @@ Guidelines For Contributing Code
 If you're ready to contribute back some code/docs, the process should look like:
 
 * Fork the project on GitHub into your own account
-* Clone your copy of The Legion Market JET to a separate folder
+* Clone your copy of TLM JET to a separate folder
 * Install it into your demo project using ``pip install -e PATH_TO_CLONED_JET``
 * Make a new branch in git & commit your changes there
 * Push your new branch up to GitHub
@@ -49,7 +49,7 @@ If you're ready to contribute back some code/docs, the process should look like:
 * Create a new pull request (based on your branch), including what the problem/feature is, versions of
   your software and referencing any related issues/pull requests
 
-In order to be merged into The Legion Market JET, contributions must have the following:
+In order to be merged into TLM JET, contributions must have the following:
 
 * A solid patch that:
 
@@ -62,7 +62,7 @@ In order to be merged into The Legion Market JET, contributions must have the fo
 * Must be appropriately licensed (see requirements_)
 
 If your contribution lacks any of these things, they will have to be added by a core contributor before
-being merged into The Legion Market JET proper, which may take time to get to.
+being merged into TLM JET proper, which may take time to get to.
 
 Contribution Styles/Javascript/Translations
 -------------------------------------------
@@ -88,7 +88,7 @@ Now you are able to install Gulp globally:
 
     npm install --global gulp-cli
 
-Change your working directory to The Legion Market JET where ``package.json`` and ``gulpfile.js`` are located and
+Change your working directory to TLM JET where ``package.json`` and ``gulpfile.js`` are located and
 install Gulp dependencies:
 
 .. code-block:: bash
@@ -124,7 +124,7 @@ Building produces the following files:
   * jet/static/jet/js/i18n/jquery-ui-timepicker/
   * jet/static/jet/js/i18n/select2/
 
-* Compiled The Legion Market localizations:
+* Compiled TLM localizations:
 
   * jet/locale/LOCALE/LC_MESSAGES/django.mo
   * jet/locale/LOCALE/LC_MESSAGES/djangojs.mo

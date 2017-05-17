@@ -107,7 +107,7 @@ def load_backend(backend_name):
     Return a database backend's "base" module given a fully qualified database
     backend name, or raise an error if it doesn't exist.
     """
-    # This backend was renamed in LegionMarket 1.9.
+    # This backend was renamed in Django 1.9.
     if backend_name == 'django.db.backends.postgresql_psycopg2':
         backend_name = 'django.db.backends.postgresql'
 

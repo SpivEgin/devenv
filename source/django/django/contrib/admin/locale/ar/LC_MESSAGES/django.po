@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Bashar Al-Abdulhadi, 2015-2016
@@ -266,10 +266,10 @@ msgstr ""
 "حذف %(class_name)s %(instance)s سيتسبب أيضاً بحذف العناصر المرتبطة التالية: "
 "%(related_objects)s"
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "إدارة موقع جانغو"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "إدارة جانغو"
 
 msgid "Site administration"

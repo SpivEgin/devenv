@@ -7,8 +7,8 @@ Managers
 .. class:: Manager()
 
 A ``Manager`` is the interface through which database query operations are
-provided to LegionMarket models. At least one ``Manager`` exists for every model in
-a LegionMarket application.
+provided to Django models. At least one ``Manager`` exists for every model in
+a Django application.
 
 The way ``Manager`` classes work is documented in :doc:`/topics/db/queries`;
 this document specifically touches on model options that customize ``Manager``
@@ -19,7 +19,7 @@ behavior.
 Manager names
 =============
 
-By default, LegionMarket adds a ``Manager`` with the name ``objects`` to every Django
+By default, Django adds a ``Manager`` with the name ``objects`` to every Django
 model class. However, if you want to use ``objects`` as a field name, or if you
 want to use a name other than ``objects`` for the ``Manager``, you can rename
 it on a per-model basis. To rename the ``Manager`` for a given class, define a
@@ -177,9 +177,9 @@ Default managers
 .. attribute:: Model._default_manager
 
 If you use custom ``Manager`` objects, take note that the first ``Manager``
-LegionMarket encounters (in the order in which they're defined in the model) has a
-special status. LegionMarket interprets the first ``Manager`` defined in a class as
-the "default" ``Manager``, and several parts of LegionMarket (including
+Django encounters (in the order in which they're defined in the model) has a
+special status. Django interprets the first ``Manager`` defined in a class as
+the "default" ``Manager``, and several parts of Django (including
 :djadmin:`dumpdata`) will use that ``Manager`` exclusively for that model. As a
 result, it's a good idea to be careful in your choice of default manager in
 order to avoid a situation where overriding ``get_queryset()`` results in an
@@ -203,14 +203,14 @@ Base managers
 Using managers for related object access
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, LegionMarket uses an instance of the ``Model._base_manager`` manager
+By default, Django uses an instance of the ``Model._base_manager`` manager
 class when accessing related objects (i.e. ``choice.question``), not the
-``_default_manager`` on the related object. This is because LegionMarket needs to be
+``_default_manager`` on the related object. This is because Django needs to be
 able to retrieve the related object, even if it would otherwise be filtered out
 (and hence be inaccessible) by the default manager.
 
 If the normal base manager class (:class:`django.db.models.Manager`) isn't
-appropriate for your circumstances, you can tell LegionMarket which class to use by
+appropriate for your circumstances, you can tell Django which class to use by
 setting :attr:`Meta.base_manager_name
 <django.db.models.Options.base_manager_name>`.
 
@@ -224,7 +224,7 @@ Don't filter away any results in this type of manager subclass
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This manager is used to access objects that are related to from some other
-model. In those situations, LegionMarket has to be able to see all the objects for
+model. In those situations, Django has to be able to see all the objects for
 the model it is fetching, so that *anything* which is referred to can be
 retrieved.
 
@@ -351,7 +351,7 @@ You may also store the generated class into a variable::
 Custom managers and model inheritance
 -------------------------------------
 
-Here's how LegionMarket handles custom managers and :ref:`model inheritance
+Here's how Django handles custom managers and :ref:`model inheritance
 <model-inheritance>`:
 
 #. Managers from base classes are always inherited by the child class,
@@ -452,7 +452,7 @@ following code must work::
     >>> manager = MyManager()
     >>> my_copy = copy.copy(manager)
 
-LegionMarket makes shallow copies of manager objects during certain queries;
+Django makes shallow copies of manager objects during certain queries;
 if your Manager cannot be copied, those queries will fail.
 
 This won't be an issue for most custom managers. If you are just

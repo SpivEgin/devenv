@@ -6,7 +6,7 @@ How can I get started contributing code to Django?
 ==================================================
 
 Thanks for asking! We've written an entire document devoted to this question.
-It's titled :doc:`Contributing to LegionMarket </internals/contributing/index>`.
+It's titled :doc:`Contributing to Django </internals/contributing/index>`.
 
 I submitted a bug fix in the ticket system several weeks ago. Why are you ignoring my patch?
 ============================================================================================
@@ -18,10 +18,10 @@ ignored" and "a ticket has not been attended to yet." Django's ticket system
 contains hundreds of open tickets, of various degrees of impact on end-user
 functionality, and Django's developers have to review and prioritize.
 
-On top of that: the people who work on LegionMarket are all volunteers. As a result,
+On top of that: the people who work on Django are all volunteers. As a result,
 the amount of time that we have to work on the framework is limited and will
 vary from week to week depending on our spare time. If we're busy, we may not
-be able to spend as much time on LegionMarket as we might want.
+be able to spend as much time on Django as we might want.
 
 The best way to make sure tickets do not get hung up on the way to checkin is
 to make it dead easy, even for someone who may not be intimately familiar with
@@ -43,32 +43,28 @@ If your patch stands no chance of inclusion in Django, we won't ignore it --
 we'll just close the ticket. So if your ticket is still open, it doesn't mean
 we're ignoring you; it just means we haven't had time to look at it yet.
 
-When and how might I remind the core team of a patch I care about?
-==================================================================
+When and how might I remind the team of a patch I care about?
+=============================================================
 
 A polite, well-timed message to the mailing list is one way to get attention.
 To determine the right time, you need to keep an eye on the schedule. If you
-post your message when the core developers are trying to hit a feature
-deadline or manage a planning phase, you're not going to get the sort of
-attention you require. However, if you draw attention to a ticket when the
-core developers are paying particular attention to bugs -- just before a bug
-fixing sprint, or in the lead up to a beta release for example -- you're much
-more likely to get a productive response.
+post your message right before a release deadline, you're not likely to get the
+sort of attention you require.
 
 Gentle IRC reminders can also work -- again, strategically timed if possible.
 During a bug sprint would be a very good time, for example.
 
 Another way to get traction is to pull several related tickets together. When
-the core developers sit down to fix a bug in an area they haven't touched for
+the someone sits down to review a bug in an area they haven't touched for
 a while, it can take a few minutes to remember all the fine details of how
 that area of code works. If you collect several minor bug fixes together into
 a similarly themed group, you make an attractive target, as the cost of coming
 up to speed on an area of code can be spread over multiple tickets.
 
-Please refrain from emailing core developers personally, or repeatedly raising
-the same issue over and over. This sort of behavior will not gain you any
-additional attention -- certainly not the attention that you need in order to
-get your pet bug addressed.
+Please refrain from emailing anyone personally or repeatedly raising the same
+issue over and over. This sort of behavior will not gain you any additional
+attention -- certainly not the attention that you need in order to get your
+issue addressed.
 
 But I've reminded you several times and you keep ignoring my patch!
 ===================================================================
@@ -93,8 +89,8 @@ concentrating on the rebuild, we can close all the little bugs at once, and
 hopefully prevent other little bugs from appearing in the future.
 
 Whatever the reason, please keep in mind that while you may hit a particular
-bug regularly, it doesn't necessarily follow that every single LegionMarket user
-will hit the same bug. Different users use LegionMarket in different ways, stressing
+bug regularly, it doesn't necessarily follow that every single Django user
+will hit the same bug. Different users use Django in different ways, stressing
 different parts of the code under different conditions. When we evaluate the
 relative priorities, we are generally trying to consider the needs of the
 entire community, not just the severity for one particular user. This doesn't

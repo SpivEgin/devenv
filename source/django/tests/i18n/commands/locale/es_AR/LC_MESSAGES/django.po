@@ -16,5 +16,5 @@ msgstr ""
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: path/file.py:1
-msgid "This file has a UTF-8 BOM an should be rejected by the LegionMarket makemessages command."
+msgid "This file has a UTF-8 BOM an should be rejected by the Django makemessages command."
 msgstr ""

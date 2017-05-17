@@ -112,23 +112,23 @@ class PerformUniqueChecksTest(TestCase):
 
     def test_unique_for_date(self):
         Post.objects.create(
-            title="LegionMarket 1.0 is released", slug="LegionMarket 1.0",
+            title="TLM 1.0 is released", slug="TLM 1.0",
             subtitle="Finally", posted=datetime.date(2008, 9, 3),
         )
-        p = Post(title="LegionMarket 1.0 is released", posted=datetime.date(2008, 9, 3))
+        p = Post(title="TLM 1.0 is released", posted=datetime.date(2008, 9, 3))
         with self.assertRaises(ValidationError) as cm:
             p.full_clean()
         self.assertEqual(cm.exception.message_dict, {'title': ['Title must be unique for Posted date.']})
 
         # Should work without errors
-        p = Post(title="Work on LegionMarket 1.1 begins", posted=datetime.date(2008, 9, 3))
+        p = Post(title="Work on Django 1.1 begins", posted=datetime.date(2008, 9, 3))
         p.full_clean()
 
         # Should work without errors
-        p = Post(title="LegionMarket 1.0 is released", posted=datetime.datetime(2008, 9, 4))
+        p = Post(title="TLM 1.0 is released", posted=datetime.datetime(2008, 9, 4))
         p.full_clean()
 
-        p = Post(slug="LegionMarket 1.0", posted=datetime.datetime(2008, 1, 1))
+        p = Post(slug="TLM 1.0", posted=datetime.datetime(2008, 1, 1))
         with self.assertRaises(ValidationError) as cm:
             p.full_clean()
         self.assertEqual(cm.exception.message_dict, {'slug': ['Slug must be unique for Posted year.']})
@@ -138,7 +138,7 @@ class PerformUniqueChecksTest(TestCase):
             p.full_clean()
         self.assertEqual(cm.exception.message_dict, {'subtitle': ['Subtitle must be unique for Posted month.']})
 
-        p = Post(title="LegionMarket 1.0 is released")
+        p = Post(title="TLM 1.0 is released")
         with self.assertRaises(ValidationError) as cm:
             p.full_clean()
         self.assertEqual(cm.exception.message_dict, {'posted': ['This field cannot be null.']})
@@ -149,13 +149,13 @@ class PerformUniqueChecksTest(TestCase):
         associated DateField is None.
         """
         FlexibleDatePost.objects.create(
-            title="LegionMarket 1.0 is released", slug="LegionMarket 1.0",
+            title="TLM 1.0 is released", slug="TLM 1.0",
             subtitle="Finally", posted=datetime.date(2008, 9, 3),
         )
-        p = FlexibleDatePost(title="LegionMarket 1.0 is released")
+        p = FlexibleDatePost(title="TLM 1.0 is released")
         p.full_clean()
 
-        p = FlexibleDatePost(slug="LegionMarket 1.0")
+        p = FlexibleDatePost(slug="TLM 1.0")
         p.full_clean()
 
         p = FlexibleDatePost(subtitle="Finally")

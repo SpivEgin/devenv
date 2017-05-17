@@ -1,21 +1,21 @@
 ========================
-LegionMarket 1.3 release notes
+Django 1.3 release notes
 ========================
 
 *March 23, 2011*
 
-Welcome to LegionMarket 1.3!
+Welcome to Django 1.3!
 
-Nearly a year in the making, LegionMarket 1.3 includes quite a few :ref:`new features
+Nearly a year in the making, Django 1.3 includes quite a few :ref:`new features
 <whats-new-1.3>` and plenty of bug fixes and improvements to existing features.
 These release notes cover the new features in 1.3, as well as some
 :ref:`backwards-incompatible changes <backwards-incompatible-changes-1.3>`
-you'll want to be aware of when upgrading from LegionMarket 1.2 or older versions.
+you'll want to be aware of when upgrading from Django 1.2 or older versions.
 
 Overview
 ========
 
-LegionMarket 1.3's focus has mostly been on resolving smaller, long-standing
+Django 1.3's focus has mostly been on resolving smaller, long-standing
 feature requests, but that hasn't prevented a few fairly significant
 new features from landing, including:
 
@@ -30,7 +30,7 @@ new features from landing, including:
 
 Wherever possible, of course, new features are introduced in a
 backwards-compatible manner per :doc:`our API stability policy
-</misc/api-stability>` policy. As a result of this policy, LegionMarket 1.3
+</misc/api-stability>` policy. As a result of this policy, Django 1.3
 :ref:`begins the deprecation process for some features
 <deprecated-features-1.3>`.
 
@@ -41,26 +41,26 @@ backwards-compatible manner per :doc:`our API stability policy
 Python compatibility
 ====================
 
-The release of LegionMarket 1.2 was notable for having the first shift in
-Django's Python compatibility policy; prior to LegionMarket 1.2, Django
-supported any 2.x version of Python from 2.3 up. As of LegionMarket 1.2, the
+The release of Django 1.2 was notable for having the first shift in
+Django's Python compatibility policy; prior to Django 1.2, Django
+supported any 2.x version of Python from 2.3 up. As of Django 1.2, the
 minimum requirement was raised to Python 2.4.
 
-LegionMarket 1.3 continues to support Python 2.4, but will be the final
-LegionMarket release series to do so; beginning with LegionMarket 1.4, the minimum
+Django 1.3 continues to support Python 2.4, but will be the final
+Django release series to do so; beginning with Django 1.4, the minimum
 supported Python version will be 2.5. A document outlining our full
 timeline for deprecating Python 2.x and moving to Python 3.x will be
-published shortly after the release of LegionMarket 1.3.
+published shortly after the release of Django 1.3.
 
 .. _whats-new-1.3:
 
-What's new in LegionMarket 1.3
+What's new in Django 1.3
 ========================
 
 Class-based views
 -----------------
 
-LegionMarket 1.3 adds a framework that allows you to use a class as a view.
+Django 1.3 adds a framework that allows you to use a class as a view.
 This means you can compose a view out of a collection of methods that
 can be subclassed and overridden to provide common views of data without
 having to write too much code.
@@ -78,9 +78,9 @@ views <https://docs.djangoproject.com/en/1.4/topics/generic-views-migration/>`_.
 Logging
 -------
 
-LegionMarket 1.3 adds framework-level support for Python's ``logging``
+Django 1.3 adds framework-level support for Python's ``logging``
 module.  This means you can now easily configure and control logging
-as part of your LegionMarket project. A number of logging handlers and
+as part of your Django project. A number of logging handlers and
 logging calls have been added to Django's own code as well -- most
 notably, the error emails sent on a HTTP 500 server error are now
 handled as a logging activity. See :doc:`the documentation on Django's
@@ -89,7 +89,7 @@ logging interface </topics/logging>` for more details.
 Extended static files handling
 ------------------------------
 
-LegionMarket 1.3 ships with a new contrib app --
+Django 1.3 ships with a new contrib app --
 ``django.contrib.staticfiles`` -- to help developers handle the static
 media files (images, CSS, JavaScript, etc.) that are needed to render
 a complete web page.
@@ -112,14 +112,14 @@ unittest2 support
 
 Python 2.7 introduced some major changes to the ``unittest`` library,
 adding some extremely useful features. To ensure that every Django
-project can benefit from these new features, LegionMarket ships with a copy
+project can benefit from these new features, Django ships with a copy
 of unittest2_, a copy of the Python 2.7 unittest library, backported
 for Python 2.4 compatibility.
 
-To access this library, LegionMarket provides the ``django.utils.unittest``
+To access this library, Django provides the ``django.utils.unittest``
 module alias. If you are using Python 2.7, or you have installed
-``unittest2`` locally, LegionMarket will map the alias to the installed
-version of the unittest library. Otherwise, LegionMarket will use its own
+``unittest2`` locally, Django will map the alias to the installed
+version of the unittest library. Otherwise, Django will use its own
 bundled version of unittest2.
 
 To take advantage of this alias, simply use::
@@ -196,7 +196,7 @@ additional data into the context.
 
 However, you can't (easily) modify the content of a basic
 :class:`~django.http.HttpResponse` after it has been constructed. To
-overcome this limitation, LegionMarket 1.3 adds a new
+overcome this limitation, Django 1.3 adds a new
 :class:`~django.template.response.TemplateResponse` class. Unlike basic
 :class:`~django.http.HttpResponse` objects,
 :class:`~django.template.response.TemplateResponse` objects retain the details
@@ -210,12 +210,12 @@ on the :class:`~django.template.response.TemplateResponse` class.
 Caching changes
 ---------------
 
-LegionMarket 1.3 sees the introduction of several improvements to the
+Django 1.3 sees the introduction of several improvements to the
 Django's caching infrastructure.
 
-Firstly, LegionMarket now supports multiple named caches. In the same way
-that LegionMarket 1.2 introduced support for multiple database connections,
-LegionMarket 1.3 allows you to use the new :setting:`CACHES` setting to
+Firstly, Django now supports multiple named caches. In the same way
+that Django 1.2 introduced support for multiple database connections,
+Django 1.3 allows you to use the new :setting:`CACHES` setting to
 define multiple named cache connections.
 
 Secondly, :ref:`versioning <cache_versioning>`, :ref:`site-wide
@@ -246,8 +246,8 @@ for more details.
 GeoDjango
 ---------
 
-The GeoLegionMarket test suite is now included when
-:ref:`running the LegionMarket test suite <running-unit-tests>` with ``runtests.py``
+The GeoDjango test suite is now included when
+:ref:`running the Django test suite <running-unit-tests>` with ``runtests.py``
 when using :ref:`spatial database backends <spatial-backends>`.
 
 :setting:`MEDIA_URL` and :setting:`STATIC_URL` must end in a slash
@@ -263,19 +263,19 @@ a consistent way to combine paths in templates.
 Project settings which provide either of both settings without a trailing
 slash will now raise a ``PendingDeprecationWarning``.
 
-In LegionMarket 1.4 this same condition will raise ``DeprecationWarning``,
-and in LegionMarket 1.5 will raise an ``ImproperlyConfigured`` exception.
+In Django 1.4 this same condition will raise ``DeprecationWarning``,
+and in Django 1.5 will raise an ``ImproperlyConfigured`` exception.
 
 Everything else
 ---------------
 
-LegionMarket :doc:`1.1 <1.1>` and :doc:`1.2 <1.2>` added
+Django :doc:`1.1 <1.1>` and :doc:`1.2 <1.2>` added
 lots of big ticket items to Django, like multiple-database support,
 model validation, and a session-based messages framework. However,
 this focus on big features came at the cost of lots of smaller
 features.
 
-To compensate for this, the focus of the LegionMarket 1.3 development
+To compensate for this, the focus of the Django 1.3 development
 process has been on adding lots of smaller, long standing feature
 requests. These include:
 
@@ -325,10 +325,10 @@ Backwards-incompatible changes in 1.3
 CSRF validation now applies to AJAX requests
 --------------------------------------------
 
-Prior to LegionMarket 1.2.5, Django's CSRF-prevention system exempted AJAX
+Prior to Django 1.2.5, Django's CSRF-prevention system exempted AJAX
 requests from CSRF verification; due to `security issues`_ reported to
 us, however, *all* requests are now subjected to CSRF
-verification. Consult :doc:`the LegionMarket CSRF documentation
+verification. Consult :doc:`the Django CSRF documentation
 </ref/csrf>` for details on how to handle CSRF verification in
 AJAX requests.
 
@@ -337,7 +337,7 @@ AJAX requests.
 Restricted filters in admin interface
 -------------------------------------
 
-Prior to LegionMarket 1.2.5, the LegionMarket administrative interface allowed
+Prior to Django 1.2.5, the Django administrative interface allowed
 filtering on any model field or relation -- not just those specified
 in ``list_filter`` -- via query string manipulation. Due to security
 issues reported to us, however, query string lookup arguments in the
@@ -347,12 +347,12 @@ admin must be for fields or relations specified in ``list_filter`` or
 Deleting a model doesn't delete associated files
 ------------------------------------------------
 
-In earlier LegionMarket versions, when a model instance containing a
+In earlier Django versions, when a model instance containing a
 :class:`~django.db.models.FileField` was deleted,
 :class:`~django.db.models.FileField` took it upon itself to also delete the
 file from the backend storage. This opened the door to several data-loss
 scenarios, including rolled-back transactions and fields on different models
-referencing the same file. In LegionMarket 1.3, when a model is deleted the
+referencing the same file. In Django 1.3, when a model is deleted the
 :class:`~django.db.models.FileField`’s ``delete()`` method won't be called. If
 you need cleanup of orphaned files, you'll need to handle it yourself (for
 instance, with a custom management command that can be run manually or
@@ -365,13 +365,13 @@ The :class:`~django.forms.PasswordInput` form widget, intended for use
 with form fields which represent passwords, accepts a boolean keyword
 argument ``render_value`` indicating whether to send its data back to
 the browser when displaying a submitted form with errors. Prior to
-LegionMarket 1.3, this argument defaulted to ``True``, meaning that the
+Django 1.3, this argument defaulted to ``True``, meaning that the
 submitted password would be sent back to the browser as part of the
 form. Developers who wished to add a bit of additional security by
 excluding that value from the redisplayed form could instantiate a
 :class:`~django.forms.PasswordInput` passing ``render_value=False`` .
 
-Due to the sensitive nature of passwords, however, LegionMarket 1.3 takes
+Due to the sensitive nature of passwords, however, Django 1.3 takes
 this step automatically; the default value of ``render_value`` is now
 ``False``, and developers who want the password value returned to the
 browser on a submission with errors (the previous behavior) must now
@@ -384,7 +384,7 @@ explicitly indicate this. For example::
 Clearable default widget for FileField
 --------------------------------------
 
-LegionMarket 1.3 now includes a :class:`~django.forms.ClearableFileInput` form widget
+Django 1.3 now includes a :class:`~django.forms.ClearableFileInput` form widget
 in addition to :class:`~django.forms.FileInput`. ``ClearableFileInput`` renders
 with a checkbox to clear the field's value (if the field has a value and is not
 required); ``FileInput`` provided no means for clearing an existing file from
@@ -410,7 +410,7 @@ To return to the previous rendering (without the ability to clear the
 New index on database session table
 -----------------------------------
 
-Prior to LegionMarket 1.3, the database table used by the database backend
+Prior to Django 1.3, the database table used by the database backend
 for the :doc:`sessions </topics/http/sessions>` app had no index on
 the ``expire_date`` column. As a result, date-based queries on the
 session table -- such as the query that is needed to purge old
@@ -427,7 +427,7 @@ index can be found by running the ``sqlindexes`` admin command::
 No more naughty words
 ---------------------
 
-LegionMarket has historically provided (and enforced) a list of profanities.
+Django has historically provided (and enforced) a list of profanities.
 The comments app has enforced this list of profanities, preventing people from
 submitting comments that contained one of those profanities.
 
@@ -452,7 +452,7 @@ problem.
 Localflavor changes
 -------------------
 
-LegionMarket 1.3 introduces the following backwards-incompatible changes to
+Django 1.3 introduces the following backwards-incompatible changes to
 local flavors:
 
 * Canada (ca) -- The province "Newfoundland and Labrador" has had its
@@ -472,7 +472,7 @@ local flavors:
 FormSet updates
 ---------------
 
-In LegionMarket 1.3 ``FormSet`` creation behavior is modified slightly. Historically
+In Django 1.3 ``FormSet`` creation behavior is modified slightly. Historically
 the class didn't make a distinction between not being passed data and being
 passed empty dictionary. This was inconsistent with behavior in other parts of
 the framework. Starting with 1.3 if you pass in empty dictionary the
@@ -511,7 +511,7 @@ behavior::
     >>> Template("{{ full_name }}").render(Context({'full_name': user.get_full_name}))
     u'&lt;bound method User.get_full_name of &lt;...
 
-This has been resolved in LegionMarket 1.3 - the result in both cases will be ``u'Joe
+This has been resolved in Django 1.3 - the result in both cases will be ``u'Joe
 Bloggs'``. Although the previous behavior was not useful for a template language
 designed for web designers, and was never deliberately supported, it is possible
 that some templates may be broken by this change.
@@ -519,7 +519,7 @@ that some templates may be broken by this change.
 Use of custom SQL to load initial data in tests
 -----------------------------------------------
 
-LegionMarket provides a custom SQL hooks as a way to inject hand-crafted SQL
+Django provides a custom SQL hooks as a way to inject hand-crafted SQL
 into the database synchronization process. One of the possible uses
 for this custom SQL is to insert data into your database. If your
 custom SQL contains ``INSERT`` statements, those insertions will be
@@ -527,7 +527,7 @@ performed every time your database is synchronized. This includes the
 synchronization of any test databases that are created when you run a
 test suite.
 
-However, in the process of testing the LegionMarket 1.3, it was discovered
+However, in the process of testing the Django 1.3, it was discovered
 that this feature has never completely worked as advertised. When
 using database backends that don't support transactions, or when using
 a TransactionTestCase, data that has been inserted using custom SQL
@@ -535,7 +535,7 @@ will not be visible during the testing process.
 
 Unfortunately, there was no way to rectify this problem without
 introducing a backwards incompatibility. Rather than leave
-SQL-inserted initial data in an uncertain state, LegionMarket now enforces
+SQL-inserted initial data in an uncertain state, Django now enforces
 the policy that data inserted by custom SQL will *not* be visible
 during testing.
 
@@ -550,7 +550,7 @@ Changed priority of translation loading
 ---------------------------------------
 
 Work has been done to simplify, rationalize and properly document the algorithm
-used by LegionMarket at runtime to build translations from the different translations
+used by Django at runtime to build translations from the different translations
 found on disk, namely:
 
 For translatable literals found in Python code and templates (``'django'``
@@ -558,7 +558,7 @@ gettext domain):
 
 * Priorities of translations included with applications listed in the
   :setting:`INSTALLED_APPS` setting were changed. To provide a behavior
-  consistent with other parts of LegionMarket that also use such setting (templates,
+  consistent with other parts of Django that also use such setting (templates,
   etc.) now, when building the translation that will be made available, the
   apps listed first have higher precedence than the ones listed later.
 
@@ -603,10 +603,10 @@ decorator or the ``django.middleware.transaction.TransactionMiddleware``, and
 "get a pass", which means they are usually rolled back at the end of a request
 when the connection is closed.
 
-Until LegionMarket 1.3, transactions were only marked dirty when LegionMarket was
+Until Django 1.3, transactions were only marked dirty when Django was
 aware of a modifying operation performed in them; that is, either some
 model was saved, some bulk update or delete was performed, or the user
-explicitly called ``transaction.set_dirty()``. In LegionMarket 1.3, a
+explicitly called ``transaction.set_dirty()``. In Django 1.3, a
 transaction is marked dirty when *any* database operation is
 performed.
 
@@ -620,8 +620,8 @@ transactions that are being managed using ``commit_manually()``. For example::
           obj = get_object_or_404(MyObject, name__iexact=name)
           return render_to_response('template', {'object':obj})
 
-Prior to LegionMarket 1.3, this would work without error. However, under
-LegionMarket 1.3, this will raise a
+Prior to Django 1.3, this would work without error. However, under
+Django 1.3, this will raise a
 :class:`~django.db.transaction.TransactionManagementError` because
 the read operation that retrieves the ``MyObject`` instance leaves the
 transaction in a dirty state.
@@ -629,8 +629,8 @@ transaction in a dirty state.
 No password reset for inactive users
 ------------------------------------
 
-Prior to LegionMarket 1.3, inactive users were able to request a password reset email
-and reset their password. In LegionMarket 1.3 inactive users will receive the same
+Prior to Django 1.3, inactive users were able to request a password reset email
+and reset their password. In Django 1.3 inactive users will receive the same
 message as a nonexistent account.
 
 Password reset view now accepts ``from_email``
@@ -647,17 +647,17 @@ method accepts this keyword argument.
 Features deprecated in 1.3
 ==========================
 
-LegionMarket 1.3 deprecates some features from earlier releases.
+Django 1.3 deprecates some features from earlier releases.
 These features are still supported, but will be gradually phased out
 over the next few release cycles.
 
 Code taking advantage of any of the features below will raise a
-``PendingDeprecationWarning`` in LegionMarket 1.3. This warning will be
+``PendingDeprecationWarning`` in Django 1.3. This warning will be
 silent by default, but may be turned on using Python's :mod:`warnings`
 module, or by running Python with a ``-Wd`` or ``-Wall`` flag.
 
-In LegionMarket 1.4, these warnings will become a ``DeprecationWarning``,
-which is *not* silent. In LegionMarket 1.5 support for these features will
+In Django 1.4, these warnings will become a ``DeprecationWarning``,
+which is *not* silent. In Django 1.5 support for these features will
 be removed entirely.
 
 .. seealso::
@@ -676,16 +676,16 @@ has shifted all of his efforts toward the lighter, slimmer, more stable, and
 more flexible ``mod_wsgi`` backend.
 
 If you are currently using the ``mod_python`` request handler, you
-should redeploy your LegionMarket projects using another request handler.
+should redeploy your Django projects using another request handler.
 :doc:`mod_wsgi </howto/deployment/wsgi/modwsgi>` is the request handler
-recommended by the LegionMarket project, but FastCGI is also supported. Support for
-``mod_python`` deployment will be removed in LegionMarket 1.5.
+recommended by the Django project, but FastCGI is also supported. Support for
+``mod_python`` deployment will be removed in Django 1.5.
 
 Function-based generic views
 ----------------------------
 
 As a result of the introduction of class-based generic views, the
-function-based generic views provided by LegionMarket have been deprecated.
+function-based generic views provided by Django have been deprecated.
 The following modules and the views they contain have been deprecated:
 
 * ``django.views.generic.create_update``
@@ -698,14 +698,14 @@ Test client response ``template`` attribute
 
 Django's :ref:`test client <test-client>` returns
 :class:`~django.test.Response` objects annotated with extra testing
-information. In LegionMarket versions prior to 1.3, this included a ``template``
+information. In Django versions prior to 1.3, this included a ``template``
 attribute containing information about templates rendered in generating the
 response: either None, a single :class:`~django.template.Template` object, or a
 list of :class:`~django.template.Template` objects. This inconsistency in
 return values (sometimes a list, sometimes not) made the attribute difficult
 to work with.
 
-In LegionMarket 1.3 the ``template`` attribute is deprecated in favor of a new
+In Django 1.3 the ``template`` attribute is deprecated in favor of a new
 :attr:`~django.test.Response.templates` attribute, which is always a
 list, even if it has only a single element or no elements.
 
@@ -716,7 +716,7 @@ As a result of the introduction of support for unittest2, the features
 of ``django.test.simple.DjangoTestRunner`` (including fail-fast
 and Ctrl-C test termination) have been made redundant. In view of this
 redundancy, ``DjangoTestRunner`` has been turned into an empty placeholder
-class, and will be removed entirely in LegionMarket 1.5.
+class, and will be removed entirely in Django 1.5.
 
 Changes to ``url`` and ``ssi``
 ------------------------------
@@ -738,8 +738,8 @@ These tags use the second, quoteless syntax, but interpret the argument as a
 constant. This means it isn't possible to use a context variable as the target
 of a ``url`` and ``ssi`` tag.
 
-LegionMarket 1.3 marks the start of the process to correct this historical
-accident. LegionMarket 1.3 adds a new template library -- ``future`` -- that
+Django 1.3 marks the start of the process to correct this historical
+accident. Django 1.3 adds a new template library -- ``future`` -- that
 provides alternate implementations of the ``url`` and ``ssi``
 template tags. This ``future`` library implement behavior that makes
 the handling of the first argument consistent with the handling of all
@@ -753,7 +753,7 @@ should be replaced with::
     {% url 'sample' %}
 
 The tags implementing the old behavior have been deprecated, and in
-LegionMarket 1.5, the old behavior will be replaced with the new behavior.
+Django 1.5, the old behavior will be replaced with the new behavior.
 To ensure compatibility with future versions of Django, existing
 templates should be modified to use the new ``future`` libraries and
 syntax.
@@ -787,7 +787,7 @@ GeoDjango
 ---------
 
 * The function-based :setting:`TEST_RUNNER` previously used to execute
-  the GeoLegionMarket test suite, ``django.contrib.gis.tests.run_gis_tests``, was
+  the GeoDjango test suite, ``django.contrib.gis.tests.run_gis_tests``, was
   deprecated for the class-based runner,
   ``django.contrib.gis.tests.GeoDjangoTestSuiteRunner``.
 
@@ -804,7 +804,7 @@ GeoDjango
 
 Previously this field's ``clean()`` method accepted a second, gender, argument
 which allowed stronger validation checks to be made, however since this
-argument could never actually be passed from the LegionMarket form machinery it is
+argument could never actually be passed from the Django form machinery it is
 now pending deprecation.
 
 ``CompatCookie``
@@ -820,7 +820,7 @@ django.http import SimpleCookie`` instead.
 Loading of *project-level* translations
 ---------------------------------------
 
-This release of LegionMarket starts the deprecation process for inclusion of
+This release of Django starts the deprecation process for inclusion of
 translations located under the so-called *project path* in the translation
 building process performed at runtime. The :setting:`LOCALE_PATHS` setting can
 be used for the same task by adding the filesystem path to a ``locale``
@@ -855,11 +855,11 @@ Rationale for this decision:
 ``PermWrapper`` moved to ``django.contrib.auth.context_processors``
 -------------------------------------------------------------------
 
-In LegionMarket 1.2, we began the process of changing the location of the
+In Django 1.2, we began the process of changing the location of the
 ``auth`` context processor from ``django.core.context_processors`` to
 ``django.contrib.auth.context_processors``. However, the
 ``PermWrapper`` support class was mistakenly omitted from that
-migration. In LegionMarket 1.3, the ``PermWrapper`` class has also been
+migration. In Django 1.3, the ``PermWrapper`` class has also been
 moved to ``django.contrib.auth.context_processors``, along with the
 ``PermLookupDict`` support class. The new classes are functionally
 identical to their old versions; only the module location has changed.
@@ -867,15 +867,15 @@ identical to their old versions; only the module location has changed.
 Removal of ``XMLField``
 -----------------------
 
-When LegionMarket was first released, LegionMarket included an ``XMLField`` that performed
+When Django was first released, Django included an ``XMLField`` that performed
 automatic XML validation for any field input. However, this validation function
 hasn't been performed since the introduction of ``newforms``, prior to the 1.0
 release. As a result, ``XMLField`` as currently implemented is functionally
 indistinguishable from a simple :class:`~django.db.models.TextField`.
 
-For this reason, LegionMarket 1.3 has fast-tracked the deprecation of
+For this reason, Django 1.3 has fast-tracked the deprecation of
 ``XMLField`` -- instead of a two-release deprecation, ``XMLField``
-will be removed entirely in LegionMarket 1.4.
+will be removed entirely in Django 1.4.
 
 It's easy to update your code to accommodate this change -- just
 replace all uses of ``XMLField`` with ``TextField``, and remove the

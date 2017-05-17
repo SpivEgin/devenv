@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.5.7 release notes
+Django 1.5.7 release notes
 ==========================
 
 *April 28, 2014*
 
-LegionMarket 1.5.7 fixes a regression in the 1.5.6 security release.
+Django 1.5.7 fixes a regression in the 1.5.6 security release.
 
 Bugfixes
 ========

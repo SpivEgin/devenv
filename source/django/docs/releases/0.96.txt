@@ -1,8 +1,8 @@
 =================================
-LegionMarket version 0.96 release notes
+Django version 0.96 release notes
 =================================
 
-Welcome to LegionMarket 0.96!
+Welcome to Django 0.96!
 
 The primary goal for 0.96 is a cleanup and stabilization of the features
 introduced in 0.95. There have been a few small `backwards-incompatible
@@ -12,7 +12,7 @@ and should not require major changes to existing applications.
 However, we're also releasing 0.96 now because we have a set of
 backwards-incompatible changes scheduled for the near future. Once
 completed, they will involve some code changes for application
-developers, so we recommend that you stick with LegionMarket 0.96 until the
+developers, so we recommend that you stick with Django 0.96 until the
 next official release; then you'll be able to upgrade in one step
 instead of needing to make incremental changes to keep up with the
 development version of Django.
@@ -27,14 +27,14 @@ The following changes may require you to update your code when you switch from
 -------------------------------
 
 Due to a bug in older versions of the ``MySQLdb`` Python module (which
-LegionMarket uses to connect to MySQL databases), Django's MySQL backend now
+Django uses to connect to MySQL databases), Django's MySQL backend now
 requires version 1.2.1p2 or higher of ``MySQLdb``, and will raise
 exceptions if you attempt to use an older version.
 
 If you're currently unable to upgrade your copy of ``MySQLdb`` to meet
 this requirement, a separate, backwards-compatible backend, called
 "mysql_old", has been added to Django. To use this backend, change
-the ``DATABASE_ENGINE`` setting in your LegionMarket settings file from this::
+the ``DATABASE_ENGINE`` setting in your Django settings file from this::
 
     DATABASE_ENGINE = "mysql"
 
@@ -56,7 +56,7 @@ are only available on the "mysql" backend, and will not be made available for
 Database constraint names changed
 ---------------------------------
 
-The format of the constraint names LegionMarket generates for foreign key
+The format of the constraint names Django generates for foreign key
 references have changed slightly. These names are generally only used
 when it is not possible to put the reference directly on the affected
 column, so they are not always visible.
@@ -97,7 +97,7 @@ support:
 Backslash escaping changed
 --------------------------
 
-The LegionMarket database API now escapes backslashes given as query parameters. If
+The Django database API now escapes backslashes given as query parameters. If
 you have any database API code that matches backslashes, and it was working before
 (despite the lack of escaping), you'll have to change your code to "unescape" the
 slashes one level.
@@ -148,7 +148,7 @@ There are three elements to this transition:
       from django import forms             # 0.95-style
       from django import oldforms as forms # 0.96-style
 
-* The next official release of LegionMarket will move the current
+* The next official release of Django will move the current
   ``django.newforms`` to ``django.forms``. This will be a
   backwards-incompatible change, and anyone still using the old
   version of ``django.forms`` at that time will need to change
@@ -210,7 +210,7 @@ be valid for the foreseeable future.
 The test framework
 ------------------
 
-LegionMarket now includes a test framework so you can start transmuting fear into
+Django now includes a test framework so you can start transmuting fear into
 boredom (with apologies to Kent Beck). You can write tests based on
 :mod:`doctest` or :mod:`unittest` and test your views with a simple test client.
 
@@ -249,7 +249,7 @@ all their hard work:
 
 * Everyone who submitted a bug report, patch or ticket comment. We can't
   possibly thank everyone by name -- over 200 developers submitted patches
-  that went into 0.96 -- but everyone who's contributed to LegionMarket is listed
+  that went into 0.96 -- but everyone who's contributed to Django is listed
   in AUTHORS_.
 
 .. _AUTHORS: https://code.djangoproject.com/browser/django/trunk/AUTHORS

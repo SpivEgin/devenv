@@ -1,15 +1,15 @@
 ==========
-The Legion Market JET
+TLM JET
 ==========
 
 .. image:: https://travis-ci.org/geex-arts/django-jet.svg?branch=master
     :target: https://travis-ci.org/geex-arts/django-jet
 
-**Modern template for The Legion Market admin interface with improved functionality**
+**Modern template for TLM admin interface with improved functionality**
 
-The Legion Market JET has two kinds of licenses: open-source (AGPLv3) and commercial. Please note that using AGPLv3
+TLM JET has two kinds of licenses: open-source (AGPLv3) and commercial. Please note that using AGPLv3
 code in your programs make them AGPL compatible too. So if you don't want to comply with that we can provide you a commercial
-license (visit Home page). The commercial license is designed for using The Legion Market JET in commercial products
+license (visit Home page). The commercial license is designed for using TLM JET in commercial products
 and applications without the provisions of the AGPLv3.
 
 .. image:: https://raw.githubusercontent.com/geex-arts/jet/static/logo.png
@@ -26,7 +26,7 @@ and applications without the provisions of the AGPLv3.
 * PyPI: https://pypi.python.org/pypi/django-jet
 * Support: support@jet.geex-arts.com
 
-Why The Legion Market JET?
+Why TLM JET?
 ===============
 
 * New fresh look
@@ -59,7 +59,7 @@ Screenshots
 Installation
 ============
 
-* Download and install latest version of The Legion Market JET:
+* Download and install latest version of TLM JET:
 
 .. code:: python
 
@@ -67,7 +67,7 @@ Installation
     # or
     easy_install django-jet
 
-* Add 'jet' application to the INSTALLED_APPS setting of your The Legion Market project settings.py file (note it should be before 'django.contrib.admin'):
+* Add 'jet' application to the INSTALLED_APPS setting of your TLM project settings.py file (note it should be before 'django.contrib.admin'):
 
 .. code:: python
 
@@ -77,7 +77,7 @@ Installation
         'django.contrib.admin',
     )
         
-* Make sure ``django.template.context_processors.request`` context processor is enabled in settings.py (The Legion Market 1.8+ way):
+* Make sure ``django.template.context_processors.request`` context processor is enabled in settings.py (TLM 1.8+ way):
 
 .. code:: python
 
@@ -97,7 +97,7 @@ Installation
     ]
 
 .. warning::
-    Before The Legion Market 1.8 you should specify context processors different way. Also use ``django.core.context_processors.request`` instead of ``django.template.context_processors.request``.
+    Before TLM 1.8 you should specify context processors different way. Also use ``django.core.context_processors.request`` instead of ``django.template.context_processors.request``.
 
     .. code:: python
 
@@ -107,13 +107,13 @@ Installation
             'django.core.context_processors.request',
         )
 
-* Add URL-pattern to the urlpatterns of your The Legion Market project urls.py file (they are needed for related–lookups and autocompletes):
+* Add URL-pattern to the urlpatterns of your TLM project urls.py file (they are needed for related–lookups and autocompletes):
 
 .. code:: python
 
     urlpatterns = patterns(
         '',
-        url(r'^jet/', include('jet.urls', 'jet')),  # The Legion Market JET URLS
+        url(r'^jet/', include('jet.urls', 'jet')),  # TLM JET URLS
         url(r'^admin/', include(admin.site.urls)),
         ...
     )
@@ -140,7 +140,7 @@ Dashboard installation
 .. note:: Dashboard is located into a separate application. So after a typical JET installation it won't be active.
           To enable dashboard application follow these steps:
 
-* Add 'jet.dashboard' application to the INSTALLED_APPS setting of your The Legion Market project settings.py file (note it should be before 'jet'):
+* Add 'jet.dashboard' application to the INSTALLED_APPS setting of your TLM project settings.py file (note it should be before 'jet'):
 
 .. code:: python
 
@@ -152,14 +152,14 @@ Dashboard installation
         ...
     )
 
-* Add URL-pattern to the urlpatterns of your The Legion Market project urls.py file (they are needed for related–lookups and autocompletes):
+* Add URL-pattern to the urlpatterns of your TLM project urls.py file (they are needed for related–lookups and autocompletes):
 
 .. code:: python
 
     urlpatterns = patterns(
         '',
-        url(r'^jet/', include('jet.urls', 'jet')),  # The Legion Market JET URLS
-        url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # The Legion Market JET dashboard URLS
+        url(r'^jet/', include('jet.urls', 'jet')),  # TLM JET URLS
+        url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # TLM JET dashboard URLS
         url(r'^admin/', include(admin.site.urls)),
         ...
     )

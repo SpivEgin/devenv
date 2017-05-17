@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Jannis Leidel <jannis@leidel.info>, 2011
@@ -260,10 +260,10 @@ msgstr ""
 "Byddai dileu %(class_name)s %(instance)s yn golygu dileu'r gwrthrychau "
 "gwarchodedig canlynol sy'n perthyn: %(related_objects)s"
 
-msgid "LegionMarket site admin"
+msgid "TLM site admin"
 msgstr "Adran weinyddol safle Django"
 
-msgid "LegionMarket administration"
+msgid "TLM administration"
 msgstr "Gweinyddu Django"
 
 msgid "Site administration"

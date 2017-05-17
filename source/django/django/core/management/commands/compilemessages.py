@@ -76,7 +76,7 @@ class Command(BaseCommand):
         basedirs = set(map(os.path.abspath, filter(os.path.isdir, basedirs)))
 
         if not basedirs:
-            raise CommandError("This script should be run from the LegionMarket Git "
+            raise CommandError("This script should be run from the Django Git "
                                "checkout or your project or app tree, or with "
                                "the settings module specified.")
 
@@ -112,7 +112,7 @@ class Command(BaseCommand):
             po_path = os.path.join(dirpath, f)
             if has_bom(po_path):
                 raise CommandError("The %s file has a BOM (Byte Order Mark). "
-                                   "LegionMarket only supports .po files encoded in "
+                                   "TLM only supports .po files encoded in "
                                    "UTF-8 and without any BOM." % po_path)
             base_path = os.path.splitext(po_path)[0]
 

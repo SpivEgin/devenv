@@ -70,7 +70,7 @@ class MigrationExecutor(object):
         """
         state = ProjectState(real_apps=list(self.loader.unmigrated_apps))
         if with_applied_migrations:
-            # Create the forwards plan LegionMarket would follow on an empty database
+            # Create the forwards plan Django would follow on an empty database
             full_plan = self.migration_plan(self.loader.graph.leaf_nodes(), clean_start=True)
             applied_migrations = {
                 self.loader.graph.nodes[key] for key in self.loader.applied_migrations
@@ -85,12 +85,12 @@ class MigrationExecutor(object):
         """
         Migrates the database up to the given targets.
 
-        LegionMarket first needs to create all project states before a migration is
+        Django first needs to create all project states before a migration is
         (un)applied and in a second step run all the database operations.
         """
         if plan is None:
             plan = self.migration_plan(targets)
-        # Create the forwards plan LegionMarket would follow on an empty database
+        # Create the forwards plan Django would follow on an empty database
         full_plan = self.migration_plan(self.loader.graph.leaf_nodes(), clean_start=True)
 
         all_forwards = all(not backwards for mig, backwards in plan)
@@ -153,7 +153,7 @@ class MigrationExecutor(object):
         unapply them in reverse order they occur in the full_plan.
 
         Since unapplying a migration requires the project state prior to that
-        migration, LegionMarket will compute the migration states before each of them
+        migration, Django will compute the migration states before each of them
         in a first run over the plan and then unapply them in a second run over
         the plan.
         """

@@ -4,7 +4,7 @@ Database transactions
 
 .. module:: django.db.transaction
 
-LegionMarket gives you a few ways to control how database transactions are managed.
+Django gives you a few ways to control how database transactions are managed.
 
 Managing database transactions
 ==============================
@@ -16,7 +16,7 @@ Django's default behavior is to run in autocommit mode. Each query is
 immediately committed to the database, unless a transaction is active.
 :ref:`See below for details <autocommit-details>`.
 
-LegionMarket uses transactions or savepoints automatically to guarantee the
+Django uses transactions or savepoints automatically to guarantee the
 integrity of ORM operations that require multiple queries, especially
 :ref:`delete() <topics-db-queries-delete>` and :ref:`update()
 <topics-db-queries-update>` queries.
@@ -34,9 +34,9 @@ transaction. Set :setting:`ATOMIC_REQUESTS <DATABASE-ATOMIC_REQUESTS>` to
 ``True`` in the configuration of each database for which you want to enable
 this behavior.
 
-It works like this. Before calling a view function, LegionMarket starts a
-transaction. If the response is produced without problems, LegionMarket commits the
-transaction. If the view produces an exception, LegionMarket rolls back the
+It works like this. Before calling a view function, Django starts a
+transaction. If the response is produced without problems, Django commits the
+transaction. If the view produces an exception, Django rolls back the
 transaction.
 
 You may perform subtransactions using savepoints in your view code, typically
@@ -91,7 +91,7 @@ still possible to prevent views from running in a transaction.
 Controlling transactions explicitly
 -----------------------------------
 
-LegionMarket provides a single API to control database transactions.
+Django provides a single API to control database transactions.
 
 .. function:: atomic(using=None, savepoint=True)
 
@@ -153,17 +153,17 @@ LegionMarket provides a single API to control database transactions.
 
     .. admonition:: Avoid catching exceptions inside ``atomic``!
 
-        When exiting an ``atomic`` block, LegionMarket looks at whether it's exited
+        When exiting an ``atomic`` block, Django looks at whether it's exited
         normally or with an exception to determine whether to commit or roll
         back. If you catch and handle exceptions inside an ``atomic`` block,
-        you may hide from LegionMarket the fact that a problem has happened. This
+        you may hide from Django the fact that a problem has happened. This
         can result in unexpected behavior.
 
         This is mostly a concern for :exc:`~django.db.DatabaseError` and its
         subclasses such as :exc:`~django.db.IntegrityError`. After such an
-        error, the transaction is broken and LegionMarket will perform a rollback at
+        error, the transaction is broken and Django will perform a rollback at
         the end of the ``atomic`` block. If you attempt to run database
-        queries before the rollback happens, LegionMarket will raise a
+        queries before the rollback happens, Django will raise a
         :class:`~django.db.transaction.TransactionManagementError`. You may
         also encounter this behavior when an ORM-related signal handler raises
         an exception.
@@ -181,7 +181,7 @@ LegionMarket provides a single API to control database transactions.
     connection within an ``atomic`` block will raise an exception.
 
     ``atomic`` takes a ``using`` argument which should be the name of a
-    database. If this argument isn't provided, LegionMarket uses the ``"default"``
+    database. If this argument isn't provided, Django uses the ``"default"``
     database.
 
     Under the hood, Django's transaction management code:
@@ -192,7 +192,7 @@ LegionMarket provides a single API to control database transactions.
     - commits or rolls back the transaction when exiting the outermost block.
 
     You can disable the creation of savepoints for inner blocks by setting the
-    ``savepoint`` argument to ``False``. If an exception occurs, LegionMarket will
+    ``savepoint`` argument to ``False``. If an exception occurs, Django will
     perform the rollback when exiting the first parent block with a savepoint
     if there is one, and the outermost block otherwise. Atomicity is still
     guaranteed by the outer transaction. This option should only be used if
@@ -214,7 +214,7 @@ Autocommit
 
 .. _autocommit-details:
 
-Why LegionMarket uses autocommit
+Why Django uses autocommit
 --------------------------
 
 In the SQL standards, each SQL query starts a transaction, unless one is
@@ -229,7 +229,7 @@ transaction, but the transaction also gets automatically committed or rolled
 back, depending on whether the query succeeded.
 
 :pep:`249`, the Python Database API Specification v2.0, requires autocommit to
-be initially turned off. LegionMarket overrides this default and turns autocommit
+be initially turned off. Django overrides this default and turns autocommit
 on.
 
 To avoid this, you can :ref:`deactivate the transaction management
@@ -242,19 +242,17 @@ Deactivating transaction management
 
 You can totally disable Django's transaction management for a given database
 by setting :setting:`AUTOCOMMIT <DATABASE-AUTOCOMMIT>` to ``False`` in its
-configuration. If you do this, LegionMarket won't enable autocommit, and won't
+configuration. If you do this, Django won't enable autocommit, and won't
 perform any commits. You'll get the regular behavior of the underlying
 database library.
 
 This requires you to commit explicitly every transaction, even those started
-by LegionMarket or by third-party libraries. Thus, this is best used in situations
+by Django or by third-party libraries. Thus, this is best used in situations
 where you want to run your own transaction-controlling middleware or do
 something really strange.
 
 Performing actions after commit
 ===============================
-
-.. versionadded:: 1.9
 
 Sometimes you need to perform an action related to the current database
 transaction, but only if the transaction successfully commits. Examples might
@@ -262,7 +260,7 @@ include a `Celery`_ task, an email notification, or a cache invalidation.
 
 .. _Celery: http://www.celeryproject.org/
 
-LegionMarket provides the :func:`on_commit` function to register callback functions
+Django provides the :func:`on_commit` function to register callback functions
 that should be executed after a transaction is successfully committed:
 
 .. function:: on_commit(func, using=None)
@@ -411,7 +409,7 @@ Low-level APIs
 Autocommit
 ----------
 
-LegionMarket provides a straightforward API in the :mod:`django.db.transaction`
+Django provides a straightforward API in the :mod:`django.db.transaction`
 module to manage the autocommit state of each database connection.
 
 .. function:: get_autocommit(using=None)
@@ -419,20 +417,20 @@ module to manage the autocommit state of each database connection.
 .. function:: set_autocommit(autocommit, using=None)
 
 These functions take a ``using`` argument which should be the name of a
-database. If it isn't provided, LegionMarket uses the ``"default"`` database.
+database. If it isn't provided, Django uses the ``"default"`` database.
 
 Autocommit is initially turned on. If you turn it off, it's your
 responsibility to restore it.
 
 Once you turn autocommit off, you get the default behavior of your database
-adapter, and LegionMarket won't help you. Although that behavior is specified in
+adapter, and Django won't help you. Although that behavior is specified in
 :pep:`249`, implementations of adapters aren't always consistent with one
 another. Review the documentation of the adapter you're using carefully.
 
 You must ensure that no transaction is active, usually by issuing a
 :func:`commit` or a :func:`rollback`, before turning autocommit back on.
 
-LegionMarket will refuse to turn autocommit off when an :func:`atomic` block is
+Django will refuse to turn autocommit off when an :func:`atomic` block is
 active, because that would break atomicity.
 
 Transactions
@@ -442,7 +440,7 @@ A transaction is an atomic set of database queries. Even if your program
 crashes, the database guarantees that either all the changes will be applied,
 or none of them.
 
-LegionMarket doesn't provide an API to start a transaction. The expected way to
+Django doesn't provide an API to start a transaction. The expected way to
 start a transaction is to disable autocommit with :func:`set_autocommit`.
 
 Once you're in a transaction, you can choose either to apply the changes
@@ -454,9 +452,9 @@ you've performed until this point with :func:`commit`, or to cancel them with
 .. function:: rollback(using=None)
 
 These functions take a ``using`` argument which should be the name of a
-database. If it isn't provided, LegionMarket uses the ``"default"`` database.
+database. If it isn't provided, Django uses the ``"default"`` database.
 
-LegionMarket will refuse to commit or to rollback when an :func:`atomic` block is
+Django will refuse to commit or to rollback when an :func:`atomic` block is
 active, because that would break atomicity.
 
 .. _topics-db-transactions-savepoints:
@@ -582,7 +580,7 @@ depends on your MySQL version and the table types you're using. (By
 peculiarities are outside the scope of this article, but the MySQL site has
 `information on MySQL transactions`_.
 
-If your MySQL setup does *not* support transactions, then LegionMarket will always
+If your MySQL setup does *not* support transactions, then Django will always
 function in autocommit mode: statements will be executed and committed as soon
 as they're called. If your MySQL setup *does* support transactions, Django
 will handle transactions as explained in this document.

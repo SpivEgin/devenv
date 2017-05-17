@@ -12,6 +12,7 @@ from django.contrib.contenttypes.fields import (
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.core import checks, management
+from django.core.management import call_command
 from django.db import connections, migrations, models
 from django.test import (
     SimpleTestCase, TestCase, TransactionTestCase, mock, override_settings,
@@ -20,7 +21,7 @@ from django.test.utils import captured_stdout, isolate_apps
 from django.utils.encoding import force_str, force_text
 
 from .models import (
-    Article, Author, ModelWithNullFKToSite, SchemeIncludedURL,
+    Article, Author, ModelWithNullFKToSite, Post, SchemeIncludedURL,
     Site as MockSite,
 )
 
@@ -242,15 +243,12 @@ class GenericForeignKeyTests(SimpleTestCase):
 
     @override_settings(INSTALLED_APPS=['django.contrib.auth', 'django.contrib.contenttypes', 'contenttypes_tests'])
     def test_generic_foreign_key_checks_are_performed(self):
-        class MyGenericForeignKey(GenericForeignKey):
-            def check(self, **kwargs):
-                return ['performed!']
-
         class Model(models.Model):
-            content_object = MyGenericForeignKey()
+            content_object = GenericForeignKey()
 
-        errors = checks.run_checks(app_configs=self.apps.get_app_configs())
-        self.assertEqual(errors, ['performed!'])
+        with mock.patch.object(GenericForeignKey, 'check') as check:
+            checks.run_checks(app_configs=self.apps.get_app_configs())
+        check.assert_called_once_with()
 
 
 @isolate_apps('contenttypes_tests')
@@ -383,38 +381,63 @@ class GenericRelationshipTests(SimpleTestCase):
 class UpdateContentTypesTests(TestCase):
     def setUp(self):
         self.before_count = ContentType.objects.count()
-        ContentType.objects.create(app_label='contenttypes_tests', model='Fake')
+        self.content_type = ContentType.objects.create(app_label='contenttypes_tests', model='Fake')
         self.app_config = apps.get_app_config('contenttypes_tests')
 
-    def test_interactive_true(self):
+    def test_interactive_true_with_dependent_objects(self):
         """
-        interactive mode of update_contenttypes() (the default) should delete
-        stale contenttypes.
+        interactive mode of remove_stale_contenttypes (the default) should
+        delete stale contenttypes and warn of dependent objects.
         """
-        contenttypes_management.input = lambda x: force_str("yes")
-        with captured_stdout() as stdout:
-            contenttypes_management.update_contenttypes(self.app_config)
+        post = Post.objects.create(title='post', content_type=self.content_type)
+        # A related object is needed to show that a custom collector with
+        # can_fast_delete=False is needed.
+        ModelWithNullFKToSite.objects.create(post=post)
+        with mock.patch(
+            'django.contrib.contenttypes.management.commands.remove_stale_contenttypes.input',
+            return_value='yes'
+        ):
+            with captured_stdout() as stdout:
+                call_command('remove_stale_contenttypes', verbosity=2, stdout=stdout)
+        self.assertEqual(Post.objects.count(), 0)
+        output = stdout.getvalue()
+        self.assertIn('- Content type for contenttypes_tests.Fake', output)
+        self.assertIn('- 1 contenttypes_tests.Post object(s)', output)
+        self.assertIn('- 1 contenttypes_tests.ModelWithNullFKToSite', output)
+        self.assertIn('Deleting stale content type', output)
+        self.assertEqual(ContentType.objects.count(), self.before_count)
+
+    def test_interactive_true_without_dependent_objects(self):
+        """
+        interactive mode of remove_stale_contenttypes (the default) should
+        delete stale contenttypes even if there aren't any dependent objects.
+        """
+        with mock.patch(
+            'django.contrib.contenttypes.management.commands.remove_stale_contenttypes.input',
+            return_value='yes'
+        ):
+            with captured_stdout() as stdout:
+                call_command('remove_stale_contenttypes', verbosity=2)
         self.assertIn("Deleting stale content type", stdout.getvalue())
         self.assertEqual(ContentType.objects.count(), self.before_count)
 
     def test_interactive_false(self):
         """
-        non-interactive mode of update_contenttypes() shouldn't delete stale
-        content types.
+        non-interactive mode of remove_stale_contenttypes shouldn't delete
+        stale content types.
         """
         with captured_stdout() as stdout:
-            contenttypes_management.update_contenttypes(self.app_config, interactive=False)
+            call_command('remove_stale_contenttypes', interactive=False, verbosity=2)
         self.assertIn("Stale content types remain.", stdout.getvalue())
         self.assertEqual(ContentType.objects.count(), self.before_count + 1)
 
     def test_unavailable_content_type_model(self):
         """
-        #24075 - A ContentType shouldn't be created or deleted if the model
-        isn't available.
+        A ContentType shouldn't be created if the model isn't available.
         """
         apps = Apps()
         with self.assertNumQueries(0):
-            contenttypes_management.update_contenttypes(self.app_config, interactive=False, verbosity=0, apps=apps)
+            contenttypes_management.create_contenttypes(self.app_config, interactive=False, verbosity=0, apps=apps)
         self.assertEqual(ContentType.objects.count(), self.before_count + 1)
 
 
@@ -440,8 +463,8 @@ class ContentTypesMultidbTestCase(TestCase):
 
     def test_multidb(self):
         """
-        Test that, when using multiple databases, we use the db_for_read (see
-        #20401).
+        When using multiple databases, ContentType.objects.get_for_model() uses
+        db_for_read().
         """
         ContentType.objects.clear_cache()
 
@@ -457,7 +480,6 @@ class ContentTypeOperationsTests(TransactionTestCase):
     available_apps = [
         'contenttypes_tests',
         'django.contrib.contenttypes',
-        'django.contrib.auth',
     ]
 
     def setUp(self):

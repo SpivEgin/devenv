@@ -90,7 +90,7 @@ else:
 
         For the sake of simplicity, this function executes in constant time only
         when the two strings have the same length. It short-circuits when they
-        have different lengths. Since LegionMarket only uses it to compare hashes of
+        have different lengths. Since Django only uses it to compare hashes of
         known expected length, this is acceptable.
         """
         if len(val1) != len(val2):
@@ -164,8 +164,8 @@ else:
             dklen = hlen
         if dklen > (2 ** 32 - 1) * hlen:
             raise OverflowError('dklen too big')
-        l = -(-dklen // hlen)
-        r = dklen - (l - 1) * hlen
+        L = -(-dklen // hlen)
+        r = dklen - (L - 1) * hlen
 
         hex_format_string = "%%0%ix" % (hlen * 2)
 
@@ -187,5 +187,5 @@ else:
                 result ^= _bin_to_long(u)
             return _long_to_bin(result, hex_format_string)
 
-        T = [F(x) for x in range(1, l)]
-        return b''.join(T) + F(l)[:r]
+        T = [F(x) for x in range(1, L)]
+        return b''.join(T) + F(L)[:r]

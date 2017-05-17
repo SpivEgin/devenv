@@ -8,10 +8,10 @@ Web page (using an HTTP ``GET`` request) to avoid sending all the data for
 something the client has already retrieved. However, the same headers can be
 used for all HTTP methods (``POST``, ``PUT``, ``DELETE``, etc.).
 
-For each page (response) that LegionMarket sends back from a view, it might provide
+For each page (response) that Django sends back from a view, it might provide
 two HTTP headers: the ``ETag`` header and the ``Last-Modified`` header. These
 headers are optional on HTTP responses. They can be set by your view function,
-or you can rely on the :class:`~django.middleware.common.CommonMiddleware`
+or you can rely on the :class:`~django.middleware.http.ConditionalGetMiddleware`
 middleware to set the ``ETag`` header.
 
 When the client next requests the same resource, it might send along a header
@@ -40,7 +40,7 @@ The ``condition`` decorator
 
 Sometimes (in fact, quite often) you can create functions to rapidly compute the ETag_
 value or the last-modified time for a resource, **without** needing to do all
-the computations needed to construct the full view. LegionMarket can then use these
+the computations needed to construct the full view. Django can then use these
 functions to provide an "early bailout" option for the view processing.
 Telling the client that the content has not been modified since the last
 request, perhaps.
@@ -65,6 +65,14 @@ order, as the view function they are helping to wrap. The function passed
 last time the resource was modified, or ``None`` if the resource doesn't
 exist. The function passed to the ``etag`` decorator should return a string
 representing the `ETag`_ for the resource, or ``None`` if it doesn't exist.
+
+.. versionchanged:: 1.11
+
+    In older versions, the return value from ``etag_func()`` was interpreted as
+    the unquoted part of the ETag. That prevented the use of weak ETags, which
+    have the format ``W/"<string>"``. The return value is now expected to be
+    an ETag as defined by the specification (including the quotes), although
+    the unquoted format is also accepted for backwards compatibility.
 
 Using this feature usefully is probably best explained with an example.
 Suppose you have this pair of models, representing a simple blog system::
@@ -115,7 +123,7 @@ Shortcuts for only computing one value
 As a general rule, if you can provide functions to compute *both* the ETag and
 the last modified time, you should do so. You don't know which headers any
 given HTTP client will send you, so be prepared to handle both. However,
-sometimes only one value is easy to compute and LegionMarket provides decorators
+sometimes only one value is easy to compute and Django provides decorators
 that handle only ETag or only last-modified computations.
 
 The ``django.views.decorators.http.etag`` and
@@ -139,7 +147,7 @@ using one of these decorators::
     front_page = last_modified(latest_entry)(front_page)
 
 Use ``condition`` when testing both conditions
-------------------------------------------------
+----------------------------------------------
 
 It might look nicer to some people to try and chain the ``etag`` and
 ``last_modified`` decorators if you want to test both preconditions. However,
@@ -193,17 +201,14 @@ every time.
 Comparison with middleware conditional processing
 =================================================
 
-You may notice that LegionMarket already provides simple and straightforward
-conditional ``GET`` handling via the
-:class:`django.middleware.http.ConditionalGetMiddleware` and
-:class:`~django.middleware.common.CommonMiddleware`. While certainly being
-easy to use and suitable for many situations, those pieces of middleware
-functionality have limitations for advanced usage:
+Django provides simple and straightforward conditional ``GET`` handling via
+:class:`django.middleware.http.ConditionalGetMiddleware`. While being easy to
+use and suitable for many situations, the middleware has limitations for
+advanced usage:
 
-* They are applied globally to all views in your project
-* They don't save you from generating the response itself, which may be
-  expensive
-* They are only appropriate for HTTP ``GET`` requests.
+* It's applied globally to all views in your project.
+* It doesn't save you from generating the response, which may be expensive.
+* It's only appropriate for HTTP ``GET`` requests.
 
 You should choose the most appropriate tool for your particular problem here.
 If you have a way to compute ETags and modification times quickly and if some

@@ -1,8 +1,8 @@
 ======================
-LegionMarket CMS Admin Style
+django CMS Admin Style
 ======================
 
-Adds pretty CSS styles for the LegionMarket CMS admin interface.
+Adds pretty CSS styles for the django CMS admin interface.
 
 +---------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------+
 | .. image:: https://raw.githubusercontent.com/divio/djangocms-admin-style/master/preview/dashboard.png   | .. image:: https://raw.githubusercontent.com/divio/djangocms-admin-style/master/preview/listview.png   |
@@ -22,7 +22,7 @@ Installation
 Customization
 =============
 
-The LegionMarket CMS Admin Style overrides django admin's ``base_site.html``, but you can still partially customize this page.
+The django CMS Admin Style overrides django admin's ``base_site.html``, but you can still partially customize this page.
 Look at the source of ``templates/admin/base_site.html`` and override the templates that are included in various blocks.
 For example, you can add your own CSS in ``templates/admin/inc/extrastyle.html``.
 

@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
-    help = "Checks the entire LegionMarket project for potential problems."
+    help = "Checks the entire Django project for potential problems."
 
     requires_system_checks = False
 

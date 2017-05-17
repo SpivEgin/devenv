@@ -4,13 +4,13 @@ The "sites" framework
 
 .. module:: django.contrib.sites
    :synopsis: Lets you operate multiple websites from the same database and
-              LegionMarket project
+              Django project
 
-LegionMarket comes with an optional "sites" framework. It's a hook for associating
+Django comes with an optional "sites" framework. It's a hook for associating
 objects and functionality to particular websites, and it's a holding place for
 the domain names and "verbose" names of your Django-powered sites.
 
-Use it if your single LegionMarket installation powers more than one site and you
+Use it if your single Django installation powers more than one site and you
 need to differentiate between those sites in some way.
 
 The sites framework is mainly based on a simple model:
@@ -24,11 +24,6 @@ The sites framework is mainly based on a simple model:
         The fully qualified domain name associated with the website.
         For example, ``www.example.com``.
 
-        .. versionchanged:: 1.9
-
-            The ``domain`` field was set to be
-            :attr:`~django.db.models.Field.unique`.
-
     .. attribute:: name
 
         A human-readable "verbose" name for the website.
@@ -41,7 +36,7 @@ try to get the current site by comparing the
 :attr:`~django.contrib.sites.models.Site.domain` with the host name from
 the :meth:`request.get_host() <django.http.HttpRequest.get_host>` method.
 
-How you use this is up to you, but LegionMarket uses it in a couple of ways
+How you use this is up to you, but Django uses it in a couple of ways
 automatically via simple conventions.
 
 Example usage
@@ -64,7 +59,7 @@ But that's inefficient for site producers, and it's redundant to store
 multiple copies of the same story in the database.
 
 The better solution is simple: Both sites use the same article database, and an
-article is associated with one or more sites. In LegionMarket model terminology,
+article is associated with one or more sites. In Django model terminology,
 that's represented by a :class:`~django.db.models.ManyToManyField` in the
 ``Article`` model::
 
@@ -79,12 +74,12 @@ that's represented by a :class:`~django.db.models.ManyToManyField` in the
 This accomplishes several things quite nicely:
 
 * It lets the site producers edit all content -- on both sites -- in a
-  single interface (the LegionMarket admin).
+  single interface (the Django admin).
 
 * It means the same story doesn't have to be published twice in the
   database; it only has a single record in the database.
 
-* It lets the site developers use the same LegionMarket view code for both sites.
+* It lets the site developers use the same Django view code for both sites.
   The view code that displays a given story just checks to make sure the
   requested story is on the current site. It looks something like this::
 
@@ -126,7 +121,7 @@ This has the same benefits as described in the last section.
 Hooking into the current site from views
 ----------------------------------------
 
-You can use the sites framework in your LegionMarket views to do
+You can use the sites framework in your Django views to do
 particular things based on the site in which the view is being called.
 For example::
 
@@ -278,7 +273,7 @@ To enable the sites framework, follow these steps:
 ``django.contrib.sites`` registers a
 :data:`~django.db.models.signals.post_migrate` signal handler which creates a
 default site named ``example.com`` with the domain ``example.com``. This site
-will also be created after LegionMarket creates the test database. To set the
+will also be created after Django creates the test database. To set the
 correct name and domain for your project, you can use a :ref:`data migration
 <data-migrations>`.
 
@@ -291,11 +286,11 @@ Caching the current ``Site`` object
 ===================================
 
 As the current site is stored in the database, each call to
-``Site.objects.get_current()`` could result in a database query. But LegionMarket is a
+``Site.objects.get_current()`` could result in a database query. But Django is a
 little cleverer than that: on the first request, the current site is cached, and
 any subsequent call returns the cached data instead of hitting the database.
 
-If for any reason you want to force a database query, you can tell LegionMarket to
+If for any reason you want to force a database query, you can tell Django to
 clear the cache using ``Site.objects.clear_cache()``::
 
     # First call; current site fetched from database.
@@ -335,7 +330,7 @@ your model explicitly. For example::
     from django.contrib.sites.managers import CurrentSiteManager
 
     class Photo(models.Model):
-        photo = models.FileField(upload_to='/home/photos')
+        photo = models.FileField(upload_to='photos')
         photographer_name = models.CharField(max_length=100)
         pub_date = models.DateField()
         site = models.ForeignKey(Site, on_delete=models.CASCADE)
@@ -372,7 +367,7 @@ demonstrates this::
     from django.contrib.sites.managers import CurrentSiteManager
 
     class Photo(models.Model):
-        photo = models.FileField(upload_to='/home/photos')
+        photo = models.FileField(upload_to='photos')
         photographer_name = models.CharField(max_length=100)
         pub_date = models.DateField()
         publish_on = models.ForeignKey(Site, on_delete=models.CASCADE)
@@ -380,15 +375,15 @@ demonstrates this::
         on_site = CurrentSiteManager('publish_on')
 
 If you attempt to use :class:`~django.contrib.sites.managers.CurrentSiteManager`
-and pass a field name that doesn't exist, LegionMarket will raise a ``ValueError``.
+and pass a field name that doesn't exist, Django will raise a ``ValueError``.
 
 Finally, note that you'll probably want to keep a normal
 (non-site-specific) ``Manager`` on your model, even if you use
 :class:`~django.contrib.sites.managers.CurrentSiteManager`. As
 explained in the :doc:`manager documentation </topics/db/managers>`, if
-you define a manager manually, then LegionMarket won't create the automatic
+you define a manager manually, then Django won't create the automatic
 ``objects = models.Manager()`` manager for you. Also note that certain
-parts of LegionMarket -- namely, the LegionMarket admin site and generic views --
+parts of Django -- namely, the Django admin site and generic views --
 use whichever manager is defined *first* in the model, so if you want
 your admin site to have access to all objects (not just site-specific
 ones), put ``objects = models.Manager()`` in your model, before you
@@ -412,19 +407,19 @@ there is simple way to avoid repetitions. Add
 :setting:`MIDDLEWARE`. The middleware sets the ``site`` attribute on every
 request object, so you can use ``request.site`` to get the current site.
 
-How LegionMarket uses the sites framework
+How Django uses the sites framework
 ===================================
 
 Although it's not required that you use the sites framework, it's strongly
-encouraged, because LegionMarket takes advantage of it in a few places. Even if your
-LegionMarket installation is powering only a single site, you should take the two
+encouraged, because Django takes advantage of it in a few places. Even if your
+Django installation is powering only a single site, you should take the two
 seconds to create the site object with your ``domain`` and ``name``, and point
 to its ID in your :setting:`SITE_ID` setting.
 
-Here's how LegionMarket uses the sites framework:
+Here's how Django uses the sites framework:
 
 * In the :mod:`redirects framework <django.contrib.redirects>`, each
-  redirect object is associated with a particular site. When LegionMarket searches
+  redirect object is associated with a particular site. When Django searches
   for a redirect, it takes into account the current site.
 
 * In the :mod:`flatpages framework <django.contrib.flatpages>`, each
@@ -441,8 +436,8 @@ Here's how LegionMarket uses the sites framework:
   the current :class:`~django.contrib.sites.models.Site` object if you don't
   specify a fully-qualified domain.
 
-* In the :mod:`authentication framework <django.contrib.auth>`, the
-  :func:`django.contrib.auth.views.login` view passes the current
+* In the :mod:`authentication framework <django.contrib.auth>`,
+  :class:`django.contrib.auth.views.LoginView` passes the current
   :class:`~django.contrib.sites.models.Site` name to the template as
   ``{{ site_name }}``.
 
@@ -512,7 +507,3 @@ Finally, to avoid repetitive fallback code, the framework provides a
     only. This does not apply to
     :class:`~django.contrib.sites.requests.RequestSite` which will always
     use the unmodified host.
-
-    .. versionchanged:: 1.9
-
-        Retrying the lookup with the port stripped was added.

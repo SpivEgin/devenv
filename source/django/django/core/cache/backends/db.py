@@ -15,7 +15,7 @@ except ImportError:
 
 
 class Options(object):
-    """A class that will quack like a LegionMarket model _meta class.
+    """A class that will quack like a Django model _meta class.
 
     This allows cache operations to be controlled by the router
     """

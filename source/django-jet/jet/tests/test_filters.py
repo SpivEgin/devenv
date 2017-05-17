@@ -6,7 +6,7 @@ from jet.tests.models import RelatedToTestModel, TestModel
 
 try:
     from django.contrib.admin.utils import get_fields_from_path
-except ImportError: # The Legion Market 1.6
+except ImportError: # TLM 1.6
     from django.contrib.admin.util import get_fields_from_path
 
 

@@ -20,7 +20,7 @@ class BooleanFieldTest(SimpleTestCase):
         self.assertTrue(f.clean(1))
         with self.assertRaisesMessage(ValidationError, "'This field is required.'"):
             f.clean(0)
-        self.assertTrue(f.clean('LegionMarket rocks'))
+        self.assertTrue(f.clean('Django rocks'))
         self.assertTrue(f.clean('True'))
         with self.assertRaisesMessage(ValidationError, "'This field is required.'"):
             f.clean('False')
@@ -35,7 +35,7 @@ class BooleanFieldTest(SimpleTestCase):
         self.assertIs(f.clean(0), False)
         self.assertIs(f.clean('1'), True)
         self.assertIs(f.clean('0'), False)
-        self.assertIs(f.clean('LegionMarket rocks'), True)
+        self.assertIs(f.clean('Django rocks'), True)
         self.assertIs(f.clean('False'), False)
         self.assertIs(f.clean('false'), False)
         self.assertIs(f.clean('FaLsE'), False)

@@ -14,8 +14,9 @@ from django.core.management import call_command
 from django.test import (
     TestCase, TransactionTestCase, mock, skipUnlessDBFeature, testcases,
 )
-from django.test.runner import DiscoverRunner, dependency_ordered
+from django.test.runner import DiscoverRunner
 from django.test.testcases import connections_support_transactions
+from django.test.utils import dependency_ordered
 
 from .models import Person
 
@@ -134,6 +135,7 @@ class MockTestRunner(object):
     def __init__(self, *args, **kwargs):
         pass
 
+
 MockTestRunner.run_tests = mock.Mock(return_value=[])
 
 
@@ -202,8 +204,6 @@ class Ticket17477RegressionTests(AdminScriptTestCase):
 
 class Sqlite3InMemoryTestDbs(TestCase):
 
-    available_apps = []
-
     @unittest.skipUnless(all(db.connections[conn].vendor == 'sqlite' for conn in db.connections),
                          "This is an sqlite-specific issue")
     def test_transaction_support(self):
@@ -235,10 +235,10 @@ class Sqlite3InMemoryTestDbs(TestCase):
 class DummyBackendTest(unittest.TestCase):
     def test_setup_databases(self):
         """
-        Test that setup_databases() doesn't fail with dummy database backend.
+        setup_databases() doesn't fail with dummy database backend.
         """
         tested_connections = db.ConnectionHandler({})
-        with mock.patch('django.test.runner.connections', new=tested_connections):
+        with mock.patch('django.test.utils.connections', new=tested_connections):
             runner_instance = DiscoverRunner(verbosity=0)
             old_config = runner_instance.setup_databases()
             runner_instance.teardown_databases(old_config)
@@ -247,7 +247,7 @@ class DummyBackendTest(unittest.TestCase):
 class AliasedDefaultTestSetupTest(unittest.TestCase):
     def test_setup_aliased_default_database(self):
         """
-        Test that setup_datebases() doesn't fail when 'default' is aliased
+        setup_datebases() doesn't fail when 'default' is aliased
         """
         tested_connections = db.ConnectionHandler({
             'default': {
@@ -257,7 +257,7 @@ class AliasedDefaultTestSetupTest(unittest.TestCase):
                 'NAME': 'dummy'
             }
         })
-        with mock.patch('django.test.runner.connections', new=tested_connections):
+        with mock.patch('django.test.utils.connections', new=tested_connections):
             runner_instance = DiscoverRunner(verbosity=0)
             old_config = runner_instance.setup_databases()
             runner_instance.teardown_databases(old_config)
@@ -280,8 +280,8 @@ class SetupDatabasesTests(unittest.TestCase):
             }
         })
 
-        with mock.patch('django.db.backends.dummy.base.DatabaseCreation') as mocked_db_creation:
-            with mock.patch('django.test.runner.connections', new=tested_connections):
+        with mock.patch('django.db.backends.dummy.base.DatabaseWrapper.creation_class') as mocked_db_creation:
+            with mock.patch('django.test.utils.connections', new=tested_connections):
                 old_config = self.runner_instance.setup_databases()
                 self.runner_instance.teardown_databases(old_config)
         mocked_db_creation.return_value.destroy_test_db.assert_called_once_with('dbname', 0, False)
@@ -305,8 +305,8 @@ class SetupDatabasesTests(unittest.TestCase):
                 'ENGINE': 'django.db.backends.dummy',
             },
         })
-        with mock.patch('django.db.backends.dummy.base.DatabaseCreation') as mocked_db_creation:
-            with mock.patch('django.test.runner.connections', new=tested_connections):
+        with mock.patch('django.db.backends.dummy.base.DatabaseWrapper.creation_class') as mocked_db_creation:
+            with mock.patch('django.test.utils.connections', new=tested_connections):
                 self.runner_instance.setup_databases()
         mocked_db_creation.return_value.create_test_db.assert_called_once_with(
             verbosity=0, autoclobber=False, serialize=True, keepdb=False
@@ -319,8 +319,8 @@ class SetupDatabasesTests(unittest.TestCase):
                 'TEST': {'SERIALIZE': False},
             },
         })
-        with mock.patch('django.db.backends.dummy.base.DatabaseCreation') as mocked_db_creation:
-            with mock.patch('django.test.runner.connections', new=tested_connections):
+        with mock.patch('django.db.backends.dummy.base.DatabaseWrapper.creation_class') as mocked_db_creation:
+            with mock.patch('django.test.utils.connections', new=tested_connections):
                 self.runner_instance.setup_databases()
         mocked_db_creation.return_value.create_test_db.assert_called_once_with(
             verbosity=0, autoclobber=False, serialize=False, keepdb=False
@@ -352,7 +352,7 @@ class AutoIncrementResetTest(TransactionTestCase):
 class EmptyDefaultDatabaseTest(unittest.TestCase):
     def test_empty_default_database(self):
         """
-        Test that an empty default database in settings does not raise an ImproperlyConfigured
+        An empty default database in settings does not raise an ImproperlyConfigured
         error when running a unit test that does not use a database.
         """
         testcases.connections = db.ConnectionHandler({'default': {}})

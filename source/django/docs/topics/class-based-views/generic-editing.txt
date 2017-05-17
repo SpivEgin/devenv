@@ -10,7 +10,7 @@ Form processing generally has 3 paths:
 
 Implementing this yourself often results in a lot of repeated boilerplate code
 (see :ref:`Using a form in a view<using-a-form-in-a-view>`). To help avoid
-this, LegionMarket provides a collection of generic class-based views for form
+this, Django provides a collection of generic class-based views for form
 processing.
 
 Basic forms

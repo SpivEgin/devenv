@@ -39,6 +39,7 @@ class FilePathFieldTest(SimpleTestCase):
             ('/django/forms/forms.py', 'forms.py'),
             ('/django/forms/formsets.py', 'formsets.py'),
             ('/django/forms/models.py', 'models.py'),
+            ('/django/forms/renderers.py', 'renderers.py'),
             ('/django/forms/utils.py', 'utils.py'),
             ('/django/forms/widgets.py', 'widgets.py')
         ]
@@ -53,7 +54,7 @@ class FilePathFieldTest(SimpleTestCase):
     def test_filepathfield_3(self):
         path = upath(forms.__file__)
         path = os.path.dirname(os.path.abspath(path)) + '/'
-        f = FilePathField(path=path, match='^.*?\.py$')
+        f = FilePathField(path=path, match=r'^.*?\.py$')
         f.choices.sort()
         expected = [
             ('/django/forms/__init__.py', '__init__.py'),
@@ -62,6 +63,7 @@ class FilePathFieldTest(SimpleTestCase):
             ('/django/forms/forms.py', 'forms.py'),
             ('/django/forms/formsets.py', 'formsets.py'),
             ('/django/forms/models.py', 'models.py'),
+            ('/django/forms/renderers.py', 'renderers.py'),
             ('/django/forms/utils.py', 'utils.py'),
             ('/django/forms/widgets.py', 'widgets.py')
         ]
@@ -72,7 +74,7 @@ class FilePathFieldTest(SimpleTestCase):
     def test_filepathfield_4(self):
         path = os.path.abspath(upath(forms.__file__))
         path = os.path.dirname(path) + '/'
-        f = FilePathField(path=path, recursive=True, match='^.*?\.py$')
+        f = FilePathField(path=path, recursive=True, match=r'^.*?\.py$')
         f.choices.sort()
         expected = [
             ('/django/forms/__init__.py', '__init__.py'),
@@ -83,6 +85,7 @@ class FilePathFieldTest(SimpleTestCase):
             ('/django/forms/forms.py', 'forms.py'),
             ('/django/forms/formsets.py', 'formsets.py'),
             ('/django/forms/models.py', 'models.py'),
+            ('/django/forms/renderers.py', 'renderers.py'),
             ('/django/forms/utils.py', 'utils.py'),
             ('/django/forms/widgets.py', 'widgets.py')
         ]

@@ -11,7 +11,7 @@ class Command(RunserverCommand):
         super(Command, self).add_arguments(parser)
         parser.add_argument(
             '--nostatic', action="store_false", dest='use_static_handler', default=True,
-            help='Tells LegionMarket to NOT automatically serve static files at STATIC_URL.',
+            help='Tells Django to NOT automatically serve static files at STATIC_URL.',
         )
         parser.add_argument(
             '--insecure', action="store_true", dest='insecure_serving', default=False,

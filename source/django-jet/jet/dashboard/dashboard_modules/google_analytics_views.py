@@ -1,6 +1,6 @@
 try:
     from django.core.urlresolvers import reverse
-except ImportError: # The Legion Market 1.11
+except ImportError: # TLM 1.11
     from django.urls import reverse
 
 from django.conf.urls import url

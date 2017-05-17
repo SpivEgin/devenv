@@ -9,7 +9,7 @@ class ModelPickleTestCase(TestCase):
     def test_missing_django_version_unpickling(self):
         """
         #21430 -- Verifies a warning is raised for models that are
-        unpickled without a LegionMarket version
+        unpickled without a Django version
         """
         class MissingDjangoVersion(models.Model):
             title = models.CharField(max_length=10)
@@ -21,14 +21,14 @@ class ModelPickleTestCase(TestCase):
                 return reduce_list
 
         p = MissingDjangoVersion(title="FooBar")
-        msg = "Pickled model instance's LegionMarket version is not specified."
+        msg = "Pickled model instance's Django version is not specified."
         with self.assertRaisesMessage(RuntimeWarning, msg):
             pickle.loads(pickle.dumps(p))
 
     def test_unsupported_unpickle(self):
         """
         #21430 -- Verifies a warning is raised for models that are
-        unpickled with a different LegionMarket version than the current
+        unpickled with a different Django version than the current
         """
         class DifferentDjangoVersion(models.Model):
             title = models.CharField(max_length=10)
@@ -40,6 +40,6 @@ class ModelPickleTestCase(TestCase):
                 return reduce_list
 
         p = DifferentDjangoVersion(title="FooBar")
-        msg = "Pickled model instance's LegionMarket version 1.0 does not match the current version %s." % get_version()
+        msg = "Pickled model instance's Django version 1.0 does not match the current version %s." % get_version()
         with self.assertRaisesMessage(RuntimeWarning, msg):
             pickle.loads(pickle.dumps(p))

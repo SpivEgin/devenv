@@ -9,7 +9,7 @@ Quite commonly in web applications, you need to display a one-time
 notification message (also known as "flash message") to the user after
 processing a form or some other types of user input.
 
-For this, LegionMarket provides full support for cookie- and session-based
+For this, Django provides full support for cookie- and session-based
 messaging, for both anonymous and authenticated users. The messages framework
 allows you to temporarily store messages in one request and retrieve them for
 display in a subsequent request (usually the next one). Every message is
@@ -55,7 +55,7 @@ Storage backends
 
 The messages framework can use different backends to store temporary messages.
 
-LegionMarket provides three built-in storage classes in
+Django provides three built-in storage classes in
 :mod:`django.contrib.messages`:
 
 .. class:: storage.session.SessionStorage

@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.6.2 release notes
+Django 1.6.2 release notes
 ==========================
 
 *February 6, 2014*
 
-This is LegionMarket 1.6.2, a bugfix release for LegionMarket 1.6. LegionMarket 1.6.2 fixes
+This is Django 1.6.2, a bugfix release for Django 1.6. Django 1.6.2 fixes
 several bugs in 1.6.1:
 
 * Prevented the base geometry object of a prepared geometry to be garbage
@@ -26,7 +26,7 @@ several bugs in 1.6.1:
 
 * Fixed an issue where when
   ``settings.DATABASES['default']['AUTOCOMMIT'] = False``, the connection
-  wasn't in autocommit mode but LegionMarket pretended it was.
+  wasn't in autocommit mode but Django pretended it was.
 
 * Fixed a regression in multiple-table inheritance ``exclude()`` queries
   (:ticket:`21787`).

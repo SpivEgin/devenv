@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Carlos Muñoz <cmuozdiaz@outlook.com>, 2015
@@ -1139,10 +1139,10 @@ msgstr ""
 
 msgid ""
 "You're seeing this message because you have <code>DEBUG = True</code> in "
-"your LegionMarket settings file and you haven't configured any URLs. Get to work!"
+"your Django settings file and you haven't configured any URLs. Get to work!"
 msgstr ""
 "Ves este mensaje porque tienes <code>DEBUG = True</code> en el archivo de "
-"configuración de LegionMarket y no has configurado ninguna URL. ¡A trabajar!"
+"configuración de Django y no has configurado ninguna URL. ¡A trabajar!"
 
 msgid "No year specified"
 msgstr "No se ha indicado el año"

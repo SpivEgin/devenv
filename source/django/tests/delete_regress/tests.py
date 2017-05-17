@@ -58,7 +58,7 @@ class DeleteLockingTest(TransactionTestCase):
 class DeleteCascadeTests(TestCase):
     def test_generic_relation_cascade(self):
         """
-        LegionMarket cascades deletes through generic-related objects to their
+        Django cascades deletes through generic-related objects to their
         reverse relations.
         """
         person = Person.objects.create(name='Nelson Mandela')

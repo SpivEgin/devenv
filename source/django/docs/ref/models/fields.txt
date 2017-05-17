@@ -8,7 +8,7 @@ Model field reference
 .. currentmodule:: django.db.models
 
 This document contains all the API references of :class:`Field` including the
-`field options`_ and `field types`_ LegionMarket offers.
+`field options`_ and `field types`_ Django offers.
 
 .. seealso::
 
@@ -39,15 +39,17 @@ The following arguments are available to all field types. All are optional.
 
 .. attribute:: Field.null
 
-If ``True``, LegionMarket will store empty values as ``NULL`` in the database. Default
+If ``True``, Django will store empty values as ``NULL`` in the database. Default
 is ``False``.
 
 Avoid using :attr:`~Field.null` on string-based fields such as
-:class:`CharField` and :class:`TextField` because empty string values will
-always be stored as empty strings, not as ``NULL``. If a string-based field has
+:class:`CharField` and :class:`TextField`. If a string-based field has
 ``null=True``, that means it has two possible values for "no data": ``NULL``,
 and the empty string. In most cases, it's redundant to have two possible values
-for "no data;" the LegionMarket convention is to use the empty string, not ``NULL``.
+for "no data;" the Django convention is to use the empty string, not
+``NULL``. One exception is when a :class:`CharField` has both ``unique=True``
+and ``blank=True`` set. In this situation, ``null=True`` is required to avoid
+unique constraint violations when saving multiple objects with blank values.
 
 For both string-based and non-string-based fields, you will also need to
 set ``blank=True`` if you wish to permit empty values in forms, as the
@@ -150,7 +152,7 @@ a value and a human-readable name for an option. Grouped options may be
 combined with ungrouped options within a single list (such as the
 `unknown` option in this example).
 
-For each model field that has :attr:`~Field.choices` set, LegionMarket will add a
+For each model field that has :attr:`~Field.choices` set, Django will add a
 method to retrieve the human-readable name for the field's current value. See
 :meth:`~django.db.models.Model.get_FOO_display` in the database API
 documentation.
@@ -174,11 +176,11 @@ sense - such as on a :class:`~django.db.models.CharField`.
 .. attribute:: Field.db_column
 
 The name of the database column to use for this field. If this isn't given,
-LegionMarket will use the field's name.
+Django will use the field's name.
 
 If your database column name is an SQL reserved word, or contains
 characters that aren't allowed in Python variable names -- notably, the
-hyphen -- that's OK. LegionMarket quotes column and table names behind the
+hyphen -- that's OK. Django quotes column and table names behind the
 scenes.
 
 ``db_index``
@@ -252,6 +254,9 @@ Error message keys include ``null``, ``blank``, ``invalid``, ``invalid_choice``,
 ``unique``, and ``unique_for_date``. Additional error message keys are
 specified for each field in the `Field types`_ section below.
 
+These error messages often don't propagate to forms. See
+:ref:`considerations-regarding-model-errormessages`.
+
 ``help_text``
 -------------
 
@@ -304,11 +309,15 @@ you try to save a model with a duplicate value in a :attr:`~Field.unique`
 field, a :exc:`django.db.IntegrityError` will be raised by the model's
 :meth:`~django.db.models.Model.save` method.
 
-This option is valid on all field types except :class:`ManyToManyField`,
-:class:`OneToOneField`, and :class:`FileField`.
+This option is valid on all field types except :class:`ManyToManyField` and
+:class:`OneToOneField`.
 
 Note that when ``unique`` is ``True``, you don't need to specify
 :attr:`~Field.db_index`, because ``unique`` implies the creation of an index.
+
+.. versionchanged:: 1.11
+
+    In older versions, ``unique=True`` can't be used on :class:`FileField`.
 
 ``unique_for_date``
 -------------------
@@ -319,7 +328,7 @@ Set this to the name of a :class:`DateField` or :class:`DateTimeField` to
 require that this field be unique for the value of the date field.
 
 For example, if you have a field ``title`` that has
-``unique_for_date="pub_date"``, then LegionMarket wouldn't allow the entry of two
+``unique_for_date="pub_date"``, then Django wouldn't allow the entry of two
 records with the same ``title`` and ``pub_date``.
 
 Note that if you set this to point to a :class:`DateTimeField`, only the date
@@ -350,7 +359,7 @@ respect to the month.
 Like :attr:`~Field.unique_for_date` and :attr:`~Field.unique_for_month`.
 
 ``verbose_name``
--------------------
+----------------
 
 .. attribute:: Field.verbose_name
 
@@ -359,7 +368,7 @@ will automatically create it using the field's attribute name, converting
 underscores to spaces. See :ref:`Verbose field names <verbose-field-names>`.
 
 ``validators``
--------------------
+--------------
 
 .. attribute:: Field.validators
 
@@ -411,7 +420,7 @@ guaranteed to fit numbers from ``-9223372036854775808`` to
 :class:`~django.forms.TextInput`.
 
 ``BinaryField``
--------------------
+---------------
 
 .. class:: BinaryField(**options)
 
@@ -466,13 +475,6 @@ The default form widget for this field is a :class:`~django.forms.TextInput`.
     database backends, you should be aware that there are restrictions on
     ``max_length`` for some backends. Refer to the :doc:`database backend
     notes </ref/databases>` for details.
-
-.. admonition:: MySQL users
-
-    If you are using this field with MySQLdb 1.2.2 and the ``utf8_bin``
-    collation (which is *not* the default), there are some issues to be aware
-    of. Refer to the :ref:`MySQL database notes <mysql-collation>` for
-    details.
 
 ``CommaSeparatedIntegerField``
 ------------------------------
@@ -626,8 +628,8 @@ uses :class:`~django.core.validators.EmailValidator` to validate the input.
 A file-upload field.
 
 .. note::
-    The ``primary_key`` and ``unique`` arguments are not supported, and will
-    raise a ``TypeError`` if used.
+    The ``primary_key`` argument isn't supported and will raise a an error if
+    used.
 
 Has two optional arguments:
 
@@ -699,7 +701,7 @@ Using a :class:`FileField` or an :class:`ImageField` (see below) in a model
 takes a few steps:
 
 1. In your settings file, you'll need to define :setting:`MEDIA_ROOT` as the
-   full path to a directory where you'd like LegionMarket to store uploaded files.
+   full path to a directory where you'd like Django to store uploaded files.
    (For performance, these files are not stored in the database.) Define
    :setting:`MEDIA_URL` as the base public URL of that directory. Make sure
    that this directory is writable by the Web server's user account.
@@ -775,10 +777,9 @@ the result of the :attr:`Storage.open()<django.core.files.storage.Storage.open>`
 method, which may be a :class:`~django.core.files.File` object, or it may be a
 custom storage's implementation of the :class:`~django.core.files.File` API.
 
-In addition to the API inherited from
-:class:`~django.core.files.File` such as :meth:`~django.core.files.File.read`
-and :meth:`~django.core.files.File.write`, :class:`FieldFile` includes several
-methods that can be used to interact with the underlying file:
+In addition to the API inherited from :class:`~django.core.files.File` such as
+``read()`` and ``write()``, :class:`FieldFile` includes several methods that
+can be used to interact with the underlying file:
 
 .. warning::
 
@@ -1055,7 +1056,7 @@ in URLs.
 
 Like a CharField, you can specify :attr:`~CharField.max_length` (read the note
 about database portability and :attr:`~CharField.max_length` in that section,
-too). If :attr:`~CharField.max_length` is not specified, LegionMarket will use a
+too). If :attr:`~CharField.max_length` is not specified, Django will use a
 default length of 50.
 
 Implies setting :attr:`Field.db_index` to ``True``.
@@ -1065,8 +1066,6 @@ of some other value.  You can do this automatically in the admin using
 :attr:`~django.contrib.admin.ModelAdmin.prepopulated_fields`.
 
 .. attribute:: SlugField.allow_unicode
-
-    .. versionadded:: 1.9
 
     If ``True``, the field accepts Unicode letters in addition to ASCII
     letters. Defaults to ``False``.
@@ -1092,13 +1091,6 @@ If you specify a ``max_length`` attribute, it will be reflected in the
 :class:`~django.forms.Textarea` widget of the auto-generated form field.
 However it is not enforced at the model or database level. Use a
 :class:`CharField` for that.
-
-.. admonition:: MySQL users
-
-    If you are using this field with MySQLdb 1.2.1p2 and the ``utf8_bin``
-    collation (which is *not* the default), there are some issues to be aware
-    of. Refer to the :ref:`MySQL database notes <mysql-collation>` for
-    details.
 
 ``TimeField``
 -------------
@@ -1155,7 +1147,7 @@ Relationship fields
 
 .. currentmodule:: django.db.models
 
-LegionMarket also defines a set of fields that represent relations.
+Django also defines a set of fields that represent relations.
 
 .. _ref-foreignkey:
 
@@ -1166,12 +1158,6 @@ LegionMarket also defines a set of fields that represent relations.
 
 A many-to-one relationship. Requires a positional argument: the class to which
 the model is related.
-
-.. versionchanged:: 1.9
-
-    ``on_delete`` can now be used as the second positional argument (previously
-    it was typically only passed as a keyword argument). It will be a required
-    argument in LegionMarket 2.0.
 
 .. _recursive-relationships:
 
@@ -1249,7 +1235,7 @@ like a partial or multiple column index.
 Database Representation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Behind the scenes, LegionMarket appends ``"_id"`` to the field name to create its
+Behind the scenes, Django appends ``"_id"`` to the field name to create its
 database column name. In the above example, the database table for the ``Car``
 model will have a ``manufacturer_id`` column. (You can change this explicitly by
 specifying :attr:`~Field.db_column`) However, your code should never have to
@@ -1266,7 +1252,7 @@ relation works.
 
 .. attribute:: ForeignKey.on_delete
 
-    When an object referenced by a :class:`ForeignKey` is deleted, LegionMarket will
+    When an object referenced by a :class:`ForeignKey` is deleted, Django will
     emulate the behavior of the SQL constraint specified by the
     :attr:`on_delete` argument. For example, if you have a nullable
     :class:`ForeignKey` and you want it to be set null when the referenced
@@ -1289,7 +1275,7 @@ The possible values for :attr:`~ForeignKey.on_delete` are found in
 
 * .. attribute:: CASCADE
 
-    Cascade deletes. LegionMarket emulates the behavior of the SQL constraint ON
+    Cascade deletes. Django emulates the behavior of the SQL constraint ON
     DELETE CASCADE and also deletes the object containing the ForeignKey.
 
 * .. attribute:: PROTECT
@@ -1352,7 +1338,7 @@ The possible values for :attr:`~ForeignKey.on_delete` are found in
         )
 
     causes the corresponding field on the ``ModelForm`` to list only ``Users``
-    that have ``is_staff=True``. This may be helpful in the LegionMarket admin.
+    that have ``is_staff=True``. This may be helpful in the Django admin.
 
     The callable form can be helpful, for instance, when used in conjunction
     with the Python ``datetime`` module to limit selections by date range. For
@@ -1389,7 +1375,7 @@ The possible values for :attr:`~ForeignKey.on_delete` are found in
     :ref:`abstract models <abstract-base-classes>`; and when you do so
     :ref:`some special syntax <abstract-related-name>` is available.
 
-    If you'd prefer LegionMarket not to create a backwards relation, set
+    If you'd prefer Django not to create a backwards relation, set
     ``related_name`` to ``'+'`` or end it with ``'+'``. For example, this will
     ensure that the ``User`` model won't have a backwards relation to this
     model::
@@ -1479,7 +1465,7 @@ Related objects can be added, removed, or created with the field's
 Database Representation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Behind the scenes, LegionMarket creates an intermediary join table to represent the
+Behind the scenes, Django creates an intermediary join table to represent the
 many-to-many relationship. By default, this table name is generated using the
 name of the many-to-many field and the name of the table for the model that
 contains it. Since some databases don't support table names above a certain
@@ -1522,23 +1508,23 @@ that control how the relationship functions.
         class Person(models.Model):
             friends = models.ManyToManyField("self")
 
-    When LegionMarket processes this model, it identifies that it has a
+    When Django processes this model, it identifies that it has a
     :class:`ManyToManyField` on itself, and as a result, it doesn't add a
     ``person_set`` attribute to the ``Person`` class. Instead, the
     :class:`ManyToManyField` is assumed to be symmetrical -- that is, if I am
     your friend, then you are my friend.
 
     If you do not want symmetry in many-to-many relationships with ``self``, set
-    :attr:`~ManyToManyField.symmetrical` to ``False``. This will force LegionMarket to
+    :attr:`~ManyToManyField.symmetrical` to ``False``. This will force Django to
     add the descriptor for the reverse relationship, allowing
     :class:`ManyToManyField` relationships to be non-symmetrical.
 
 .. attribute:: ManyToManyField.through
 
-    LegionMarket will automatically generate a table to manage many-to-many
+    Django will automatically generate a table to manage many-to-many
     relationships. However, if you want to manually specify the intermediary
     table, you can use the :attr:`~ManyToManyField.through` option to specify
-    the LegionMarket model that represents the intermediate table that you want to
+    the Django model that represents the intermediate table that you want to
     use.
 
     The most common use for this option is when you want to associate
@@ -1572,7 +1558,7 @@ that control how the relationship functions.
 
 .. attribute:: ManyToManyField.through_fields
 
-    Only used when a custom intermediary model is specified. LegionMarket will
+    Only used when a custom intermediary model is specified. Django will
     normally determine which fields of the intermediary model to use in order
     to establish a many-to-many relationship automatically. However,
     consider the following models::
@@ -1601,9 +1587,9 @@ that control how the relationship functions.
             invite_reason = models.CharField(max_length=64)
 
     ``Membership`` has *two* foreign keys to ``Person`` (``person`` and
-    ``inviter``), which makes the relationship ambiguous and LegionMarket can't know
+    ``inviter``), which makes the relationship ambiguous and Django can't know
     which one to use. In this case, you must explicitly specify which
-    foreign keys LegionMarket should use using ``through_fields``, as in the example
+    foreign keys Django should use using ``through_fields``, as in the example
     above.
 
     ``through_fields`` accepts a 2-tuple ``('field1', 'field2')``, where
@@ -1618,7 +1604,7 @@ that control how the relationship functions.
     :ref:`recursive relationships <recursive-relationships>`
     when an intermediary model is used and there are more than two
     foreign keys to the model, or you want to explicitly specify which two
-    LegionMarket should use.
+    Django should use.
 
     Recursive relationships using an intermediary model are always defined as
     non-symmetrical -- that is, with :attr:`symmetrical=False <ManyToManyField.symmetrical>`
@@ -1629,7 +1615,7 @@ that control how the relationship functions.
 .. attribute:: ManyToManyField.db_table
 
     The name of the table to create for storing the many-to-many data. If this
-    is not provided, LegionMarket will assume a default name based upon the names of:
+    is not provided, Django will assume a default name based upon the names of:
     the table for the model defining the relationship and the name of the field
     itself.
 
@@ -1675,12 +1661,6 @@ A one-to-one relationship. Conceptually, this is similar to a
 :class:`ForeignKey` with :attr:`unique=True <Field.unique>`, but the
 "reverse" side of the relation will directly return a single object.
 
-.. versionchanged:: 1.9
-
-    ``on_delete`` can now be used as the second positional argument (previously
-    it was typically only passed as a keyword argument). It will be a required
-    argument in LegionMarket 2.0.
-
 This is most useful as the primary key of a model which "extends"
 another model in some way; :ref:`multi-table-inheritance` is
 implemented by adding an implicit one-to-one relation from the child
@@ -1692,7 +1672,7 @@ including all the options regarding :ref:`recursive <recursive-relationships>`
 and :ref:`lazy <lazy-relationships>` relationships.
 
 If you do not specify the :attr:`~ForeignKey.related_name` argument for
-the ``OneToOneField``, LegionMarket will use the lower-case name of the current model
+the ``OneToOneField``, Django will use the lower-case name of the current model
 as default value.
 
 With the following example::
@@ -1750,17 +1730,17 @@ Field API reference
 .. class:: Field
 
     ``Field`` is an abstract class that represents a database table column.
-    LegionMarket uses fields to create the database table (:meth:`db_type`), to map
+    Django uses fields to create the database table (:meth:`db_type`), to map
     Python types to database (:meth:`get_prep_value`) and vice-versa
     (:meth:`from_db_value`).
 
-    A field is thus a fundamental piece in different LegionMarket APIs, notably,
+    A field is thus a fundamental piece in different Django APIs, notably,
     :class:`models <django.db.models.Model>` and :class:`querysets
     <django.db.models.query.QuerySet>`.
 
     In models, a field is instantiated as a class attribute and represents a
     particular table column, see :doc:`/topics/db/models`. It has attributes
-    such as :attr:`null` and :attr:`unique`, and methods that LegionMarket uses to
+    such as :attr:`null` and :attr:`unique`, and methods that Django uses to
     map the field value to database-specific values.
 
     A ``Field`` is a subclass of
@@ -1786,7 +1766,7 @@ Field API reference
 
         where the arguments are interpolated from the field's ``__dict__``.
 
-    To map a ``Field`` to a database-specific type, LegionMarket exposes several
+    To map a ``Field`` to a database-specific type, Django exposes several
     methods:
 
     .. method:: get_internal_type()
@@ -1813,7 +1793,7 @@ Field API reference
 
         See :ref:`custom-database-types` for usage in custom fields.
 
-    There are three main situations where LegionMarket needs to interact with the
+    There are three main situations where Django needs to interact with the
     database backend and fields:
 
     * when it queries the database (Python value -> database backend value)
@@ -1855,7 +1835,7 @@ Field API reference
         .. note::
 
             For performance reasons, ``from_db_value`` is not implemented as a
-            no-op on fields which do not require it (all LegionMarket fields).
+            no-op on fields which do not require it (all Django fields).
             Consequently you may not call ``super`` in your definition.
 
     When saving, :meth:`pre_save` and :meth:`get_db_prep_save` are used:
@@ -1993,7 +1973,7 @@ have boolean values (rather than ``None``) if the field is a relation type
 .. attribute:: Field.many_to_many
 
     Boolean flag that is ``True`` if the field has a many-to-many relation;
-    ``False`` otherwise. The only field included with LegionMarket where this is
+    ``False`` otherwise. The only field included with Django where this is
     ``True`` is ``ManyToManyField``.
 
 .. attribute:: Field.many_to_one

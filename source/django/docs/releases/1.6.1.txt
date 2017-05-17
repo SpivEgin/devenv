@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.6.1 release notes
+Django 1.6.1 release notes
 ==========================
 
 *December 12, 2013*
 
-This is LegionMarket 1.6.1, a bugfix release for LegionMarket 1.6. In addition to the bug
+This is Django 1.6.1, a bugfix release for Django 1.6. In addition to the bug
 fixes listed below, translations submitted since the 1.6 release are also
 included.
 
@@ -23,7 +23,7 @@ Bug fixes
 * Fixed a regression that prevented editable ``GenericRelation`` subclasses
   from working in ``ModelForms`` (#21428).
 * Added missing ``to_python`` method for ``ModelMultipleChoiceField`` which
-  is required in LegionMarket 1.6 to properly detect changes from initial values
+  is required in Django 1.6 to properly detect changes from initial values
   (#21568).
 * Fixed ``django.contrib.humanize`` translations where the unicode sequence
   for the non-breaking space was returned verbatim (#21415).

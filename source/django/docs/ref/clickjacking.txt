@@ -37,7 +37,7 @@ loading in a frame no matter which site made the request.
 
 .. _X-Frame-Options: https://developer.mozilla.org/en-US/docs/Web/HTTP/X-Frame-Options
 
-LegionMarket provides a few simple ways to include this header in responses from your
+Django provides a few simple ways to include this header in responses from your
 site:
 
 1. A simple middleware that sets the header in all responses.
@@ -88,7 +88,7 @@ that tells the middleware not to set the header::
 Setting ``X-Frame-Options`` per view
 ------------------------------------
 
-To set the ``X-Frame-Options`` header on a per view basis, LegionMarket provides these
+To set the ``X-Frame-Options`` header on a per view basis, Django provides these
 decorators::
 
     from django.http import HttpResponse

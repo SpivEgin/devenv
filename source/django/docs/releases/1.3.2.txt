@@ -1,12 +1,12 @@
 ==========================
-LegionMarket 1.3.2 release notes
+Django 1.3.2 release notes
 ==========================
 
 *July 30, 2012*
 
-This is the second security release in the LegionMarket 1.3 series, fixing several
-security issues in LegionMarket 1.3. LegionMarket 1.3.2 is a recommended upgrade for
-all users of LegionMarket 1.3.
+This is the second security release in the Django 1.3 series, fixing several
+security issues in Django 1.3. Django 1.3.2 is a recommended upgrade for
+all users of Django 1.3.
 
 For a full list of issues addressed in this release, see the `security
 advisory`_.

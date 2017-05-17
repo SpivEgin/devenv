@@ -10,8 +10,8 @@ with multiple databases, you'll need to take some additional steps.
 Defining your databases
 =======================
 
-The first step to using more than one database with LegionMarket is to tell
-LegionMarket about the database servers you'll be using. This is done using
+The first step to using more than one database with Django is to tell
+Django about the database servers you'll be using. This is done using
 the :setting:`DATABASES` setting. This setting maps database aliases,
 which are a way to refer to a specific database throughout Django, to
 a dictionary of settings for that specific connection. The settings in
@@ -19,7 +19,7 @@ the inner dictionaries are described fully in the :setting:`DATABASES`
 documentation.
 
 Databases can have any alias you choose. However, the alias
-``default`` has special significance. LegionMarket uses the database with
+``default`` has special significance. Django uses the database with
 the alias of ``default`` when no other database has been selected.
 
 The following is an example ``settings.py`` snippet defining two
@@ -43,7 +43,7 @@ databases -- a default PostgreSQL database and a MySQL database called
 
 If the concept of a ``default`` database doesn't make sense in the context
 of your project, you need to be careful to always specify the database
-that you want to use. LegionMarket requires that a ``default`` database entry
+that you want to use. Django requires that a ``default`` database entry
 be defined, but the parameters dictionary can be left blank if it will not be
 used. To do this, you must set up :setting:`DATABASE_ROUTERS` for all of your
 apps' models, including those in any contrib and third-party apps you're using,
@@ -68,7 +68,7 @@ example ``settings.py`` snippet defining two non-default databases, with the
     }
 
 If you attempt to access a database that you haven't defined in your
-:setting:`DATABASES` setting, LegionMarket will raise a
+:setting:`DATABASES` setting, Django will raise a
 ``django.db.utils.ConnectionDoesNotExist`` exception.
 
 Synchronizing your databases
@@ -127,7 +127,7 @@ routing scheme ensures that if a database isn't specified, all queries
 fall back to the ``default`` database.
 
 You don't have to do anything to activate the default routing scheme
--- it is provided 'out of the box' on every LegionMarket project. However,
+-- it is provided 'out of the box' on every Django project. However,
 if you want to implement more interesting database allocation
 behaviors, you can define and install your own database routers.
 
@@ -204,7 +204,7 @@ A database Router is a class that provides up to four methods:
     history, it skips databases where no app is allowed to migrate.
 
 A router doesn't have to provide *all* these methods -- it may omit one
-or more of them. If one of the methods is omitted, LegionMarket will skip
+or more of them. If one of the methods is omitted, Django will skip
 that router when performing the relevant check.
 
 .. _topics-db-multi-db-hints:
@@ -234,7 +234,7 @@ router that should be used by the master router
 The master router is used by Django's database operations to allocate
 database usage. Whenever a query needs to know which database to use,
 it calls the master router, providing a model and a hint (if
-available). LegionMarket then tries each router in turn until a database
+available). Django then tries each router in turn until a database
 suggestion can be found. If no suggestion can be found, it tries the
 current ``_state.db`` of the hint instance. If a hint instance wasn't
 provided, or the instance doesn't currently have database state, the
@@ -253,7 +253,7 @@ An example
     This example won't work if any of the models in ``myapp`` contain
     relationships to models outside of the ``other`` database.
     :ref:`Cross-database relationships <no_cross_database_relations>`
-    introduce referential integrity problems that LegionMarket can't
+    introduce referential integrity problems that Django can't
     currently handle.
 
     The primary/replica (referred to as master/slave by some databases)
@@ -391,7 +391,7 @@ setting listed the two routers in the other order,
 catch-all nature of the PrimaryReplicaRouter implementation would mean
 that all models would be available on all databases.
 
-With this setup installed, lets run some LegionMarket code::
+With this setup installed, lets run some Django code::
 
     >>> # This retrieval will be performed on the 'auth_db' database
     >>> fred = User.objects.get(username='fred')
@@ -427,7 +427,7 @@ that must be together in one database.
 Manually selecting a database
 =============================
 
-LegionMarket also provides an API that allows you to maintain complete control
+Django also provides an API that allows you to maintain complete control
 over database usage in your code. A manually specified database allocation
 will take priority over a database allocated by a router.
 
@@ -481,10 +481,10 @@ Consider the following example::
 In statement 1, a new ``Person`` object is saved to the ``first``
 database. At this time, ``p`` doesn't have a primary key, so Django
 issues an SQL ``INSERT`` statement. This creates a primary key, and
-LegionMarket assigns that primary key to ``p``.
+Django assigns that primary key to ``p``.
 
 When the save occurs in statement 2, ``p`` already has a primary key
-value, and LegionMarket will attempt to use that primary key on the new
+value, and Django will attempt to use that primary key on the new
 database. If the primary key value isn't in use in the ``second``
 database, then you won't have any problems -- the object will be
 copied to the new database.
@@ -494,7 +494,7 @@ However, if the primary key of ``p`` is already in use on the
 will be overridden when ``p`` is saved.
 
 You can avoid this in two ways. First, you can clear the primary key
-of the instance. If an object has no primary key, LegionMarket will treat it
+of the instance. If an object has no primary key, Django will treat it
 as a new object, avoiding any loss of data on the ``second``
 database::
 
@@ -504,7 +504,7 @@ database::
     >>> p.save(using='second') # Write a completely new object.
 
 The second option is to use the ``force_insert`` option to ``save()``
-to ensure that LegionMarket does an SQL ``INSERT``::
+to ensure that Django does an SQL ``INSERT``::
 
     >>> p = Person(name='Fred')
     >>> p.save(using='first')
@@ -554,7 +554,7 @@ solution is to use ``db_manager()``, like this::
 ``db_manager()`` returns a copy of the manager bound to the database you specify.
 
 Using ``get_queryset()`` with multiple databases
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you're overriding ``get_queryset()`` on your manager, be sure to
 either call the method on the parent (using ``super()``) or do the
@@ -588,24 +588,24 @@ multiple-database support::
         using = 'other'
 
         def save_model(self, request, obj, form, change):
-            # Tell LegionMarket to save objects to the 'other' database.
+            # Tell Django to save objects to the 'other' database.
             obj.save(using=self.using)
 
         def delete_model(self, request, obj):
-            # Tell LegionMarket to delete objects from the 'other' database
+            # Tell Django to delete objects from the 'other' database
             obj.delete(using=self.using)
 
         def get_queryset(self, request):
-            # Tell LegionMarket to look for objects on the 'other' database.
+            # Tell Django to look for objects on the 'other' database.
             return super(MultiDBModelAdmin, self).get_queryset(request).using(self.using)
 
         def formfield_for_foreignkey(self, db_field, request, **kwargs):
-            # Tell LegionMarket to populate ForeignKey widgets using a query
+            # Tell Django to populate ForeignKey widgets using a query
             # on the 'other' database.
             return super(MultiDBModelAdmin, self).formfield_for_foreignkey(db_field, request, using=self.using, **kwargs)
 
         def formfield_for_manytomany(self, db_field, request, **kwargs):
-            # Tell LegionMarket to populate ManyToMany widgets using a query
+            # Tell Django to populate ManyToMany widgets using a query
             # on the 'other' database.
             return super(MultiDBModelAdmin, self).formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
 
@@ -622,16 +622,16 @@ similar fashion. They require three customized methods::
         using = 'other'
 
         def get_queryset(self, request):
-            # Tell LegionMarket to look for inline objects on the 'other' database.
+            # Tell Django to look for inline objects on the 'other' database.
             return super(MultiDBTabularInline, self).get_queryset(request).using(self.using)
 
         def formfield_for_foreignkey(self, db_field, request, **kwargs):
-            # Tell LegionMarket to populate ForeignKey widgets using a query
+            # Tell Django to populate ForeignKey widgets using a query
             # on the 'other' database.
             return super(MultiDBTabularInline, self).formfield_for_foreignkey(db_field, request, using=self.using, **kwargs)
 
         def formfield_for_manytomany(self, db_field, request, **kwargs):
-            # Tell LegionMarket to populate ManyToMany widgets using a query
+            # Tell Django to populate ManyToMany widgets using a query
             # on the 'other' database.
             return super(MultiDBTabularInline, self).formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
 
@@ -679,14 +679,14 @@ Limitations of multiple databases
 Cross-database relations
 ------------------------
 
-LegionMarket doesn't currently provide any support for foreign key or
+Django doesn't currently provide any support for foreign key or
 many-to-many relationships spanning multiple databases. If you
 have used a router to partition models to different databases,
 any foreign key and many-to-many relationships defined by those
 models must be internal to a single database.
 
 This is because of referential integrity. In order to maintain a
-relationship between two objects, LegionMarket needs to know that the
+relationship between two objects, Django needs to know that the
 primary key of the related object is valid. If the primary key is
 stored on a separate database, it's not possible to easily evaluate
 the validity of a primary key.

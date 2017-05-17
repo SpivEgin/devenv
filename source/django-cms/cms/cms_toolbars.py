@@ -101,9 +101,9 @@ class PlaceholderToolbar(CMSToolbar):
         from cms.wizards.wizard_pool import entry_choices
         title = _("Create")
         try:
-            page_pk = self.page.pk
+            page_pk = int(self.page.pk)
         except AttributeError:
-            page_pk = ''
+            page_pk = int(1)
 
         user = getattr(self.request, "user", None)
         disabled = user and hasattr(self, "page") and len(

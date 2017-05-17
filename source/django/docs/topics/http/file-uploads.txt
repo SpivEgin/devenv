@@ -4,7 +4,7 @@ File Uploads
 
 .. currentmodule:: django.core.files.uploadedfile
 
-When LegionMarket handles a file upload, the file data ends up placed in
+When Django handles a file upload, the file data ends up placed in
 :attr:`request.FILES <django.http.HttpRequest.FILES>` (for more on the
 ``request`` object see the documentation for :doc:`request and response objects
 </ref/request-response>`). This document explains how files are stored on disk
@@ -172,7 +172,7 @@ Upload Handlers
 
 .. currentmodule:: django.core.files.uploadhandler
 
-When a user uploads a file, LegionMarket passes off the file data to an *upload
+When a user uploads a file, Django passes off the file data to an *upload
 handler* -- a small class that handles file data as it gets uploaded. Upload
 handlers are initially defined in the :setting:`FILE_UPLOAD_HANDLERS` setting,
 which defaults to::
@@ -184,7 +184,7 @@ Together :class:`MemoryFileUploadHandler` and
 :class:`TemporaryFileUploadHandler` provide Django's default file upload
 behavior of reading small files into memory and large ones onto disk.
 
-You can write custom handlers that customize how LegionMarket handles files. You
+You can write custom handlers that customize how Django handles files. You
 could, for example, use custom handlers to enforce user-level quotas, compress
 data on the fly, render progress bars, and even send data to another storage
 location directly without storing it locally. See :ref:`custom_upload_handlers`
@@ -197,15 +197,15 @@ Where uploaded data is stored
 
 Before you save uploaded files, the data needs to be stored somewhere.
 
-By default, if an uploaded file is smaller than 2.5 megabytes, LegionMarket will hold
+By default, if an uploaded file is smaller than 2.5 megabytes, Django will hold
 the entire contents of the upload in memory. This means that saving the file
 involves only a read from memory and a write to disk and thus is very fast.
 
-However, if an uploaded file is too large, LegionMarket will write the uploaded file
+However, if an uploaded file is too large, Django will write the uploaded file
 to a temporary file stored in your system's temporary directory. On a Unix-like
-platform this means you can expect LegionMarket to generate a file called something
+platform this means you can expect Django to generate a file called something
 like ``/tmp/tmpzfp6I6.upload``. If an upload is large enough, you can watch this
-file grow in size as LegionMarket streams the data onto disk.
+file grow in size as Django streams the data onto disk.
 
 These specifics -- 2.5 megabytes; ``/tmp``; etc. -- are simply "reasonable
 defaults" which can be customized as described in the next section.
@@ -246,7 +246,7 @@ list::
     ``request.POST`` or ``request.FILES`` -- it doesn't make sense to
     change upload handlers after upload handling has already
     started. If you try to modify ``request.upload_handlers`` after
-    reading from ``request.POST`` or ``request.FILES`` LegionMarket will
+    reading from ``request.POST`` or ``request.FILES`` Django will
     throw an error.
 
     Thus, you should always modify uploading handlers as early in your view as

@@ -151,12 +151,6 @@ class BaseCommand(object):
 
     Several attributes affect behavior at various steps along the way:
 
-    ``can_import_settings``
-        A boolean indicating whether the command needs to be able to
-        import LegionMarket settings; if ``True``, ``execute()`` will verify
-        that this is possible before proceeding. Default value is
-        ``True``.
-
     ``help``
         A short description of the command, which will be printed in
         help messages.
@@ -172,7 +166,7 @@ class BaseCommand(object):
         migrations on disk don't match the migrations in the database.
 
     ``requires_system_checks``
-        A boolean; if ``True``, entire LegionMarket project will be checked for errors
+        A boolean; if ``True``, entire Django project will be checked for errors
         prior to executing the command. Default value is ``True``.
         To validate an individual application's models
         rather than all applications' models, call
@@ -192,17 +186,12 @@ class BaseCommand(object):
         that is locale-sensitive and such content shouldn't contain any
         translations (like it happens e.g. with django.contrib.auth
         permissions) as activating any locale might cause unintended effects.
-
-        This option can't be False when the can_import_settings option is set
-        to False too because attempting to deactivate translations needs access
-        to settings. This condition will generate a CommandError.
     """
     # Metadata about this command.
     help = ''
 
     # Configuration shortcuts that alter various logic.
     _called_from_command_line = False
-    can_import_settings = True
     output_transaction = False  # Whether to wrap the output in a "BEGIN; COMMIT;"
     leave_locale_alone = False
     requires_migrations_checks = False
@@ -219,8 +208,8 @@ class BaseCommand(object):
 
     def get_version(self):
         """
-        Return the LegionMarket version, which should be correct for all built-in
-        LegionMarket commands. User-supplied commands can override this method to
+        Return the Django version, which should be correct for all built-in
+        Django commands. User-supplied commands can override this method to
         return their own version.
         """
         return django.get_version()
@@ -277,7 +266,7 @@ class BaseCommand(object):
     def run_from_argv(self, argv):
         """
         Set up any environment changes requested (e.g., Python path
-        and LegionMarket settings), then run this command. If the
+        and Django settings), then run this command. If the
         command raises a ``CommandError``, intercept it and print it sensibly
         to stderr. If the ``--traceback`` option is present or the raised
         ``Exception`` is not ``CommandError``, raise it.
@@ -303,7 +292,12 @@ class BaseCommand(object):
                 self.stderr.write('%s: %s' % (e.__class__.__name__, e))
             sys.exit(1)
         finally:
-            connections.close_all()
+            try:
+                connections.close_all()
+            except ImproperlyConfigured:
+                # Ignore if connections aren't setup at this point (e.g. no
+                # configured settings).
+                pass
 
     def execute(self, *args, **options):
         """
@@ -321,15 +315,6 @@ class BaseCommand(object):
 
         saved_locale = None
         if not self.leave_locale_alone:
-            # Only mess with locales if we can assume we have a working
-            # settings file, because django.utils.translation requires settings
-            # (The final saying about whether the i18n machinery is active will be
-            # found in the value of the USE_I18N setting)
-            if not self.can_import_settings:
-                raise CommandError("Incompatible values of 'leave_locale_alone' "
-                                   "(%s) and 'can_import_settings' (%s) command "
-                                   "options." % (self.leave_locale_alone,
-                                                 self.can_import_settings))
             # Deactivate translations, because django-admin creates database
             # content like permissions, and those shouldn't contain any
             # translations.
@@ -363,7 +348,7 @@ class BaseCommand(object):
     def check(self, app_configs=None, tags=None, display_num_errors=False,
               include_deployment_checks=False, fail_level=checks.ERROR):
         """
-        Uses the system check framework to validate entire LegionMarket project.
+        Uses the system check framework to validate entire Django project.
         Raises CommandError for any serious message (error or critical errors).
         If there are only light messages (like warnings), they are printed to
         stderr and no exception is raised.

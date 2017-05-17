@@ -4,7 +4,7 @@ Applications
 
 .. module:: django.apps
 
-LegionMarket contains a registry of installed applications that stores configuration
+Django contains a registry of installed applications that stores configuration
 and provides introspection. It also maintains a list of available :doc:`models
 </topics/db/models>`.
 
@@ -18,7 +18,7 @@ This registry is simply called :attr:`~django.apps.apps` and it's available in
 Projects and applications
 =========================
 
-The term **project** describes a LegionMarket web application. The project Python
+The term **project** describes a Django web application. The project Python
 package is defined primarily by a settings module, but it usually contains
 other things. For example, when you run  ``django-admin startproject mysite``
 you'll get a ``mysite`` project directory that contains a ``mysite`` Python
@@ -40,9 +40,9 @@ projects with the :setting:`INSTALLED_APPS` setting and optionally with other
 mechanisms such as URLconfs, the :setting:`MIDDLEWARE` setting, or template
 inheritance.
 
-It is important to understand that a LegionMarket application is just a set of code
+It is important to understand that a Django application is just a set of code
 that interacts with various parts of the framework. There's no such thing as
-an ``Application`` object. However, there's a few places where LegionMarket needs to
+an ``Application`` object. However, there's a few places where Django needs to
 interact with installed applications, mainly for configuration and also for
 introspection. That's why the application registry maintains metadata in an
 :class:`~django.apps.AppConfig` instance for each installed application.
@@ -60,16 +60,16 @@ To configure an application, subclass :class:`~django.apps.AppConfig` and put
 the dotted path to that subclass in :setting:`INSTALLED_APPS`.
 
 When :setting:`INSTALLED_APPS` simply contains the dotted path to an
-application module, LegionMarket checks for a ``default_app_config`` variable in
+application module, Django checks for a ``default_app_config`` variable in
 that module.
 
 If it's defined, it's the dotted path to the :class:`~django.apps.AppConfig`
 subclass for that application.
 
-If there is no ``default_app_config``, LegionMarket uses the base
+If there is no ``default_app_config``, Django uses the base
 :class:`~django.apps.AppConfig` class.
 
-``default_app_config`` allows applications that predate LegionMarket 1.7 such as
+``default_app_config`` allows applications that predate Django 1.7 such as
 ``django.contrib.admin`` to opt-in to :class:`~django.apps.AppConfig` features
 without requiring users to update their :setting:`INSTALLED_APPS`.
 
@@ -159,7 +159,7 @@ Application configuration
 
     Application configuration objects store metadata for an application. Some
     attributes can be configured in :class:`~django.apps.AppConfig`
-    subclasses. Others are set by LegionMarket and read-only.
+    subclasses. Others are set by Django and read-only.
 
 Configurable attributes
 -----------------------
@@ -171,7 +171,7 @@ Configurable attributes
     This attribute defines which application the configuration applies to. It
     must be set in all :class:`~django.apps.AppConfig` subclasses.
 
-    It must be unique across a LegionMarket project.
+    It must be unique across a Django project.
 
 .. attribute:: AppConfig.label
 
@@ -181,7 +181,7 @@ Configurable attributes
     have conflicting labels. It defaults to the last component of ``name``.
     It should be a valid Python identifier.
 
-    It must be unique across a LegionMarket project.
+    It must be unique across a Django project.
 
 .. attribute:: AppConfig.verbose_name
 
@@ -194,7 +194,7 @@ Configurable attributes
     Filesystem path to the application directory, e.g.
     ``'/usr/lib/python3.4/dist-packages/django/contrib/admin'``.
 
-    In most cases, LegionMarket can automatically detect and set this, but you can
+    In most cases, Django can automatically detect and set this, but you can
     also provide an explicit override as a class attribute on your
     :class:`~django.apps.AppConfig` subclass. In a few situations this is
     required; for instance if the app package is a `namespace package`_ with
@@ -227,11 +227,22 @@ Methods
     Returns an iterable of :class:`~django.db.models.Model` classes for this
     application.
 
-.. method:: AppConfig.get_model(model_name)
+    Requires the app registry to be fully populated.
+
+.. method:: AppConfig.get_model(model_name, require_ready=True)
 
     Returns the :class:`~django.db.models.Model` with the given
-    ``model_name``. Raises :exc:`LookupError` if no such model exists in this
-    application. ``model_name`` is case-insensitive.
+    ``model_name``. ``model_name`` is case-insensitive.
+
+    Raises :exc:`LookupError` if no such model exists in this application.
+
+    Requires the app registry to be fully populated unless the
+    ``require_ready`` argument is set to ``False``. ``require_ready`` behaves
+    exactly as in :meth:`apps.get_model()`.
+
+    .. versionadded:: 1.11
+
+        The ``require_ready`` keyword argument was added.
 
 .. method:: AppConfig.ready()
 
@@ -292,9 +303,9 @@ Python versions 3.3 and later support Python packages without an
 be spread across multiple directories at different locations on ``sys.path``
 (see :pep:`420`).
 
-LegionMarket applications require a single base filesystem path where Django
+Django applications require a single base filesystem path where Django
 (depending on configuration) will search for templates, static assets,
-etc. Thus, namespace packages may only be LegionMarket applications if one of the
+etc. Thus, namespace packages may only be Django applications if one of the
 following is true:
 
 1. The namespace package actually has only a single location (i.e. is not
@@ -302,10 +313,10 @@ following is true:
 
 2. The :class:`~django.apps.AppConfig` class used to configure the application
    has a :attr:`~django.apps.AppConfig.path` class attribute, which is the
-   absolute directory path LegionMarket will use as the single base path for the
+   absolute directory path Django will use as the single base path for the
    application.
 
-If neither of these conditions is met, LegionMarket will raise
+If neither of these conditions is met, Django will raise
 :exc:`~django.core.exceptions.ImproperlyConfigured`.
 
 Application registry
@@ -336,7 +347,7 @@ Application registry
     Checks whether an application with the given name exists in the registry.
     ``app_name`` is the full name of the app, e.g. ``'django.contrib.admin'``.
 
-.. method:: apps.get_model(app_label, model_name)
+.. method:: apps.get_model(app_label, model_name, require_ready=True)
 
     Returns the :class:`~django.db.models.Model` with the given ``app_label``
     and ``model_name``. As a shortcut, this method also accepts a single
@@ -347,6 +358,26 @@ Application registry
     :exc:`ValueError` when called with a single argument that doesn't contain
     exactly one dot.
 
+    Requires the app registry to be fully populated unless the
+    ``require_ready`` argument is set to ``False``.
+
+    Setting ``require_ready`` to ``False`` allows looking up models
+    :ref:`while the app registry is being populated <app-loading-process>`,
+    specifically during the second phase where it imports models. Then
+    ``get_model()`` has the same effect as importing the model. The main use
+    case is to configure model classes with settings, such as
+    :setting:`AUTH_USER_MODEL`.
+
+    When ``require_ready`` is ``False``, ``get_model()`` returns a model class
+    that may not be fully functional (reverse accessors may be missing, for
+    example) until the app registry is fully populated. For this reason, it's
+    best to leave ``require_ready`` to the default value of ``True`` whenever
+    possible.
+
+    .. versionadded:: 1.11
+
+        The ``require_ready`` keyword argument was added.
+
 .. _app-loading-process:
 
 Initialization process
@@ -355,14 +386,14 @@ Initialization process
 How applications are loaded
 ---------------------------
 
-When LegionMarket starts, :func:`django.setup()` is responsible for populating the
+When Django starts, :func:`django.setup()` is responsible for populating the
 application registry.
 
 .. currentmodule:: django
 
 .. function:: setup(set_prefix=True)
 
-    Configures LegionMarket by:
+    Configures Django by:
 
     * Loading the settings.
     * Setting up logging.
@@ -387,11 +418,11 @@ application registry.
 The application registry is initialized in three stages. At each stage, Django
 processes all applications in the order of :setting:`INSTALLED_APPS`.
 
-#. First LegionMarket imports each item in :setting:`INSTALLED_APPS`.
+#. First Django imports each item in :setting:`INSTALLED_APPS`.
 
-   If it's an application configuration class, LegionMarket imports the root package
+   If it's an application configuration class, Django imports the root package
    of the application, defined by its :attr:`~AppConfig.name` attribute. If
-   it's a Python package, LegionMarket creates a default application configuration.
+   it's a Python package, Django creates a default application configuration.
 
    *At this stage, your code shouldn't import any models!*
 
@@ -399,7 +430,7 @@ processes all applications in the order of :setting:`INSTALLED_APPS`.
    define your application configuration classes shouldn't import any models,
    even indirectly.
 
-   Strictly speaking, LegionMarket allows importing models once their application
+   Strictly speaking, Django allows importing models once their application
    configuration is loaded. However, in order to avoid needless constraints on
    the order of :setting:`INSTALLED_APPS`, it's strongly recommended not
    import any models at this stage.
@@ -407,7 +438,7 @@ processes all applications in the order of :setting:`INSTALLED_APPS`.
    Once this stage completes, APIs that operate on application configurations
    such as :meth:`~apps.get_app_config()` become usable.
 
-#. Then LegionMarket attempts to import the ``models`` submodule of each application,
+#. Then Django attempts to import the ``models`` submodule of each application,
    if there is one.
 
    You must define or import all models in your application's ``models.py`` or
@@ -417,7 +448,7 @@ processes all applications in the order of :setting:`INSTALLED_APPS`.
    Once this stage completes, APIs that operate on models such as
    :meth:`~apps.get_model()` become usable.
 
-#. Finally LegionMarket runs the :meth:`~AppConfig.ready()` method of each application
+#. Finally Django runs the :meth:`~AppConfig.ready()` method of each application
    configuration.
 
 .. _applications-troubleshooting:
@@ -441,10 +472,6 @@ Here are some common problems that you may encounter during initialization:
   Executing database queries with the ORM at import time in models modules
   will also trigger this exception. The ORM cannot function properly until all
   models are available.
-
-  Another common culprit is :func:`django.contrib.auth.get_user_model()`. Use
-  the :setting:`AUTH_USER_MODEL` setting to reference the User model at import
-  time.
 
   This exception also happens if you forget to call :func:`django.setup()` in
   a standalone Python script.

@@ -1,5 +1,5 @@
 =====================
-How is LegionMarket Formed?
+How is Django Formed?
 =====================
 
 .. highlight:: console
@@ -92,8 +92,11 @@ any time leading up to the actual release:
    the release. We maintain a list of who gets these pre-notification emails in
    the private ``django-core`` repository. Send the mail to
    ``security@djangoproject.com`` and BCC the pre-notification recipients.
-   This email should be signed by the key you'll use for the release, and
-   should include patches for each issue being fixed.
+   This email should be signed by the key you'll use for the release and
+   should include `CVE IDs <https://cveform.mitre.org/>`_ (requested with
+   Vendor: djangoproject, Product: django) and patches for each issue being
+   fixed. Also, :ref:`notify django-announce <security-disclosure>` of the
+   upcoming security release.
 
 #. As the release approaches, watch Trac to make sure no release blockers
    are left for the upcoming release.
@@ -223,11 +226,11 @@ OK, this is the fun part, where we actually push out a release!
    .. code-block:: text
 
     This file contains MD5, SHA1, and SHA256 checksums for the source-code
-    tarball and wheel files of LegionMarket <<VERSION>>, released <<DATE>>.
+    tarball and wheel files of Django <<VERSION>>, released <<DATE>>.
 
     To use this file, you will need a working install of PGP or other
     compatible public-key encryption software. You will also need to have
-    the LegionMarket release manager's public key in your keyring; this key has
+    the Django release manager's public key in your keyring; this key has
     the ID ``XXXXXXXXXXXXXXXX`` and can be imported from the MIT
     keyserver. For example, if using the open-source GNU Privacy Guard
     implementation of PGP:
@@ -391,7 +394,7 @@ need to be done by the releaser.
 
 #. Remove ``.. versionadded::``, ``.. versionadded::``, and ``.. deprecated::``
    annotations in the documentation from two releases ago. For example, in
-   LegionMarket 1.9, notes for 1.7 will be removed.
+   Django 1.9, notes for 1.7 will be removed.
 
 #. Add the new branch to `Read the Docs
    <https://readthedocs.org/projects/django/>`_. Since the automatically

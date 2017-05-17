@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.7.9 release notes
+Django 1.7.9 release notes
 ==========================
 
 *July 8, 2015*
 
-LegionMarket 1.7.9 fixes several security issues and bugs in 1.7.8.
+Django 1.7.9 fixes several security issues and bugs in 1.7.8.
 
 Denial-of-service possibility by filling session store
 ======================================================
@@ -34,7 +34,7 @@ Some of Django's built-in validators
 (:class:`~django.core.validators.EmailValidator`, most seriously) didn't
 prohibit newline characters (due to the usage of ``$`` instead of ``\Z`` in the
 regular expressions). If you use values with newlines in HTTP response or email
-headers, you can suffer from header injection attacks. LegionMarket itself isn't
+headers, you can suffer from header injection attacks. Django itself isn't
 vulnerable because :class:`~django.http.HttpResponse` and the mail sending
 utilities in :mod:`django.core.mail` prohibit newlines in HTTP and SMTP
 headers, respectively. While the validators have been fixed in Django, if
@@ -46,7 +46,7 @@ unexpected newlines.
 :func:`~django.core.validators.validate_ipv4_address`,
 :func:`~django.core.validators.validate_slug`, and
 :class:`~django.core.validators.URLValidator` are also affected, however, as
-of LegionMarket 1.6 the ``GenericIPAddresseField``, ``IPAddressField``, ``SlugField``,
+of Django 1.6 the ``GenericIPAddresseField``, ``IPAddressField``, ``SlugField``,
 and ``URLField`` form fields which use these validators all strip the input, so
 the possibility of newlines entering your data only exists if you are using
 these validators outside of the form fields.

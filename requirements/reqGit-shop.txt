@@ -8,7 +8,6 @@ git+https://github.com/LegionMarket/djangocms-googlemap.git
 git+https://github.com/LegionMarket/djangocms-snippet.git
 git+https://github.com/LegionMarket/djangocms-style.git
 git+https://github.com/LegionMarket/djangocms-audio.git
-git+https://github.com/LegionMarket/django-rest-framework.git
 git+https://github.com/LegionMarket/django-rest-auth.git
 git+https://github.com/LegionMarket/django-fsm.git
 git+https://github.com/LegionMarket/django-fsm-admin.git

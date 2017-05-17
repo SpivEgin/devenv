@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# The Legion Market JET documentation build configuration file, created by
+# TLM JET documentation build configuration file, created by
 # sphinx-quickstart on Sun Aug 30 14:01:43 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -54,7 +54,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'The Legion Market JET'
+project = u'TLM JET'
 copyright = u'2015, Geex Arts'
 author = u'Geex Arts'
 
@@ -239,7 +239,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'DjangoJET.tex', u'The Legion Market JET Documentation',
+  (master_doc, 'DjangoJET.tex', u'TLM JET Documentation',
    u'Denis Kildishev', 'manual'),
 ]
 
@@ -269,7 +269,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'djangojet', u'The Legion Market JET Documentation',
+    (master_doc, 'djangojet', u'TLM JET Documentation',
      [author], 1)
 ]
 
@@ -283,7 +283,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'DjangoJET', u'The Legion Market JET Documentation',
+  (master_doc, 'DjangoJET', u'TLM JET Documentation',
    author, 'DjangoJET', 'One line description of project.',
    'Miscellaneous'),
 ]

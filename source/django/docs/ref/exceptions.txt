@@ -1,16 +1,16 @@
 =================
-LegionMarket Exceptions
+Django Exceptions
 =================
 
-LegionMarket raises some of its own exceptions as well as standard Python exceptions.
+Django raises some of its own exceptions as well as standard Python exceptions.
 
-LegionMarket Core Exceptions
+Django Core Exceptions
 ======================
 
 .. module:: django.core.exceptions
-    :synopsis: LegionMarket core exceptions
+    :synopsis: Django core exceptions
 
-LegionMarket core exception classes are defined in ``django.core.exceptions``.
+Django core exception classes are defined in ``django.core.exceptions``.
 
 ``AppRegistryNotReady``
 -----------------------
@@ -32,6 +32,19 @@ LegionMarket core exception classes are defined in ``django.core.exceptions``.
 
     See :meth:`~django.db.models.query.QuerySet.get()` for further information
     on :exc:`ObjectDoesNotExist` and :exc:`~django.db.models.Model.DoesNotExist`.
+
+``EmptyResultSet``
+------------------
+
+.. exception:: EmptyResultSet
+
+    ``EmptyResultSet`` may be raised during query generation if a query won't
+    return any results. Most Django projects won't encounter this exception,
+    but it might be useful for implementing custom lookups and expressions.
+
+    .. versionchanged:: 1.11
+
+        In older versions, it's only importable from ``django.db.models.sql``.
 
 ``FieldDoesNotExist``
 ---------------------
@@ -110,7 +123,7 @@ LegionMarket core exception classes are defined in ``django.core.exceptions``.
 
 .. exception:: ImproperlyConfigured
 
-    The :exc:`ImproperlyConfigured` exception is raised when LegionMarket is
+    The :exc:`ImproperlyConfigured` exception is raised when Django is
     somehow improperly configured -- for example, if a value in ``settings.py``
     is incorrect or unparseable.
 
@@ -164,7 +177,7 @@ URL Resolver exceptions are defined in ``django.urls``.
 
     In older versions, these exceptions are located in
     ``django.core.urlresolvers``. Importing from the old location will continue
-    to work until LegionMarket 2.0.
+    to work until Django 2.0.
 
 ``Resolver404``
 ---------------
@@ -191,7 +204,7 @@ Database Exceptions
 
 Database exceptions may be imported from ``django.db``.
 
-LegionMarket wraps the standard database exceptions so that your LegionMarket code has a
+Django wraps the standard database exceptions so that your Django code has a
 guaranteed common implementation of these classes.
 
 .. exception:: Error
@@ -204,7 +217,7 @@ guaranteed common implementation of these classes.
 .. exception:: ProgrammingError
 .. exception:: NotSupportedError
 
-The LegionMarket wrappers for database exceptions behave exactly the same as
+The Django wrappers for database exceptions behave exactly the same as
 the underlying database exceptions. See :pep:`249`, the Python Database API
 Specification v2.0, for further information.
 
@@ -212,7 +225,7 @@ As per :pep:`3134`, a ``__cause__`` attribute is set with the original
 (underlying) database exception, allowing access to any additional
 information provided. (Note that this attribute is available under
 both Python 2 and Python 3, although :pep:`3134` normally only applies
-to Python 3. To avoid unexpected differences with Python 3, LegionMarket will also
+to Python 3. To avoid unexpected differences with Python 3, Django will also
 ensure that the exception made available via ``__cause__`` has a usable
 ``__traceback__`` attribute.)
 
@@ -273,5 +286,5 @@ Exceptions provided by the ``django.test`` package.
 Python Exceptions
 =================
 
-LegionMarket raises built-in Python exceptions when appropriate as well. See the
+Django raises built-in Python exceptions when appropriate as well. See the
 Python documentation for further information on the :ref:`bltin-exceptions`.

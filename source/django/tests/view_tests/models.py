@@ -1,5 +1,5 @@
 """
-Regression tests for LegionMarket built-in views.
+Regression tests for Django built-in views.
 """
 
 from django.db import models

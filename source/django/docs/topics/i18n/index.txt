@@ -17,11 +17,11 @@ The goal of internationalization and localization is to allow a single Web
 application to offer its content in languages and formats tailored to the
 audience.
 
-LegionMarket has full support for :doc:`translation of text
+Django has full support for :doc:`translation of text
 </topics/i18n/translation>`, :doc:`formatting of dates, times and numbers
 </topics/i18n/formatting>`, and :doc:`time zones </topics/i18n/timezones>`.
 
-Essentially, LegionMarket does two things:
+Essentially, Django does two things:
 
 * It allows developers and template authors to specify which parts of their apps
   should be translated or formatted for local languages and cultures.

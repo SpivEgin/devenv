@@ -1,22 +1,22 @@
 ========================
-LegionMarket 1.2 release notes
+Django 1.2 release notes
 ========================
 
 *May 17, 2010.*
 
-Welcome to LegionMarket 1.2!
+Welcome to Django 1.2!
 
-Nearly a year in the making, LegionMarket 1.2 packs an impressive list of :ref:`new
+Nearly a year in the making, Django 1.2 packs an impressive list of :ref:`new
 features <whats-new-1.2>` and lots of bug fixes. These release notes cover
 the new features, as well as important changes you'll want to be aware of when
-upgrading from LegionMarket 1.1 or older versions.
+upgrading from Django 1.1 or older versions.
 
 Overview
 ========
 
-LegionMarket 1.2 introduces several large, important new features, including:
+Django 1.2 introduces several large, important new features, including:
 
-* Support for `multiple database connections`_ in a single LegionMarket instance.
+* Support for `multiple database connections`_ in a single Django instance.
 
 * `Model validation`_ inspired by Django's form validation.
 
@@ -41,11 +41,11 @@ LegionMarket 1.2 introduces several large, important new features, including:
 These are just the highlights; full details and a complete list of features `may
 be found below`_.
 
-.. _may be found below: `What's new in LegionMarket 1.2`_
+.. _may be found below: `What's new in Django 1.2`_
 
 .. seealso::
 
-    `LegionMarket Advent`_ covered the release of LegionMarket 1.2 with a series of
+    `Django Advent`_ covered the release of Django 1.2 with a series of
     articles and tutorials that cover some of the new features in depth.
 
 .. _django advent: https://github.com/djangoadvent/djangoadvent-articles
@@ -61,7 +61,7 @@ backwards-incompatible. The big changes are:
 
 * The new CSRF protection framework is not backwards-compatible with
   the old system. Users of the old system will not be affected until
-  the old system is removed in LegionMarket 1.4.
+  the old system is removed in Django 1.4.
 
   However, upgrading to the new CSRF protection framework requires a few
   important backwards-incompatible changes, detailed in `CSRF Protection`_,
@@ -85,7 +85,7 @@ backwards-incompatible. The big changes are:
 .. _detailed below: `user_passes_test, login_required and permission_required`_
 
 Again, these are just the big features that will affect the most users. Users
-upgrading from previous versions of LegionMarket are heavily encouraged to consult
+upgrading from previous versions of Django are heavily encouraged to consult
 the complete list of :ref:`backwards-incompatible changes
 <backwards-incompatible-changes-1.2>` and the list of :ref:`deprecated
 features <deprecated-features-1.2>`.
@@ -93,36 +93,36 @@ features <deprecated-features-1.2>`.
 Python compatibility
 ====================
 
-While not a new feature, it's important to note that LegionMarket 1.2
+While not a new feature, it's important to note that Django 1.2
 introduces the first shift in our Python compatibility policy since
-Django's initial public debut. Previous LegionMarket releases were tested
-and supported on 2.x Python versions from 2.3 up; LegionMarket 1.2, however,
+Django's initial public debut. Previous Django releases were tested
+and supported on 2.x Python versions from 2.3 up; Django 1.2, however,
 drops official support for Python 2.3. As such, the minimum Python
-version required for LegionMarket is now 2.4, and LegionMarket is tested and
+version required for Django is now 2.4, and Django is tested and
 supported on Python 2.4, 2.5 and 2.6, and will be supported on the
 as-yet-unreleased Python 2.7.
 
-This change should affect only a small number of LegionMarket users, as most
+This change should affect only a small number of Django users, as most
 operating-system vendors today are shipping Python 2.4 or newer as
 their default version. If you're still using Python 2.3, however,
-you'll need to stick to LegionMarket 1.1 until you can upgrade; per
-:doc:`our support policy </internals/release-process>`, LegionMarket 1.1 will
-continue to receive security support until the release of LegionMarket 1.3.
+you'll need to stick to Django 1.1 until you can upgrade; per
+:doc:`our support policy </internals/release-process>`, Django 1.1 will
+continue to receive security support until the release of Django 1.3.
 
 A roadmap for Django's overall 2.x Python support, and eventual
 transition to Python 3.x, is currently being developed, and will be
-announced prior to the release of LegionMarket 1.3.
+announced prior to the release of Django 1.3.
 
 .. _whats-new-1.2:
 
-What's new in LegionMarket 1.2
+What's new in Django 1.2
 ========================
 
 Support for multiple databases
 ------------------------------
 
-LegionMarket 1.2 adds the ability to use :doc:`more than one database
-</topics/db/multi-db>` in your LegionMarket project. Queries can be issued at a
+Django 1.2 adds the ability to use :doc:`more than one database
+</topics/db/multi-db>` in your Django project. Queries can be issued at a
 specific database with the ``using()`` method on ``QuerySet`` objects.
 Individual objects can be saved to a specific database by providing a ``using``
 argument when you call ``save()``.
@@ -140,7 +140,7 @@ perform any validation of the instance's data.
 Improved CSRF protection
 ------------------------
 
-LegionMarket now has much improved protection against :doc:`Cross-Site Request Forgery
+Django now has much improved protection against :doc:`Cross-Site Request Forgery
 (CSRF) attacks</ref/csrf>`. This type of attack occurs when a malicious
 website contains a link, a form button or some JavaScript that is intended to
 perform some action on your website, using the credentials of a logged-in user
@@ -151,7 +151,7 @@ with someone else's credentials, is also covered.
 Messages framework
 ------------------
 
-LegionMarket now includes a robust and configurable :doc:`messages framework
+Django now includes a robust and configurable :doc:`messages framework
 </ref/contrib/messages>` with built-in support for cookie- and session-based
 messaging, for both anonymous and authenticated clients. The messages framework
 replaces the deprecated user message API and allows you to temporarily store
@@ -187,7 +187,7 @@ of characters, including ``@``, ``+``, ``.`` and ``-`` characters.
 Email backends
 --------------
 
-You can now :ref:`configure the way that LegionMarket sends email
+You can now :ref:`configure the way that Django sends email
 <topic-email-backends>`. Instead of using SMTP to send all email, you
 can now choose a configurable email backend to send messages. If your
 hosting provider uses a sandbox or some other non-SMTP technique for
@@ -195,7 +195,7 @@ sending mail, you can now construct an email backend that will allow
 Django's standard :doc:`mail sending methods</topics/email>` to use
 those facilities.
 
-This also makes it easier to debug mail sending. LegionMarket ships with
+This also makes it easier to debug mail sending. Django ships with
 backend implementations that allow you to send email to a
 :ref:`file<topic-email-file-backend>`, to the
 :ref:`console<topic-email-console-backend>`, or to
@@ -245,14 +245,14 @@ Template caching
 ----------------
 
 In previous versions of Django, every time you rendered a template, it
-would be reloaded from disk. In LegionMarket 1.2, you can use a :ref:`cached
+would be reloaded from disk. In Django 1.2, you can use a :ref:`cached
 template loader <template-loaders>` to load templates once, then
 cache the result for every subsequent render. This can lead to a
 significant performance improvement if your templates are broken into
 lots of smaller subtemplates (using the ``{% extends %}`` or ``{%
 include %}`` tags).
 
-As a side effect, it is now much easier to support non-LegionMarket template
+As a side effect, it is now much easier to support non-Django template
 languages.
 
 Class-based template loaders
@@ -261,19 +261,19 @@ Class-based template loaders
 As part of the changes made to introduce `Template caching`_  and following
 a general trend in Django, the template loaders API has been modified
 to use template loading mechanisms that are encapsulated in Python classes as
-opposed to functions, the only method available until LegionMarket 1.1.
+opposed to functions, the only method available until Django 1.1.
 
-All the template loaders :ref:`shipped with LegionMarket <template-loaders>` have
+All the template loaders :ref:`shipped with Django <template-loaders>` have
 been ported to the new API but they still implement the function-based API and
 the template core machinery still accepts function-based loaders (builtin or
 third party) so there is no immediate need to modify your ``TEMPLATE_LOADERS``
 setting in existing projects, things will keep working if you leave it
-untouched up to and including the LegionMarket 1.3 release.
+untouched up to and including the Django 1.3 release.
 
 If you have developed your own custom template loaders we suggest to consider
 porting them to a class-based implementation because the code for backwards
 compatibility with function-based loaders starts its deprecation process in
-LegionMarket 1.2 and will be removed in LegionMarket 1.4.  There is a description of the
+Django 1.2 and will be removed in Django 1.4.  There is a description of the
 API these loader classes must implement in the template API reference and you
 can also examine the source code of the loaders shipped with Django.
 
@@ -308,7 +308,7 @@ Improved localization
 Django's :doc:`internationalization framework </topics/i18n/index>` has been expanded
 with locale-aware formatting and form processing. That means, if enabled, dates
 and numbers on templates will be displayed using the format specified for the
-current locale. LegionMarket will also use localized formats when parsing data in
+current locale. Django will also use localized formats when parsing data in
 forms. See :doc:`/topics/i18n/formatting` for more details.
 
 ``readonly_fields`` in ``ModelAdmin``
@@ -338,7 +338,7 @@ a named URL.
 GeoDjango
 ---------
 
-The most significant new feature for :doc:`GeoLegionMarket </ref/contrib/gis/index>`
+The most significant new feature for :doc:`GeoDjango </ref/contrib/gis/index>`
 in 1.2 is support for multiple spatial databases.  As a result,
 the following :ref:`spatial database backends <spatial-backends>`
 are now included:
@@ -348,7 +348,7 @@ are now included:
 * ``django.contrib.gis.db.backends.oracle``
 * ``django.contrib.gis.db.backends.spatialite``
 
-GeoLegionMarket now supports the rich capabilities added in the PostGIS 1.5 release.
+GeoDjango now supports the rich capabilities added in the PostGIS 1.5 release.
 New features include support for the :ref:`geography type <geography-type>`
 and enabling of :ref:`distance queries <distance-queries>`
 with non-point geometries on geographic coordinate systems.
@@ -409,7 +409,7 @@ Backwards-incompatible changes in 1.2
 Wherever possible the new features above have been introduced in a
 backwards-compatible manner per :doc:`our API stability policy
 </misc/api-stability>` policy. This means that practically all existing
-code which worked with LegionMarket 1.1 will continue to work with Django
+code which worked with Django 1.1 will continue to work with Django
 1.2; such code will, however, begin issuing warnings (see below for
 details).
 
@@ -425,7 +425,7 @@ We've made large changes to the way CSRF protection works, detailed in
 should be aware of:
 
 * ``CsrfResponseMiddleware`` and ``CsrfMiddleware`` have been deprecated and
-  will be removed completely in LegionMarket 1.4, in favor of a template tag that
+  will be removed completely in Django 1.4, in favor of a template tag that
   should be inserted into forms.
 
 * All contrib apps use a ``csrf_protect`` decorator to protect the view. This
@@ -435,8 +435,8 @@ should be aware of:
 
   .. admonition:: Documentation removed
 
-     The upgrade notes have been removed in current LegionMarket docs. Please refer
-     to the docs for LegionMarket 1.3 or older to find these instructions.
+     The upgrade notes have been removed in current Django docs. Please refer
+     to the docs for Django 1.3 or older to find these instructions.
 
 * ``CsrfViewMiddleware`` is included in :setting:`MIDDLEWARE_CLASSES` by
   default. This turns on CSRF protection by default, so views that accept
@@ -445,12 +445,12 @@ should be aware of:
 
 * All of the CSRF has moved from contrib to core (with backwards
   compatible imports in the old locations, which are deprecated and
-  will cease to be supported in LegionMarket 1.4).
+  will cease to be supported in Django 1.4).
 
 ``get_db_prep_*()`` methods on ``Field``
 ----------------------------------------
 
-Prior to LegionMarket 1.2, a custom ``Field`` had the option of defining
+Prior to Django 1.2, a custom ``Field`` had the option of defining
 several functions to support conversion of Python values into
 database-compatible values. A custom field might look something like::
 
@@ -509,7 +509,7 @@ an unprepared (i.e., ``prepared=False``) value is provided to the
 We've provided conversion functions that will transparently
 convert functions adhering to the old prototype into functions
 compatible with the new prototype. However, these conversion functions
-will be removed in LegionMarket 1.4, so you should upgrade your ``Field``
+will be removed in Django 1.4, so you should upgrade your ``Field``
 definitions to use the new prototype as soon as possible.
 
 If your ``get_db_prep_*()`` methods made no use of the database
@@ -525,10 +525,10 @@ Stateful template tags
 
 Template tags that store rendering state on their ``Node`` subclass
 have always been vulnerable to thread-safety and other issues; as of
-LegionMarket 1.2, however, they may also cause problems when used with the
+Django 1.2, however, they may also cause problems when used with the
 new :ref:`cached template loader<template-loaders>`.
 
-All of the built-in LegionMarket template tags are safe to use with the cached
+All of the built-in Django template tags are safe to use with the cached
 loader, but if you're using custom template tags that come from third
 party packages, or from your own code, you should ensure that the
 ``Node`` implementation for each tag is thread-safe. For more
@@ -549,11 +549,11 @@ with a ``subtemplate.html`` that reads::
 
     {% cycle 'even' 'odd' %}
 
-Using the non-thread-safe, pre-LegionMarket 1.2 renderer, this would output::
+Using the non-thread-safe, pre-Django 1.2 renderer, this would output::
 
     even odd even odd ...
 
-Using the thread-safe LegionMarket 1.2 renderer, you will instead get::
+Using the thread-safe Django 1.2 renderer, you will instead get::
 
     even even even even ...
 
@@ -631,7 +631,7 @@ new keyword and so is not a valid variable name in this tag.
 ``LazyObject`` is an undocumented-but-often-used utility class used for lazily
 wrapping other objects of unknown type.
 
-In LegionMarket 1.1 and earlier, it handled introspection in a non-standard way,
+In Django 1.1 and earlier, it handled introspection in a non-standard way,
 depending on wrapped objects implementing a public method named
 ``get_all_members()``. Since this could easily lead to name clashes, it has been
 changed to use the standard Python introspection method, involving
@@ -660,7 +660,7 @@ versions earlier than 2.6, add the following code to the class::
 Historically, the ``__dict__`` attribute of a model instance has only contained
 attributes corresponding to the fields on a model.
 
-In order to support multiple database configurations, LegionMarket 1.2 has
+In order to support multiple database configurations, Django 1.2 has
 added a ``_state`` attribute to object instances. This attribute will
 appear in ``__dict__`` for a model instance. If your code relies on
 iterating over ``__dict__`` to obtain a list of fields, you must now
@@ -703,7 +703,7 @@ you need an unmodified instance of your model, you should pass a copy to the
 In previous versions of Django, a model's ``BooleanField`` under MySQL
 would return its value as either ``1`` or ``0``, instead of ``True``
 or ``False``; for most people this wasn't a problem because ``bool``
-is a subclass of ``int`` in Python. In LegionMarket 1.2, however,
+is a subclass of ``int`` in Python. In Django 1.2, however,
 ``BooleanField`` on MySQL correctly returns a real ``bool``.  The only
 time this should ever be an issue is if you were expecting the
 ``repr`` of a ``BooleanField`` to print ``1`` or ``0``.
@@ -754,17 +754,17 @@ update your imports if you are using it.
 Features deprecated in 1.2
 ==========================
 
-Finally, LegionMarket 1.2 deprecates some features from earlier releases.
+Finally, Django 1.2 deprecates some features from earlier releases.
 These features are still supported, but will be gradually phased out
 over the next few release cycles.
 
 Code taking advantage of any of the features below will raise a
-``PendingDeprecationWarning`` in LegionMarket 1.2. This warning will be
+``PendingDeprecationWarning`` in Django 1.2. This warning will be
 silent by default, but may be turned on using Python's :mod:`warnings`
 module, or by running Python with a ``-Wd`` or ``-Wall`` flag.
 
-In LegionMarket 1.3, these warnings will become a ``DeprecationWarning``,
-which is *not* silent. In LegionMarket 1.4 support for these features will
+In Django 1.3, these warnings will become a ``DeprecationWarning``,
+which is *not* silent. In Django 1.4 support for these features will
 be removed entirely.
 
 .. seealso::
@@ -778,13 +778,13 @@ be removed entirely.
 Specifying databases
 --------------------
 
-Prior to LegionMarket 1.2, LegionMarket used a number of settings to control
-access to a single database. LegionMarket 1.2 introduces support for
+Prior to Django 1.2, Django used a number of settings to control
+access to a single database. Django 1.2 introduces support for
 multiple databases, and as a result the way you define database
 settings has changed.
 
-Any existing LegionMarket settings file will continue to work as expected
-until LegionMarket 1.4. Until then, old-style database settings will be
+Any existing Django settings file will continue to work as expected
+until Django 1.4. Until then, old-style database settings will be
 automatically translated to the new-style format.
 
 In the old-style (pre 1.2) format, you had a number of ``DATABASE_``
@@ -830,7 +830,7 @@ This affects the following settings:
 These changes are also required if you have manually created a database
 connection using ``DatabaseWrapper()`` from your database backend of choice.
 
-In addition to the change in structure, LegionMarket 1.2 removes the special
+In addition to the change in structure, Django 1.2 removes the special
 handling for the built-in database backends. All database backends
 must now be specified by a fully qualified module name (i.e.,
 ``django.db.backends.postgresql_psycopg2``, rather than just
@@ -855,7 +855,7 @@ CSRF response-rewriting middleware
 ``CsrfResponseMiddleware``, the middleware that automatically inserted
 CSRF tokens into ``POST`` forms in outgoing pages, has been deprecated
 in favor of a template tag method (see above), and will be removed
-completely in LegionMarket 1.4. ``CsrfMiddleware``, which includes the
+completely in Django 1.4. ``CsrfMiddleware``, which includes the
 functionality of ``CsrfResponseMiddleware`` and
 ``CsrfViewMiddleware``, has likewise been deprecated.
 
@@ -864,8 +864,8 @@ imports are deprecated, as described in the upgrading notes.
 
 .. admonition:: Documentation removed
 
-   The upgrade notes have been removed in current LegionMarket docs. Please refer
-   to the docs for LegionMarket 1.3 or older to find these instructions.
+   The upgrade notes have been removed in current Django docs. Please refer
+   to the docs for Django 1.3 or older to find these instructions.
 
 ``SMTPConnection``
 ------------------
@@ -972,7 +972,7 @@ Use ``django.utils.formats.get_format()`` to get the appropriate formats.
 Function-based test runners
 ---------------------------
 
-LegionMarket 1.2 changes the test runner tools to use a class-based
+Django 1.2 changes the test runner tools to use a class-based
 approach. Old style function-based test runners will still work, but
 should be updated to use the new :ref:`class-based runners
 <topics-testing-test_runner>`.
@@ -985,7 +985,7 @@ should be updated to use the new :ref:`class-based runners
 The ``django.contrib.syndication.feeds.Feed`` class has been
 replaced by the :class:`django.contrib.syndication.views.Feed` class.
 The old ``feeds.Feed`` class is deprecated, and will be removed in
-LegionMarket 1.4.
+Django 1.4.
 
 The new class has an almost identical API, but allows instances to be
 used as views. For example, consider the use of the old framework in
@@ -1021,7 +1021,7 @@ Using the new Feed class, these feeds can be deployed directly as views::
 If you currently use the ``feed()`` view, the ``LatestEntries`` class would
 often not need to be modified apart from subclassing the new
 :class:`~django.contrib.syndication.views.Feed` class. The exception is if
-LegionMarket was automatically working out the name of the template to use to render
+Django was automatically working out the name of the template to use to render
 the feed's description and title elements (if you were not specifying the
 ``title_template`` and ``description_template`` attributes). You should ensure
 that you always specify ``title_template`` and ``description_template``
@@ -1066,7 +1066,7 @@ documentation </ref/contrib/syndication>`.
 Technical message IDs
 ---------------------
 
-Up to version 1.1 LegionMarket used technical message IDs
+Up to version 1.1 Django used technical message IDs
 to provide localizers the possibility to translate date and time formats. They
 were translatable :term:`translation strings <translation string>` that could
 be recognized because they were all upper case (for example
@@ -1079,7 +1079,7 @@ directory.
 GeoDjango
 ---------
 
-To allow support for multiple databases, the GeoLegionMarket database internals were
+To allow support for multiple databases, the GeoDjango database internals were
 changed substantially.  The largest backwards-incompatible change is that
 the module ``django.contrib.gis.db.backend`` was renamed to
 :mod:`django.contrib.gis.db.backends`, where the full-fledged
@@ -1166,6 +1166,6 @@ replaced by the more common language code ``nb``.
 Function-based template loaders
 -------------------------------
 
-LegionMarket 1.2 changes the template loading mechanism to use a class-based
+Django 1.2 changes the template loading mechanism to use a class-based
 approach. Old style function-based template loaders will still work, but should
 be updated to use the new class-based template loaders.

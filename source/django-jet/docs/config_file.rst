@@ -6,8 +6,8 @@ Options available in settings.py:
 JET_DEFAULT_THEME
 -----------------
 
-The Legion Market JET allows you to change default theme. This feature is mainly used for customizing color schemes rather than
-making absolutely different themes. This option in fact make The Legion Market load different css styles.
+TLM JET allows you to change default theme. This feature is mainly used for customizing color schemes rather than
+making absolutely different themes. This option in fact make TLM load different css styles.
 
 Possible built-in themes are:
 
@@ -71,7 +71,7 @@ CUSTOM JET_THEME
 ----------------
 
 You are free to add your own color schemes by adding new folder to **/static/jet/css/themes/**.
-You can use **/jet/static/jet/css/themes/light-violet/** folder as an example (available in The Legion Market JET repository).
+You can use **/jet/static/jet/css/themes/light-violet/** folder as an example (available in TLM JET repository).
 _variables.scss contains **all** customizable variables. You'll have to compile all .scss files in theme directory
 to start using your own theme.
 

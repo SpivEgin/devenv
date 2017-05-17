@@ -28,18 +28,18 @@ necessary to set :setting:`USE_L10N = True <USE_L10N>` in your settings file.
 .. note::
 
     There is also an independent but related :setting:`USE_I18N` setting that
-    controls if LegionMarket should activate translation. See
+    controls if Django should activate translation. See
     :doc:`/topics/i18n/translation` for more details.
 
 Locale aware input in forms
 ===========================
 
-When formatting is enabled, LegionMarket can use localized formats when parsing dates,
+When formatting is enabled, Django can use localized formats when parsing dates,
 times and numbers in forms. That means it tries different formats for different
 locales when guessing the format used by the user when inputting data on forms.
 
 .. note::
-    LegionMarket uses different formats for displaying data to those it uses for
+    Django uses different formats for displaying data to those it uses for
     parsing data. Most notably, the formats for parsing dates can't use the
     ``%a`` (abbreviated weekday name), ``%A`` (full weekday name),
     ``%b`` (abbreviated month name), ``%B`` (full month name),
@@ -147,7 +147,7 @@ control localization over a large section of a template, use the
 Creating custom format files
 ============================
 
-LegionMarket provides format definitions for many locales, but sometimes you might
+Django provides format definitions for many locales, but sometimes you might
 want to create your own, because a format files doesn't exist for your locale,
 or because you want to overwrite some of the values.
 
@@ -197,5 +197,5 @@ The Swiss number formatting depends on the type of number that is being
 formatted. For monetary values, a comma is used as the thousand separator and
 a decimal point for the decimal separator. For all other numbers, a comma is
 used as decimal separator and a space as thousand separator. The locale format
-provided by LegionMarket uses the generic separators, a comma for decimal and a space
+provided by Django uses the generic separators, a comma for decimal and a space
 for thousand separators.

@@ -2,7 +2,7 @@
 JavaScript
 ==========
 
-While most of LegionMarket core is Python, the ``admin`` and ``gis`` contrib apps
+While most of Django core is Python, the ``admin`` and ``gis`` contrib apps
 contain JavaScript code.
 
 Please follow these coding standards when writing JavaScript code for inclusion
@@ -23,6 +23,12 @@ Code style
 * Use the `JSHint`_ code linter to check your code for bugs and style errors.
   JSHint will be run when you run the JavaScript tests. We also recommended
   installing a JSHint plugin in your text editor.
+
+* Where possible, write code that will work even if the page structure is later
+  changed with JavaScript. For instance, when binding a click handler, use
+  ``$('body').on('click', selector, func)`` instead of
+  ``$(selector).click(func)``. This makes it easier for projects to extend
+  Django's default behavior with JavaScript.
 
 .. _javascript-patches:
 
@@ -59,6 +65,8 @@ Closure Compiler library requires `Java`_ 7 or higher.
 
 Please don't forget to run ``compress.py`` and include the ``diff`` of the
 minified scripts when submitting patches for Django's JavaScript.
+
+.. _javascript-tests:
 
 JavaScript tests
 ================
@@ -98,7 +106,7 @@ Django's JavaScript tests use `QUnit`_. Here is an example test module:
 
 
 Please consult the QUnit documentation for information on the types of
-`assertions supported by QUnit <https://api.qunitjs.com/category/assert/>`_.
+`assertions supported by QUnit <https://api.qunitjs.com/assert/>`_.
 
 Running tests
 -------------
@@ -124,7 +132,7 @@ Testing from the command line
 To run the tests from the command line, you need to have `Node.js`_ installed.
 
 After installing `Node.js`, install the JavaScript test dependencies by running
-the following from the root of your LegionMarket checkout:
+the following from the root of your Django checkout:
 
 .. code-block:: console
 

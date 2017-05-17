@@ -13,6 +13,7 @@ from django.utils.decorators import method_decorator
 from django.utils.deprecation import RemovedInDjango20Warning
 from django.utils.encoding import force_text
 from django.utils.functional import allow_lazy, keep_lazy, keep_lazy_text, lazy
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy
 from django.views.decorators.cache import (
     cache_control, cache_page, never_cache,
@@ -29,6 +30,8 @@ from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 def fully_decorated(request):
     """Expected __doc__"""
     return HttpResponse('<html><body>dummy</body></html>')
+
+
 fully_decorated.anything = "Expected __dict__"
 
 
@@ -74,6 +77,9 @@ full_decorator = compose(
     keep_lazy(HttpResponse),
     keep_lazy_text,
     lazy,
+
+    # django.utils.safestring
+    mark_safe,
 )
 
 fully_decorated = full_decorator(fully_decorated)
@@ -83,8 +89,7 @@ class DecoratorsTest(TestCase):
 
     def test_attributes(self):
         """
-        Tests that django decorators set certain attributes of the wrapped
-        function.
+        Built-in decorators set certain attributes of the wrapped function.
         """
         self.assertEqual(fully_decorated.__name__, 'fully_decorated')
         self.assertEqual(fully_decorated.__doc__, 'Expected __doc__')
@@ -92,8 +97,7 @@ class DecoratorsTest(TestCase):
 
     def test_user_passes_test_composition(self):
         """
-        Test that the user_passes_test decorator can be applied multiple times
-        (#9474).
+        The user_passes_test decorator can be applied multiple times (#9474).
         """
         def test1(user):
             user.decorators_applied.append('test1')
@@ -122,10 +126,7 @@ class DecoratorsTest(TestCase):
 
         self.assertEqual(response, ['test2', 'test1'])
 
-    def test_cache_page_new_style(self):
-        """
-        Test that we can call cache_page the new way
-        """
+    def test_cache_page(self):
         def my_view(request):
             return "response"
         my_view_cached = cache_page(123)(my_view)
@@ -171,6 +172,7 @@ def simple_dec(func):
         return func("test:" + arg)
     return wraps(func)(wrapper)
 
+
 simple_dec_m = method_decorator(simple_dec)
 
 
@@ -181,6 +183,7 @@ def myattr_dec(func):
     wrapper.myattr = True
     return wraps(func)(wrapper)
 
+
 myattr_dec_m = method_decorator(myattr_dec)
 
 
@@ -189,6 +192,7 @@ def myattr2_dec(func):
         return func(*args, **kwargs)
     wrapper.myattr2 = True
     return wraps(func)(wrapper)
+
 
 myattr2_dec_m = method_decorator(myattr2_dec)
 

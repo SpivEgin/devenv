@@ -1,4 +1,4 @@
-# This file is distributed under the same license as the LegionMarket package.
+# This file is distributed under the same license as the Django package.
 #
 # Translators:
 # Jacara <baskhuujacara@gmail.com>, 2011
@@ -83,7 +83,7 @@ msgid "WKT debugging window:"
 msgstr "WKT шинжлэх цонх:"
 
 msgid "Google Maps via GeoDjango"
-msgstr "GeoLegionMarket -оор дамжсан Google Maps"
+msgstr "GeoDjango -оор дамжсан Google Maps"
 
 msgid "Debugging window (serialized value)"
 msgstr "Шинжлэх цонх (дугаарлагдсан утга) "

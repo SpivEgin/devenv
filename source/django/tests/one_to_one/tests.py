@@ -165,10 +165,8 @@ class OneToOneTests(TestCase):
 
     def test_create_models_m2m(self):
         """
-        Regression test for #1064 and #1506
-
-        Check that we create models via the m2m relation if the remote model
-        has a OneToOneField.
+        Modles are created via the m2m relation if the remote model has a
+        OneToOneField (#1064, #1506).
         """
         f = Favorites(name='Fred')
         f.save()
@@ -180,9 +178,7 @@ class OneToOneTests(TestCase):
 
     def test_reverse_object_cache(self):
         """
-        Regression test for #7173
-
-        Check that the name of the cache for the reverse object is correct.
+        The name of the cache for the reverse object is correct (#7173).
         """
         self.assertEqual(self.p1.restaurant, self.r1)
         self.assertEqual(self.p1.bar, self.b1)
@@ -516,15 +512,19 @@ class OneToOneTests(TestCase):
     def test_rel_pk_subquery(self):
         r = Restaurant.objects.first()
         q1 = Restaurant.objects.filter(place_id=r.pk)
-        # Test that subquery using primary key and a query against the
+        # Subquery using primary key and a query against the
         # same model works correctly.
         q2 = Restaurant.objects.filter(place_id__in=q1)
-        self.assertQuerysetEqual(q2, [r], lambda x: x)
-        # Test that subquery using 'pk__in' instead of 'place_id__in' work, too.
+        self.assertSequenceEqual(q2, [r])
+        # Subquery using 'pk__in' instead of 'place_id__in' work, too.
         q2 = Restaurant.objects.filter(
             pk__in=Restaurant.objects.filter(place__id=r.place.pk)
         )
-        self.assertQuerysetEqual(q2, [r], lambda x: x)
+        self.assertSequenceEqual(q2, [r])
+        q3 = Restaurant.objects.filter(place__in=Place.objects.all())
+        self.assertSequenceEqual(q3, [r])
+        q4 = Restaurant.objects.filter(place__in=Place.objects.filter(id=r.pk))
+        self.assertSequenceEqual(q4, [r])
 
     def test_rel_pk_exact(self):
         r = Restaurant.objects.first()
@@ -534,5 +534,5 @@ class OneToOneTests(TestCase):
     def test_primary_key_to_field_filter(self):
         target = Target.objects.create(name='foo')
         pointer = ToFieldPointer.objects.create(target=target)
-        self.assertQuerysetEqual(ToFieldPointer.objects.filter(target=target), [pointer], lambda x: x)
-        self.assertQuerysetEqual(ToFieldPointer.objects.filter(pk__exact=pointer), [pointer], lambda x: x)
+        self.assertSequenceEqual(ToFieldPointer.objects.filter(target=target), [pointer])
+        self.assertSequenceEqual(ToFieldPointer.objects.filter(pk__exact=pointer), [pointer])

@@ -303,14 +303,8 @@ class ProxyModelTests(TestCase):
         issue = Issue.objects.create(assignee=tu)
         self.assertEqual(tu.issues.get(), issue)
         self.assertEqual(ptu.issues.get(), issue)
-        self.assertQuerysetEqual(
-            TrackerUser.objects.filter(issues=issue),
-            [tu], lambda x: x
-        )
-        self.assertQuerysetEqual(
-            ProxyTrackerUser.objects.filter(issues=issue),
-            [ptu], lambda x: x
-        )
+        self.assertSequenceEqual(TrackerUser.objects.filter(issues=issue), [tu])
+        self.assertSequenceEqual(ProxyTrackerUser.objects.filter(issues=issue), [ptu])
 
     def test_proxy_bug(self):
         contributor = ProxyTrackerUser.objects.create(name='Contributor', status='contrib')
@@ -370,7 +364,7 @@ class ProxyModelAdminTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.superuser = AuthUser.objects.create(is_superuser=True, is_staff=True)
-        cls.tu1 = ProxyTrackerUser.objects.create(name='LegionMarket Pony', status='emperor')
+        cls.tu1 = ProxyTrackerUser.objects.create(name='Django Pony', status='emperor')
         cls.i1 = Issue.objects.create(summary="Pony's Issue", assignee=cls.tu1)
 
     def test_cascade_delete_proxy_model_admin_warning(self):
@@ -381,7 +375,7 @@ class ProxyModelAdminTests(TestCase):
         tracker_user = TrackerUser.objects.all()[0]
         base_user = BaseUser.objects.all()[0]
         issue = Issue.objects.all()[0]
-        with self.assertNumQueries(7):
+        with self.assertNumQueries(6):
             collector = admin.utils.NestedObjects('default')
             collector.collect(ProxyTrackerUser.objects.all())
         self.assertIn(tracker_user, collector.edges.get(None, ()))
@@ -393,8 +387,8 @@ class ProxyModelAdminTests(TestCase):
         Test if the admin delete page shows the correct string representation
         for a proxy model.
         """
-        user = TrackerUser.objects.get(name='LegionMarket Pony')
-        proxy = ProxyTrackerUser.objects.get(name='LegionMarket Pony')
+        user = TrackerUser.objects.get(name='Django Pony')
+        proxy = ProxyTrackerUser.objects.get(name='Django Pony')
 
         user_str = 'Tracker user: <a href="%s">%s</a>' % (
             reverse('admin_proxy:proxy_models_trackeruser_change', args=(user.pk,)), user

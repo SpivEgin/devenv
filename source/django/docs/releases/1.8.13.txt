@@ -1,10 +1,10 @@
 ===========================
-LegionMarket 1.8.13 release notes
+Django 1.8.13 release notes
 ===========================
 
 *May 2, 2016*
 
-LegionMarket 1.8.13 fixes several bugs in 1.8.12.
+Django 1.8.13 fixes several bugs in 1.8.12.
 
 Bugfixes
 ========

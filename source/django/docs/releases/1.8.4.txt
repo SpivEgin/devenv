@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.8.4 release notes
+Django 1.8.4 release notes
 ==========================
 
 *August 18, 2015*
 
-LegionMarket 1.8.4 fixes a security issue and several bugs in 1.8.3.
+Django 1.8.4 fixes a security issue and several bugs in 1.8.3.
 
 Denial-of-service possibility in ``logout()`` view by filling session store
 ===========================================================================

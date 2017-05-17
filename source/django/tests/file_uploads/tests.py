@@ -450,7 +450,7 @@ class FileUploadTests(TestCase):
             })
 
         request = response.wsgi_request
-        # Check that the files got actually parsed.
+        # The files were parsed.
         self.assertTrue(hasattr(request, '_files'))
 
         file = request._files['file']
@@ -469,7 +469,7 @@ class FileUploadTests(TestCase):
             })
 
         request = response.wsgi_request
-        # Check that the fd closing logic doesn't trigger parsing of the stream
+        # The fd closing logic doesn't trigger parsing of the stream
         self.assertFalse(hasattr(request, '_files'))
 
     def test_file_error_blocking(self):
@@ -520,7 +520,7 @@ class FileUploadTests(TestCase):
         uploaded.
         """
         # Synthesize the contents of a file upload with a mixed case filename
-        # so we don't have to carry such a file in the LegionMarket tests source code
+        # so we don't have to carry such a file in the Django tests source code
         # tree.
         vars = {'boundary': 'oUrBoUnDaRyStRiNg'}
         post_data = [

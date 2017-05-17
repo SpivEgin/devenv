@@ -50,7 +50,7 @@ class RelativeFieldTests(SimpleTestCase):
             self.assertEqual(len(warns), 1)
             self.assertEqual(
                 str(warns[0].message),
-                'on_delete will be a required arg for ForeignKey in LegionMarket '
+                'on_delete will be a required arg for ForeignKey in Django '
                 '2.0. Set it to models.CASCADE on models and in existing '
                 'migrations if you want to maintain the current default '
                 'behavior. See https://docs.djangoproject.com/en/%s/ref/models/fields/'
@@ -70,7 +70,7 @@ class RelativeFieldTests(SimpleTestCase):
             self.assertEqual(len(warns), 1)
             self.assertEqual(
                 str(warns[0].message),
-                "The signature for ForeignKey will change in LegionMarket 2.0. "
+                "The signature for ForeignKey will change in Django 2.0. "
                 "Pass to_field='id' as a kwarg instead of as an arg."
             )
 
@@ -87,7 +87,7 @@ class RelativeFieldTests(SimpleTestCase):
             self.assertEqual(len(warns), 1)
             self.assertEqual(
                 str(warns[0].message),
-                'on_delete will be a required arg for OneToOneField in LegionMarket '
+                'on_delete will be a required arg for OneToOneField in Django '
                 '2.0. Set it to models.CASCADE on models and in existing '
                 'migrations if you want to maintain the current default '
                 'behavior. See https://docs.djangoproject.com/en/%s/ref/models/fields/'
@@ -107,7 +107,7 @@ class RelativeFieldTests(SimpleTestCase):
             self.assertEqual(len(warns), 1)
             self.assertEqual(
                 str(warns[0].message),
-                "The signature for OneToOneField will change in LegionMarket 2.0. "
+                "The signature for OneToOneField will change in Django 2.0. "
                 "Pass to_field='id' as a kwarg instead of as an arg."
             )
 
@@ -176,12 +176,32 @@ class RelativeFieldTests(SimpleTestCase):
         field = Model._meta.get_field('m2m')
         self.assertEqual(field.check(from_model=Model), [])
 
+    def test_many_to_many_with_limit_choices_auto_created_no_warning(self):
+        class Model(models.Model):
+            name = models.CharField(max_length=20)
+
+        class ModelM2M(models.Model):
+            m2m = models.ManyToManyField(Model, limit_choices_to={'name': 'test_name'})
+
+        self.assertEqual(ModelM2M.check(), [])
+
     def test_many_to_many_with_useless_options(self):
         class Model(models.Model):
             name = models.CharField(max_length=20)
 
         class ModelM2M(models.Model):
-            m2m = models.ManyToManyField(Model, null=True, validators=[''])
+            m2m = models.ManyToManyField(
+                Model,
+                null=True,
+                validators=[''],
+                limit_choices_to={'name': 'test_name'},
+                through='ThroughModel',
+                through_fields=('modelm2m', 'model'),
+            )
+
+        class ThroughModel(models.Model):
+            model = models.ForeignKey('Model', models.CASCADE)
+            modelm2m = models.ForeignKey('ModelM2M', models.CASCADE)
 
         errors = ModelM2M.check()
         field = ModelM2M._meta.get_field('m2m')
@@ -191,15 +211,19 @@ class RelativeFieldTests(SimpleTestCase):
                 'null has no effect on ManyToManyField.',
                 obj=field,
                 id='fields.W340',
-            )
-        ]
-        expected.append(
+            ),
             DjangoWarning(
                 'ManyToManyField does not support validators.',
                 obj=field,
                 id='fields.W341',
-            )
-        )
+            ),
+            DjangoWarning(
+                'limit_choices_to has no effect on ManyToManyField '
+                'with a through model.',
+                obj=field,
+                id='fields.W343',
+            ),
+        ]
 
         self.assertEqual(errors, expected)
 
@@ -224,7 +248,7 @@ class RelativeFieldTests(SimpleTestCase):
                 "The model is used as an intermediate model by "
                 "'invalid_models_tests.Group.field', but it has more than one "
                 "foreign key to 'Person', which is ambiguous. You must specify "
-                "which foreign key LegionMarket should use via the through_fields "
+                "which foreign key Django should use via the through_fields "
                 "keyword argument.",
                 hint=(
                     'If you want to create a recursive relationship, use '
@@ -378,9 +402,9 @@ class RelativeFieldTests(SimpleTestCase):
                 "The model is used as an intermediate model by "
                 "'invalid_models_tests.Person.friends', but it has more than two "
                 "foreign keys to 'Person', which is ambiguous. You must specify "
-                "which two foreign keys LegionMarket should use via the through_fields "
+                "which two foreign keys Django should use via the through_fields "
                 "keyword argument.",
-                hint='Use through_fields to specify which two foreign keys LegionMarket should use.',
+                hint='Use through_fields to specify which two foreign keys Django should use.',
                 obj=InvalidRelationship,
                 id='fields.E333',
             ),
@@ -730,7 +754,7 @@ class RelativeFieldTests(SimpleTestCase):
             pass
 
         for invalid_related_name in invalid_related_names:
-            Child = type(str('Child_%s') % str(invalid_related_name), (models.Model,), {
+            Child = type(str('Child%s') % str(invalid_related_name), (models.Model,), {
                 'parent': models.ForeignKey('Parent', models.CASCADE, related_name=invalid_related_name),
                 '__module__': Parent.__module__,
             })
@@ -739,7 +763,7 @@ class RelativeFieldTests(SimpleTestCase):
             errors = Child.check()
             expected = [
                 Error(
-                    "The name '%s' is invalid related_name for field Child_%s.parent"
+                    "The name '%s' is invalid related_name for field Child%s.parent"
                     % (invalid_related_name, invalid_related_name),
                     hint="Related name must be a valid Python identifier or end with a '+'",
                     obj=field,
@@ -759,7 +783,6 @@ class RelativeFieldTests(SimpleTestCase):
             '_starts_with_underscore',
             'contains_%s_digit' % digit,
             'ends_with_plus+',
-            '_',
             '_+',
             '+',
         ]
@@ -771,13 +794,89 @@ class RelativeFieldTests(SimpleTestCase):
             pass
 
         for related_name in related_names:
-            Child = type(str('Child_%s') % str(related_name), (models.Model,), {
+            Child = type(str('Child%s') % str(related_name), (models.Model,), {
                 'parent': models.ForeignKey('Parent', models.CASCADE, related_name=related_name),
                 '__module__': Parent.__module__,
             })
 
             errors = Child.check()
             self.assertFalse(errors)
+
+    def test_to_fields_exist(self):
+        class Parent(models.Model):
+            pass
+
+        class Child(models.Model):
+            a = models.PositiveIntegerField()
+            b = models.PositiveIntegerField()
+            parent = ForeignObject(
+                Parent,
+                on_delete=models.SET_NULL,
+                from_fields=('a', 'b'),
+                to_fields=('a', 'b'),
+            )
+
+        field = Child._meta.get_field('parent')
+        expected = [
+            Error(
+                "The to_field 'a' doesn't exist on the related model 'invalid_models_tests.Parent'.",
+                obj=field,
+                id='fields.E312',
+            ),
+            Error(
+                "The to_field 'b' doesn't exist on the related model 'invalid_models_tests.Parent'.",
+                obj=field,
+                id='fields.E312',
+            ),
+        ]
+        self.assertEqual(field.check(), expected)
+
+    def test_to_fields_not_checked_if_related_model_doesnt_exist(self):
+        class Child(models.Model):
+            a = models.PositiveIntegerField()
+            b = models.PositiveIntegerField()
+            parent = ForeignObject(
+                'invalid_models_tests.Parent',
+                on_delete=models.SET_NULL,
+                from_fields=('a', 'b'),
+                to_fields=('a', 'b'),
+            )
+
+        field = Child._meta.get_field('parent')
+        self.assertEqual(field.check(), [
+            Error(
+                "Field defines a relation with model 'invalid_models_tests.Parent', "
+                "which is either not installed, or is abstract.",
+                id='fields.E300',
+                obj=field,
+            ),
+        ])
+
+    def test_invalid_related_query_name(self):
+        class Target(models.Model):
+            pass
+
+        class Model(models.Model):
+            first = models.ForeignKey(Target, models.CASCADE, related_name='contains__double')
+            second = models.ForeignKey(Target, models.CASCADE, related_query_name='ends_underscore_')
+
+        self.assertEqual(Model.check(), [
+            Error(
+                "Reverse query name 'contains__double' must not contain '__'.",
+                hint=("Add or change a related_name or related_query_name "
+                      "argument for this field."),
+                obj=Model._meta.get_field('first'),
+                id='fields.E309',
+            ),
+            Error(
+                "Reverse query name 'ends_underscore_' must not end with an "
+                "underscore.",
+                hint=("Add or change a related_name or related_query_name "
+                      "argument for this field."),
+                obj=Model._meta.get_field('second'),
+                id='fields.E308',
+            ),
+        ])
 
 
 @isolate_apps('invalid_models_tests')
@@ -895,6 +994,21 @@ class AccessorClashTests(SimpleTestCase):
             )
         ]
         self.assertEqual(errors, expected)
+
+    def test_no_clash_for_hidden_related_name(self):
+        class Stub(models.Model):
+            pass
+
+        class ManyToManyRel(models.Model):
+            thing1 = models.ManyToManyField(Stub, related_name='+')
+            thing2 = models.ManyToManyField(Stub, related_name='+')
+
+        class FKRel(models.Model):
+            thing1 = models.ForeignKey(Stub, models.CASCADE, related_name='+')
+            thing2 = models.ForeignKey(Stub, models.CASCADE, related_name='+')
+
+        self.assertEqual(ManyToManyRel.check(), [])
+        self.assertEqual(FKRel.check(), [])
 
 
 @isolate_apps('invalid_models_tests')
@@ -1413,7 +1527,7 @@ class ComplexClashTests(SimpleTestCase):
 class M2mThroughFieldsTests(SimpleTestCase):
     def test_m2m_field_argument_validation(self):
         """
-        Tests that ManyToManyField accepts the ``through_fields`` kwarg
+        ManyToManyField accepts the ``through_fields`` kwarg
         only if an intermediary table is specified.
         """
         class Fan(models.Model):
@@ -1424,7 +1538,7 @@ class M2mThroughFieldsTests(SimpleTestCase):
 
     def test_invalid_order(self):
         """
-        Tests that mixing up the order of link fields to ManyToManyField.through_fields
+        Mixing up the order of link fields to ManyToManyField.through_fields
         triggers validation errors.
         """
         class Fan(models.Model):
@@ -1458,7 +1572,7 @@ class M2mThroughFieldsTests(SimpleTestCase):
 
     def test_invalid_field(self):
         """
-        Tests that providing invalid field names to ManyToManyField.through_fields
+        Providing invalid field names to ManyToManyField.through_fields
         triggers validation errors.
         """
         class Fan(models.Model):
@@ -1496,7 +1610,7 @@ class M2mThroughFieldsTests(SimpleTestCase):
 
     def test_explicit_field_names(self):
         """
-        Tests that if ``through_fields`` kwarg is given, it must specify both
+        If ``through_fields`` kwarg is given, it must specify both
         link fields of the intermediary table.
         """
         class Fan(models.Model):

@@ -178,13 +178,13 @@ attributes:
 
 .. attribute:: FileUploadHandler.chunk_size
 
-    Size, in bytes, of the "chunks" LegionMarket should store into memory and feed
+    Size, in bytes, of the "chunks" Django should store into memory and feed
     into the handler. That is, this attribute controls the size of chunks
     fed into ``FileUploadHandler.receive_data_chunk``.
 
     For maximum performance the chunk sizes should be divisible by ``4`` and
     should not exceed 2 GB (2\ :sup:`31` bytes) in size. When there are
-    multiple chunk sizes provided by multiple handlers, LegionMarket will use the
+    multiple chunk sizes provided by multiple handlers, Django will use the
     smallest chunk size defined by any handler.
 
     The default is 64*2\ :sup:`10` bytes, or 64 KB.

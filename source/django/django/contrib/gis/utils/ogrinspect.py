@@ -1,6 +1,6 @@
 """
 This module is for inspecting OGR data sources and generating either
-models for GeoLegionMarket and/or mapping dictionaries for use with the
+models for GeoDjango and/or mapping dictionaries for use with the
 `LayerMapping` utility.
 """
 from django.contrib.gis.gdal import DataSource
@@ -53,7 +53,7 @@ def mapping(data_source, geom_name='geom', layer_key=0, multi_geom=False):
 def ogrinspect(*args, **kwargs):
     """
     Given a data source (either a string or a DataSource object) and a string
-    model name this function will generate a GeoLegionMarket model.
+    model name this function will generate a GeoDjango model.
 
     Usage:
 
@@ -125,7 +125,7 @@ def _ogrinspect(data_source, model_name, geom_name='geom', layer_key=0, srid=Non
                 multi_geom=False, name_field=None, imports=True,
                 decimal=False, blank=False, null=False):
     """
-    Helper routine for `ogrinspect` that generates GeoLegionMarket models corresponding
+    Helper routine for `ogrinspect` that generates GeoDjango models corresponding
     to the given data source.  See the `ogrinspect` docstring for more details.
     """
     # Getting the DataSource
@@ -168,7 +168,7 @@ def _ogrinspect(data_source, model_name, geom_name='geom', layer_key=0, srid=Non
 
     # For those wishing to disable the imports.
     if imports:
-        yield '# This is an auto-generated LegionMarket model module created by ogrinspect.'
+        yield '# This is an auto-generated Django model module created by ogrinspect.'
         yield 'from django.contrib.gis.db import models'
         yield ''
 

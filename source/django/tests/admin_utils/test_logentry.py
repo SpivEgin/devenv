@@ -59,7 +59,7 @@ class LogEntryTests(TestCase):
         logentry = LogEntry.objects.filter(content_type__model__iexact='article').latest('id')
         self.assertEqual(logentry.get_change_message(), 'Changed title and hist.')
         with translation.override('fr'):
-            self.assertEqual(logentry.get_change_message(), 'Title et hist modifié(s).')
+            self.assertEqual(logentry.get_change_message(), 'Modification de title et hist.')
 
         add_url = reverse('admin:admin_utils_article_add')
         post_data['title'] = 'New'
@@ -137,8 +137,9 @@ class LogEntryTests(TestCase):
         with translation.override('fr'):
             self.assertEqual(
                 logentry.get_change_message(),
-                "Domain modifié(s). Article « Article object » ajouté. "
-                "Title modifié(s) pour l'objet article « Article object ». Article « Article object » supprimé."
+                "Modification de domain. Ajout de article « Article object ». "
+                "Modification de title pour l'objet article « Article object ». "
+                "Suppression de article « Article object »."
             )
 
     def test_logentry_get_edited_object(self):
@@ -178,6 +179,14 @@ class LogEntryTests(TestCase):
         # Make sure custom action_flags works
         log_entry.action_flag = 4
         self.assertEqual(six.text_type(log_entry), 'LogEntry Object')
+
+    def test_log_action(self):
+        content_type_pk = ContentType.objects.get_for_model(Article).pk
+        log_entry = LogEntry.objects.log_action(
+            self.user.pk, content_type_pk, self.a1.pk, repr(self.a1), CHANGE,
+            change_message='Changed something else',
+        )
+        self.assertEqual(log_entry, LogEntry.objects.latest('id'))
 
     def test_recentactions_without_content_type(self):
         """

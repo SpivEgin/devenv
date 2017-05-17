@@ -19,11 +19,14 @@ from django.test.selenium import SeleniumTestCaseBase
 from django.test.utils import get_runner
 from django.utils import six
 from django.utils._os import upath
-from django.utils.deprecation import RemovedInDjango20Warning
+from django.utils.deprecation import (
+    RemovedInDjango20Warning, RemovedInDjango21Warning,
+)
 from django.utils.log import DEFAULT_LOGGING
 
 # Make deprecation warnings errors to ensure no usage of deprecated features.
 warnings.simplefilter("error", RemovedInDjango20Warning)
+warnings.simplefilter("error", RemovedInDjango21Warning)
 # Make runtime warning errors to ensure no usage of error prone patterns.
 warnings.simplefilter("error", RuntimeWarning)
 # Ignore known warnings in test dependencies.
@@ -81,11 +84,12 @@ CONTRIB_TESTS_TO_APPS = {
 
 def get_test_modules():
     modules = []
-    discovery_paths = [
-        (None, RUNTESTS_DIR),
+    discovery_paths = [(None, RUNTESTS_DIR)]
+    if connection.features.gis_enabled:
         # GIS tests are in nested apps
-        ('gis_tests', os.path.join(RUNTESTS_DIR, 'gis_tests')),
-    ]
+        discovery_paths.append(('gis_tests', os.path.join(RUNTESTS_DIR, 'gis_tests')))
+    else:
+        SUBDIRS_TO_SKIP.append('gis_tests')
 
     for modpath, dirpath in discovery_paths:
         for f in os.listdir(dirpath):
@@ -103,8 +107,18 @@ def get_installed():
 
 
 def setup(verbosity, test_labels, parallel):
+    # Reduce the given test labels to just the app module path.
+    test_labels_set = set()
+    for label in test_labels:
+        bits = label.split('.')[:1]
+        test_labels_set.add('.'.join(bits))
+
+    if 'gis_tests' in test_labels_set and not connection.features.gis_enabled:
+        print('Aborting: A GIS database backend is required to run gis_tests.')
+        sys.exit(1)
+
     if verbosity >= 1:
-        msg = "Testing against LegionMarket installed in '%s'" % os.path.dirname(django.__file__)
+        msg = "Testing against Django installed in '%s'" % os.path.dirname(django.__file__)
         max_parallel = default_test_processes() if parallel == 0 else parallel
         if max_parallel > 1:
             msg += " with up to %d processes" % max_parallel
@@ -160,10 +174,19 @@ def setup(verbosity, test_labels, parallel):
     # tests.
     log_config['loggers']['django']['level'] = 'ERROR'
     settings.LOGGING = log_config
+    settings.SILENCED_SYSTEM_CHECKS = [
+        'fields.W342',  # ForeignKey(unique=True) -> OneToOneField
+        'fields.W901',  # CommaSeparatedIntegerField deprecated
+    ]
 
     warnings.filterwarnings(
         'ignore',
         'The GeoManager class is deprecated.',
+        RemovedInDjango20Warning
+    )
+    warnings.filterwarnings(
+        'ignore',
+        'django.forms.extras is deprecated.',
         RemovedInDjango20Warning
     )
 
@@ -172,12 +195,6 @@ def setup(verbosity, test_labels, parallel):
 
     # Load all the test model apps.
     test_modules = get_test_modules()
-
-    # Reduce given test labels to just the app module path
-    test_labels_set = set()
-    for label in test_labels:
-        bits = label.split('.')[:1]
-        test_labels_set.add('.'.join(bits))
 
     installed_app_names = set(get_installed())
     for modpath, module_name in test_modules:
@@ -221,6 +238,12 @@ def teardown(state):
     # Restore the old settings.
     for key, value in state.items():
         setattr(settings, key, value)
+    # Discard the multiprocessing.util finalizer that tries to remove a
+    # temporary directory that's already removed by this script's
+    # atexit.register(shutil.rmtree, TMPDIR) handler. Prevents
+    # FileNotFoundError at the end of a test run on Python 3.6+ (#27890).
+    from multiprocessing.util import _finalizer_registry
+    _finalizer_registry.pop((-100, 0), None)
 
 
 def actual_test_processes(parallel):
@@ -327,11 +350,11 @@ def bisect_tests(bisection_label, options, test_labels, parallel):
 
         if failures_a and not failures_b:
             print("***** Problem found in first half. Bisecting again...")
-            iteration = iteration + 1
+            iteration += 1
             test_labels = test_labels_a[:-1]
         elif failures_b and not failures_a:
             print("***** Problem found in second half. Bisecting again...")
-            iteration = iteration + 1
+            iteration += 1
             test_labels = test_labels_b[:-1]
         elif failures_a and failures_b:
             print("***** Multiple sources of failure found")
@@ -375,7 +398,7 @@ def paired_tests(paired_test, options, test_labels, parallel):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run the LegionMarket test suite.")
+    parser = argparse.ArgumentParser(description="Run the Django test suite.")
     parser.add_argument(
         'modules', nargs='*', metavar='module',
         help='Optional path(s) to test modules; e.g. "i18n" or '
@@ -387,15 +410,15 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         '--noinput', action='store_false', dest='interactive', default=True,
-        help='Tells LegionMarket to NOT prompt the user for input of any kind.',
+        help='Tells Django to NOT prompt the user for input of any kind.',
     )
     parser.add_argument(
         '--failfast', action='store_true', dest='failfast', default=False,
-        help='Tells LegionMarket to stop running the test suite after first failed test.',
+        help='Tells Django to stop running the test suite after first failed test.',
     )
     parser.add_argument(
         '-k', '--keepdb', action='store_true', dest='keepdb', default=False,
-        help='Tells LegionMarket to preserve the test database between runs.',
+        help='Tells Django to preserve the test database between runs.',
     )
     parser.add_argument(
         '--settings',
@@ -416,12 +439,6 @@ if __name__ == "__main__":
         '--reverse', action='store_true', default=False,
         help='Sort test suites and test cases in opposite order to debug '
              'test side effects not apparent with normal execution lineup.',
-    )
-    parser.add_argument(
-        '--liveserver',
-        help='Overrides the default address where the live server (used with '
-             'LiveServerTestCase) is expected to run from. The default value '
-             'is localhost:8081-8179.',
     )
     parser.add_argument(
         '--selenium', dest='selenium', action=ActionSelenium, metavar='BROWSERS',
@@ -467,9 +484,6 @@ if __name__ == "__main__":
             os.environ['DJANGO_SETTINGS_MODULE'] = 'test_sqlite'
         options.settings = os.environ['DJANGO_SETTINGS_MODULE']
 
-    if options.liveserver is not None:
-        os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = options.liveserver
-
     if options.selenium:
         if not options.tags:
             options.tags = ['selenium']
@@ -489,4 +503,4 @@ if __name__ == "__main__":
             options.exclude_tags,
         )
         if failures:
-            sys.exit(bool(failures))
+            sys.exit(1)

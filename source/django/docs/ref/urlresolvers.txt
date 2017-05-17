@@ -8,13 +8,13 @@
 
     In older versions, these functions are located in
     ``django.core.urlresolvers``. Importing from the old location will continue
-    to work until LegionMarket 2.0.
+    to work until Django 2.0.
 
 ``reverse()``
 =============
 
 If you need to use something similar to the :ttag:`url` template tag in
-your code, LegionMarket provides the following function:
+your code, Django provides the following function:
 
 .. function:: reverse(viewname, urlconf=None, args=None, kwargs=None, current_app=None)
 
@@ -144,8 +144,6 @@ If the URL does not resolve, the function raises a
 
     .. attribute:: ResolverMatch.app_names
 
-        .. versionadded:: 1.9
-
         The list of individual namespace components in the full
         application namespace for the URL pattern that matches the URL.
         For example, if the ``app_name`` is ``'foo:bar'``, then ``app_names``
@@ -210,8 +208,8 @@ view would raise a ``Http404`` error before redirecting to it::
 Normally, you should always use :func:`~django.urls.reverse` to define URLs
 within your application. However, if your application constructs part of the
 URL hierarchy itself, you may occasionally need to generate URLs. In that
-case, you need to be able to find the base URL of the LegionMarket project within
+case, you need to be able to find the base URL of the Django project within
 its Web server (normally, :func:`~django.urls.reverse` takes care of this for
 you). In that case, you can call ``get_script_prefix()``, which will return
-the script prefix portion of the URL for your LegionMarket project. If your Django
+the script prefix portion of the URL for your Django project. If your Django
 project is at the root of its web server, this is always ``"/"``.

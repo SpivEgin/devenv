@@ -2,7 +2,7 @@
 """
 Using a custom primary key
 
-By default, LegionMarket adds an ``"id"`` field to each model. But you can override
+By default, Django adds an ``"id"`` field to each model. But you can override
 this behavior by explicitly adding ``primary_key=True`` to a field.
 """
 

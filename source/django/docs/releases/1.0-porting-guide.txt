@@ -1,10 +1,10 @@
 =========================================
-Porting your apps from LegionMarket 0.96 to 1.0
+Porting your apps from Django 0.96 to 1.0
 =========================================
 
 .. highlight:: python
 
-LegionMarket 1.0 breaks compatibility with 0.96 in some areas.
+Django 1.0 breaks compatibility with 0.96 in some areas.
 
 This guide will help you port 0.96 projects and apps to 1.0. The first part of
 this document includes the common changes needed to run with 1.0. If after going
@@ -126,7 +126,7 @@ New (1.0) ``admin.py``::
 The Admin
 ---------
 
-One of the biggest changes in 1.0 is the new admin. The LegionMarket administrative
+One of the biggest changes in 1.0 is the new admin. The Django administrative
 interface (``django.contrib.admin``) has been completely refactored; admin
 definitions are now completely decoupled from model definitions, the framework
 has been rewritten to use Django's new form-handling library and redesigned with
@@ -253,7 +253,7 @@ Views
 Use ``django.forms`` instead of ``newforms``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Replace ``django.newforms`` with ``django.forms`` -- LegionMarket 1.0 renamed the
+Replace ``django.newforms`` with ``django.forms`` -- Django 1.0 renamed the
 ``newforms`` module (introduced in 0.96) to plain old ``forms``. The
 ``oldforms`` module was also removed.
 
@@ -391,7 +391,7 @@ Old (0.96)                                         New (1.0)
 Comments
 --------
 
-If you were using LegionMarket 0.96's ``django.contrib.comments`` app, you'll need to
+If you were using Django 0.96's ``django.contrib.comments`` app, you'll need to
 upgrade to the new comments app introduced in 1.0. See the upgrade guide
 for details.
 
@@ -441,7 +441,7 @@ Better exceptions
 ~~~~~~~~~~~~~~~~~
 
 The old :exc:`EnvironmentError` has split into an
-:exc:`ImportError` when LegionMarket fails to find the settings module
+:exc:`ImportError` when Django fails to find the settings module
 and a :exc:`RuntimeError` when you try to reconfigure settings
 after having already used them.
 
@@ -456,7 +456,7 @@ LOGIN_URL`` refer to :setting:`settings.LOGIN_URL <LOGIN_URL>`.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In 0.96, if a URL didn't end in a slash or have a period in the final
-component of its path, and :setting:`APPEND_SLASH` was True, LegionMarket would
+component of its path, and :setting:`APPEND_SLASH` was True, Django would
 redirect to the same URL, but with a slash appended to the end. Now, Django
 checks to see whether the pattern without the trailing slash would be matched
 by something in your URL patterns. If so, no redirection takes place, because
@@ -543,7 +543,7 @@ database column types for ``DecimalField`` are the same as for the old
 If you're using SQLite, you need to force the database to view the
 appropriate columns as decimal types, rather than floats. To do this, you'll
 need to reload your data. Do this after you have made the change to using
-``DecimalField`` in your code and updated the LegionMarket code.
+``DecimalField`` in your code and updated the Django code.
 
 .. warning::
 
@@ -572,9 +572,9 @@ Notes:
    lose the data for the application(s) in question. Say yes; we'll restore
    this data in the third step, of course.
 
-3. ``DecimalField`` is not used in any of the apps shipped with LegionMarket prior
+3. ``DecimalField`` is not used in any of the apps shipped with Django prior
    to this change being made, so you do not need to worry about performing
-   this procedure for any of the standard LegionMarket models.
+   this procedure for any of the standard Django models.
 
 If something goes wrong in the above process, just copy your backed up
 database file over the original file and start again.

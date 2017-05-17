@@ -164,7 +164,7 @@ CHANGELOG
 ------------------
 
 * Fix ``extrastyle.html`` link in README.rst
-* Fix modal display in LegionMarket CMS <= 3.1
+* Fix modal display in django CMS <= 3.1
 * Fix multiple select showing dropdown icon
 * Fix magnifier icon in django-filer for files
 * Fix box-shadow on buttons

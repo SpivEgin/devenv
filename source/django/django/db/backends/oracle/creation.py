@@ -1,5 +1,4 @@
 import sys
-import time
 
 from django.conf import settings
 from django.db.backends.base.creation import BaseDatabaseCreation
@@ -77,9 +76,6 @@ class DatabaseCreation(BaseDatabaseCreation):
             try:
                 self._create_test_user(cursor, parameters, verbosity, keepdb)
             except Exception as e:
-                # If we want to keep the db, then we want to also keep the user.
-                if keepdb:
-                    return
                 sys.stderr.write("Got an error creating the test user: %s\n" % e)
                 if not autoclobber:
                     confirm = input(
@@ -161,7 +157,7 @@ class DatabaseCreation(BaseDatabaseCreation):
                 print("Tests cancelled -- test database cannot be recreated.")
                 sys.exit(1)
         else:
-            print("LegionMarket is configured to use pre-existing test user '%s',"
+            print("TLM is configured to use pre-existing test user '%s',"
                   " and will not attempt to delete it.\n" % parameters['user'])
             print("Tests cancelled -- test database cannot be recreated.")
             sys.exit(1)
@@ -176,7 +172,6 @@ class DatabaseCreation(BaseDatabaseCreation):
         self.connection.close()
         parameters = self._get_test_db_params()
         cursor = self._maindb_connection.cursor()
-        time.sleep(1)  # To avoid "database is being accessed by other users" errors.
         if self._test_user_create():
             if verbosity >= 1:
                 print('Destroying test user...')
@@ -351,7 +346,7 @@ class DatabaseCreation(BaseDatabaseCreation):
         """
         We need to return the 'production' DB name to get the test DB creation
         machinery to work. This isn't a great deal in this case because DB
-        names as handled by LegionMarket haven't real counterparts in Oracle.
+        names as handled by Django haven't real counterparts in Oracle.
         """
         return self.connection.settings_dict['NAME']
 

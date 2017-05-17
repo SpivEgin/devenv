@@ -51,7 +51,7 @@ class C01(models.Model):
 
 # All of these models use the same tables as the previous set (they are shadows
 # of possibly a subset of the columns). There should be no creation errors,
-# since we have told LegionMarket they aren't managed by Django.
+# since we have told Django they aren't managed by Django.
 
 
 @python_2_unicode_compatible

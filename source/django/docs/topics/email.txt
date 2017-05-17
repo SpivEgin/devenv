@@ -6,7 +6,7 @@ Sending email
    :synopsis: Helpers to easily send email.
 
 Although Python makes sending email relatively easy via the :mod:`smtplib`
-module, LegionMarket provides a couple of light wrappers over it. These wrappers are
+module, Django provides a couple of light wrappers over it. These wrappers are
 provided to make sending email extra quick, to make it easy to test email
 sending during development, and to provide support for platforms that can't use
 SMTP.
@@ -62,10 +62,10 @@ are required.
   possible exceptions, all of which are subclasses of
   :exc:`~smtplib.SMTPException`.
 * ``auth_user``: The optional username to use to authenticate to the SMTP
-  server. If this isn't provided, LegionMarket will use the value of the
+  server. If this isn't provided, Django will use the value of the
   :setting:`EMAIL_HOST_USER` setting.
 * ``auth_password``: The optional password to use to authenticate to the
-  SMTP server. If this isn't provided, LegionMarket will use the value of the
+  SMTP server. If this isn't provided, Django will use the value of the
   :setting:`EMAIL_HOST_PASSWORD` setting.
 * ``connection``: The optional email backend to use to send the mail.
   If unspecified, an instance of the default backend will be used.
@@ -177,7 +177,7 @@ Preventing header injection
 email headers to control the "To:" and "From:" in email messages that your
 scripts generate.
 
-The LegionMarket email functions outlined above all protect against header injection
+The Django email functions outlined above all protect against header injection
 by forbidding newlines in header values. If any ``subject``, ``from_email`` or
 ``recipient_list`` contains a newline (in either Unix, Windows or Mac style),
 the email function (e.g. :meth:`~django.core.mail.send_mail()`) will raise
@@ -229,7 +229,7 @@ recipients, file attachments, or multi-part email, you'll need to create
 
 .. note::
     This is a design feature. :meth:`~django.core.mail.send_mail()` and
-    related functions were originally the only interface LegionMarket provided.
+    related functions were originally the only interface Django provided.
     However, the list of parameters they accepted was slowly growing over
     time. It made sense to move to a more object-oriented design for email
     messages and retain the original functions only for backwards
@@ -345,6 +345,11 @@ The class has the following methods:
     If you specify a ``mimetype`` of ``message/rfc822``, it will also accept
     :class:`django.core.mail.EmailMessage` and :py:class:`email.message.Message`.
 
+    For a ``mimetype`` starting with ``text/``, content is expected to be a
+    string. Binary data will be decoded using UTF-8, and if that fails, the
+    MIME type will be changed to ``application/octet-stream`` and the data will
+    be attached unchanged.
+
     In addition, ``message/rfc822`` attachments will no longer be
     base64-encoded in violation of :rfc:`2046#section-5.2.1`, which can cause
     issues with displaying the attachments in `Evolution`__ and `Thunderbird`__.
@@ -358,6 +363,14 @@ The class has the following methods:
   will be guessed from the filename. The simplest use would be::
 
     message.attach_file('/images/weather_map.png')
+
+  For MIME types starting with ``text/``, binary data is handled as in
+  ``attach()``.
+
+.. versionchanged:: 1.11
+
+    Added the fallback to MIME type ``application/octet-stream`` when binary
+    data for a ``text/*`` attachment cannot be decoded.
 
 Sending alternative content types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -450,7 +463,7 @@ will be silently ignored.
 All other arguments are passed directly to the constructor of the
 email backend.
 
-LegionMarket ships with several email sending backends. With the exception of the
+Django ships with several email sending backends. With the exception of the
 SMTP backend (which is the default), these backends are only useful during
 testing and development. If you have special email sending requirements, you
 can :ref:`write your own email backend <topic-custom-email-backend>`.
@@ -644,7 +657,7 @@ manually open the connection, you can control when it is closed. For example::
 Configuring email for development
 =================================
 
-There are times when you do not want LegionMarket to send emails at
+There are times when you do not want Django to send emails at
 all. For example, while developing a website, you probably don't want
 to send out thousands of emails -- but you may want to validate that
 emails will be sent to the right people under the right conditions,

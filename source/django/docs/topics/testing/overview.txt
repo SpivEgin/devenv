@@ -3,7 +3,7 @@ Writing and running tests
 =========================
 
 .. module:: django.test
-   :synopsis: Testing tools for LegionMarket applications.
+   :synopsis: Testing tools for Django applications.
 
 .. seealso::
 
@@ -203,7 +203,7 @@ Order in which tests are executed
 ---------------------------------
 
 In order to guarantee that all ``TestCase`` code starts with a clean database,
-the LegionMarket test runner reorders tests in the following way:
+the Django test runner reorders tests in the following way:
 
 * All :class:`~django.test.TestCase` subclasses are run first.
 
@@ -238,7 +238,7 @@ MyISAM). This is also true for tests which rely on ``TransactionTestCase``
 such as :class:`LiveServerTestCase` and
 :class:`~django.contrib.staticfiles.testing.StaticLiveServerTestCase`.
 
-LegionMarket can reload that data for you on a per-testcase basis by
+Django can reload that data for you on a per-testcase basis by
 setting the ``serialized_rollback`` option to ``True`` in the body of the
 ``TestCase`` or ``TransactionTestCase``, but note that this will slow down
 that test suite by approximately 3x.
@@ -252,8 +252,6 @@ The initial serialization is usually very quick, but if you wish to exclude
 some apps from this process (and speed up test runs slightly), you may add
 those apps to :setting:`TEST_NON_SERIALIZED_APPS`.
 
-.. versionchanged:: 1.9
-
 To prevent serialized data from being loaded twice, setting
 ``serialized_rollback=True`` disables the
 :data:`~django.db.models.signals.post_migrate` signal when flushing the test
@@ -263,7 +261,7 @@ Other test conditions
 ---------------------
 
 Regardless of the value of the :setting:`DEBUG` setting in your configuration
-file, all LegionMarket tests run with :setting:`DEBUG`\=False. This is to ensure that
+file, all Django tests run with :setting:`DEBUG`\=False. This is to ensure that
 the observed output of your code matches what will be seen in a production
 setting.
 
@@ -288,7 +286,7 @@ prepares itself. You can control the level of detail of these messages with the
 This tells you that the test runner is creating a test database, as described
 in the previous section.
 
-Once the test database has been created, LegionMarket will run your tests.
+Once the test database has been created, Django will run your tests.
 If everything goes well, you'll see something like this::
 
     ----------------------------------------------------------------------

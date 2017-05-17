@@ -1,5 +1,5 @@
 =====================================
-Writing your first LegionMarket app, part 5
+Writing your first Django app, part 5
 =====================================
 
 This tutorial begins where :doc:`Tutorial 4 </intro/tutorial04>` left off.
@@ -37,7 +37,7 @@ Python/Django, and having yet another thing to learn and do may seem
 overwhelming and perhaps unnecessary. After all, our polls application is
 working quite happily now; going through the trouble of creating automated
 tests is not going to make it work any better. If creating the polls
-application is the last bit of LegionMarket programming you will ever do, then true,
+application is the last bit of Django programming you will ever do, then true,
 you don't need to know how to create automated tests. But, if that's not the
 case, now is an excellent time to learn.
 
@@ -97,7 +97,7 @@ The previous points are written from the point of view of a single developer
 maintaining an application. Complex applications will be maintained by teams.
 Tests guarantee that colleagues don't inadvertently break your code (and that
 you don't break theirs without knowing). If you want to make a living as a
-LegionMarket programmer, you must be good at writing tests!
+Django programmer, you must be good at writing tests!
 
 Basic testing strategies
 ========================
@@ -197,6 +197,7 @@ In the terminal, we can run our test::
 and you'll see something like::
 
     Creating test database for alias 'default'...
+    System check identified no issues (0 silenced).
     F
     ======================================================================
     FAIL: test_was_published_recently_with_future_question (polls.tests.QuestionMethodTests)
@@ -250,6 +251,7 @@ past:
 and run the test again::
 
     Creating test database for alias 'default'...
+    System check identified no issues (0 silenced).
     .
     ----------------------------------------------------------------------
     Ran 1 test in 0.001s
@@ -324,10 +326,10 @@ through a web browser.
 
 Before we try to fix anything, let's have a look at the tools at our disposal.
 
-The LegionMarket test client
+The Django test client
 ----------------------
 
-LegionMarket provides a test :class:`~django.test.Client` to simulate a user
+Django provides a test :class:`~django.test.Client` to simulate a user
 interacting with the code at the view level.  We can use it in ``tests.py``
 or even in the :djadmin:`shell`.
 
@@ -359,7 +361,9 @@ With that ready, we can ask the client to do some work for us::
 
     >>> # get a response from '/'
     >>> response = client.get('/')
-    >>> # we should expect a 404 from that address
+    >>> # we should expect a 404 from that address; if you instead see an
+    >>> # "Invalid HTTP_HOST header" error and a 400 response, you probably
+    >>> # omitted the setup_test_environment() call described earlier.
     >>> response.status_code
     404
     >>> # on the other hand we should expect to find something at '/polls/'
@@ -370,8 +374,6 @@ With that ready, we can ask the client to do some work for us::
     200
     >>> response.content
     b'\n    <ul>\n    \n        <li><a href="/polls/1/">What&#39;s up?</a></li>\n    \n    </ul>\n\n'
-    >>> # If the following doesn't work, you probably omitted the call to
-    >>> # setup_test_environment() described above
     >>> response.context['latest_question_list']
     <QuerySet [<Question: What's up?>]>
 
@@ -646,7 +648,7 @@ framework such as Selenium_ to test the way your HTML actually renders in a
 browser. These tools allow you to check not just the behavior of your Django
 code, but also, for example, of your JavaScript. It's quite something to see
 the tests launch a browser, and start interacting with your site, as if a human
-being were driving it! LegionMarket includes :class:`~django.test.LiveServerTestCase`
+being were driving it! Django includes :class:`~django.test.LiveServerTestCase`
 to facilitate integration with tools like Selenium.
 
 If you have a complex application, you may want to run tests automatically
@@ -659,7 +661,7 @@ a piece of code, it usually means that code should be refactored or removed.
 Coverage will help to identify dead code. See
 :ref:`topics-testing-code-coverage` for details.
 
-:doc:`Testing in LegionMarket </topics/testing/index>` has comprehensive
+:doc:`Testing in Django </topics/testing/index>` has comprehensive
 information about testing.
 
 .. _Selenium: http://seleniumhq.org/
@@ -671,6 +673,6 @@ What's next?
 For full details on testing, see :doc:`Testing in Django
 </topics/testing/index>`.
 
-When you're comfortable with testing LegionMarket views, read
+When you're comfortable with testing Django views, read
 :doc:`part 6 of this tutorial</intro/tutorial06>` to learn about
 static files management.

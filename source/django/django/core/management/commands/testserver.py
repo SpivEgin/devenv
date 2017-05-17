@@ -15,7 +15,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             '--noinput', '--no-input', action='store_false', dest='interactive', default=True,
-            help='Tells LegionMarket to NOT prompt the user for input of any kind.',
+            help='Tells Django to NOT prompt the user for input of any kind.',
         )
         parser.add_argument(
             '--addrport', default='',
@@ -23,7 +23,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             '--ipv6', '-6', action='store_true', dest='use_ipv6', default=False,
-            help='Tells LegionMarket to use an IPv6 address.',
+            help='Tells Django to use an IPv6 address.',
         )
 
     def handle(self, *fixture_labels, **options):

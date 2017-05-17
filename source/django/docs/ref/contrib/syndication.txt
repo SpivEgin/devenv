@@ -6,13 +6,13 @@ The syndication feed framework
    :synopsis: A framework for generating syndication feeds, in RSS and Atom,
               quite easily.
 
-LegionMarket comes with a high-level syndication-feed-generating framework
+Django comes with a high-level syndication-feed-generating framework
 that makes creating RSS_ and Atom_ feeds easy.
 
 To create any syndication feed, all you have to do is write a short
 Python class. You can create as many feeds as you want.
 
-LegionMarket also comes with a lower-level feed-generating API. Use this if
+Django also comes with a lower-level feed-generating API. Use this if
 you want to generate feeds outside of a Web context, or in some other
 lower-level way.
 
@@ -99,7 +99,7 @@ Note:
   example returns ``NewsItem`` objects using Django's
   :doc:`object-relational mapper </ref/models/querysets>`, ``items()``
   doesn't have to return model instances. Although you get a few bits of
-  functionality "for free" by using LegionMarket models, ``items()`` can
+  functionality "for free" by using Django models, ``items()`` can
   return any type of object you want.
 
 * If you're creating an Atom feed, rather than an RSS feed, set the
@@ -110,7 +110,7 @@ One thing is left to do. In an RSS feed, each ``<item>`` has a ``<title>``,
 ``<link>`` and ``<description>``. We need to tell the framework what data to put
 into those elements.
 
-* For the contents of ``<title>`` and ``<description>``, LegionMarket tries
+* For the contents of ``<title>`` and ``<description>``, Django tries
   calling the methods ``item_title()`` and ``item_description()`` on
   the :class:`~django.contrib.syndication.views.Feed` class. They are passed
   a single parameter, ``item``, which is the object itself. These are
@@ -118,7 +118,7 @@ into those elements.
   both.
 
   If you want to do any special formatting for either the title or
-  description, :doc:`LegionMarket templates </ref/templates/language>` can be used
+  description, :doc:`Django templates </ref/templates/language>` can be used
   instead. Their paths can be specified with the ``title_template`` and
   ``description_template`` attributes on the
   :class:`~django.contrib.syndication.views.Feed` class. The templates are
@@ -129,7 +129,7 @@ into those elements.
 
   * ``{{ site }}`` -- A :class:`django.contrib.sites.models.Site` object
     representing the current site. This is useful for ``{{ site.domain
-    }}`` or ``{{ site.name }}``. If you do *not* have the LegionMarket sites
+    }}`` or ``{{ site.name }}``. If you do *not* have the Django sites
     framework installed, this will be set to a
     :class:`~django.contrib.sites.requests.RequestSite` object. See the
     :ref:`RequestSite section of the sites framework documentation
@@ -185,11 +185,11 @@ into those elements.
   and return the modified dictionary.
 
 * To specify the contents of ``<link>``, you have two options. For each item
-  in ``items()``, LegionMarket first tries calling the
+  in ``items()``, Django first tries calling the
   ``item_link()`` method on the
   :class:`~django.contrib.syndication.views.Feed` class. In a similar way to
   the title and description, it is passed it a single parameter,
-  ``item``. If that method doesn't exist, LegionMarket tries executing a
+  ``item``. If that method doesn't exist, Django tries executing a
   ``get_absolute_url()`` method on that object. Both
   ``get_absolute_url()`` and ``item_link()`` should return the
   item's URL as a normal Python string. As with ``get_absolute_url()``, the
@@ -248,7 +248,7 @@ To generate the feed's ``<title>``, ``<link>`` and ``<description>``, Django
 uses the ``title()``, ``link()`` and ``description()`` methods. In
 the previous example, they were simple string class attributes, but this example
 illustrates that they can be either strings *or* methods. For each of
-``title``, ``link`` and ``description``, LegionMarket follows this
+``title``, ``link`` and ``description``, Django follows this
 algorithm:
 
 * First, it tries to call a method, passing the ``obj`` argument, where
@@ -303,11 +303,6 @@ enclosure per item, the ``item_enclosure_url``, ``item_enclosure_length``, and
 ``item_enclosure_mime_type`` hooks. See the ``ExampleFeed`` class below for
 usage examples.
 
-.. versionchanged:: 1.9
-
-    Support for multiple enclosures per feed item was added through the
-    ``item_enclosures`` hook.
-
 Language
 --------
 
@@ -361,7 +356,7 @@ Here's a full example::
     a feed-level "description," but they *do* provide for a "subtitle."
 
     If you provide a ``description`` in your
-    :class:`~django.contrib.syndication.views.Feed` class, LegionMarket will *not*
+    :class:`~django.contrib.syndication.views.Feed` class, Django will *not*
     automatically put that into the ``subtitle`` element, because a
     subtitle and description are not necessarily the same thing. Instead, you
     should define a ``subtitle`` attribute.
@@ -403,7 +398,7 @@ This example illustrates all possible attributes and methods for a
         feed_type = feedgenerator.Rss201rev2Feed
 
         # TEMPLATE NAMES -- Optional. These should be strings
-        # representing names of LegionMarket templates that the system should
+        # representing names of Django templates that the system should
         # use in rendering the title and description of your feed items.
         # Both are optional. If a template is not specified, the
         # item_title() or item_description() methods are used instead.

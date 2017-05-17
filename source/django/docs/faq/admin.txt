@@ -6,7 +6,7 @@ I can't log in. When I enter a valid username and password, it just brings up th
 ===========================================================================================================================
 
 The login cookie isn't being set correctly, because the domain of the cookie
-sent out by LegionMarket doesn't match the domain in your browser. Try setting the
+sent out by Django doesn't match the domain in your browser. Try setting the
 :setting:`SESSION_COOKIE_DOMAIN` setting to match your domain. For example, if
 you're going to "https://www.example.com/admin/" in your browser, set
 ``SESSION_COOKIE_DOMAIN = 'www.example.com'``.
@@ -43,12 +43,12 @@ My admin-site CSS and images showed up fine using the development server, but th
 =========================================================================================================================
 
 See :ref:`serving the admin files <serving-the-admin-files>`
-in the "How to use LegionMarket with mod_wsgi" documentation.
+in the "How to use Django with mod_wsgi" documentation.
 
 My "list_filter" contains a ManyToManyField, but the filter doesn't display.
 ============================================================================
 
-LegionMarket won't bother displaying the filter for a ``ManyToManyField`` if there
+Django won't bother displaying the filter for a ``ManyToManyField`` if there
 are fewer than two related objects.
 
 For example, if your :attr:`~django.contrib.admin.ModelAdmin.list_filter`
@@ -65,14 +65,14 @@ foreign key field incorrectly set to :attr:`null=False
 :class:`~django.db.models.ForeignKey` pointing to a non-existent object and
 that foreign key is included is
 :attr:`~django.contrib.admin.ModelAdmin.list_display`, the record will not be
-shown in the admin changelist because the LegionMarket model is declaring an
+shown in the admin changelist because the Django model is declaring an
 integrity constraint that is not implemented at the database level.
 
 How can I customize the functionality of the admin interface?
 =============================================================
 
 You've got several options. If you want to piggyback on top of an add/change
-form that LegionMarket automatically generates, you can attach arbitrary JavaScript
+form that Django automatically generates, you can attach arbitrary JavaScript
 modules to the page via the model's class Admin :ref:`js parameter
 <modeladmin-asset-definitions>`. That parameter is a list of URLs, as strings,
 pointing to JavaScript modules that will be included within the admin form via

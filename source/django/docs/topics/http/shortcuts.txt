@@ -1,5 +1,5 @@
 =========================
-LegionMarket shortcut functions
+Django shortcut functions
 =========================
 
 .. module:: django.shortcuts
@@ -20,7 +20,7 @@ introduce controlled coupling for convenience's sake.
    Combines a given template with a given context dictionary and returns an
    :class:`~django.http.HttpResponse` object with that rendered text.
 
-   LegionMarket does not provide a shortcut function which returns a
+   Django does not provide a shortcut function which returns a
    :class:`~django.template.response.TemplateResponse` because the constructor
    of :class:`~django.template.response.TemplateResponse` offers the same level
    of convenience as :func:`render()`.

@@ -8,7 +8,7 @@ class SimpleAdminConfig(AppConfig):
     """Simple AppConfig which does not do automatic discovery."""
 
     name = 'django.contrib.admin'
-    verbose_name = _("Administration")
+    verbose_name = _("TLM Administration")
 
     def ready(self):
         checks.register(check_dependencies, checks.Tags.admin)

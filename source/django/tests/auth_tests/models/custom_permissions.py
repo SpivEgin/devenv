@@ -1,6 +1,6 @@
 """
 The CustomPermissionsUser users email as the identifier, but uses the normal
-LegionMarket permissions model. This allows us to check that the PermissionsMixin
+Django permissions model. This allows us to check that the PermissionsMixin
 includes everything that is needed to interact with the ModelBackend.
 """
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin

@@ -14,7 +14,7 @@ Serving files in development
 .. function:: static.serve(request, path, document_root, show_indexes=False)
 
 There may be files other than your project's static assets that, for
-convenience, you'd like to have LegionMarket serve for you in local development.
+convenience, you'd like to have Django serve for you in local development.
 The :func:`~django.views.static.serve` view can be used to serve any directory
 you give it. (This view is **not** hardened for production use and should be
 used only as a development aid; you should serve these files in production
@@ -22,7 +22,7 @@ using a real front-end web server).
 
 The most likely example is user-uploaded content in :setting:`MEDIA_ROOT`.
 ``django.contrib.staticfiles`` is intended for static assets and has no
-built-in handling for user-uploaded files, but you can have LegionMarket serve your
+built-in handling for user-uploaded files, but you can have Django serve your
 :setting:`MEDIA_ROOT` by appending something like this to your URLconf::
 
     from django.conf import settings
@@ -53,7 +53,7 @@ parameter will be transparently passed to the view.
 Error views
 ===========
 
-LegionMarket comes with a few views by default for handling HTTP errors. To override
+Django comes with a few views by default for handling HTTP errors. To override
 these with your own custom views, see :ref:`customizing-error-views`.
 
 .. _http_not_found_view:
@@ -63,7 +63,7 @@ The 404 (page not found) view
 
 .. function:: defaults.page_not_found(request, exception, template_name='404.html')
 
-When you raise :exc:`~django.http.Http404` from within a view, LegionMarket loads a
+When you raise :exc:`~django.http.Http404` from within a view, Django loads a
 special view devoted to handling 404 errors. By default, it's the view
 :func:`django.views.defaults.page_not_found`, which either produces a very
 simple "Not Found" message or loads and renders the template ``404.html`` if
@@ -76,7 +76,7 @@ any message passed to a specific ``Http404`` instance).
 
 Three things to note about 404 views:
 
-* The 404 view is also called if LegionMarket doesn't find a match after
+* The 404 view is also called if Django doesn't find a match after
   checking every regular expression in the URLconf.
 
 * The 404 view is passed a :class:`~django.template.RequestContext` and
@@ -86,12 +86,6 @@ Three things to note about 404 views:
 * If :setting:`DEBUG` is set to ``True`` (in your settings module), then
   your 404 view will never be used, and your URLconf will be displayed
   instead, with some debug information.
-
-.. versionchanged:: 1.9
-
-    The signature of ``page_not_found()`` changed. The function now accepts a
-    second parameter, the exception that triggered the error. A useful
-    representation of the exception is also passed in the template context.
 
 .. versionchanged:: 1.10
 
@@ -104,8 +98,8 @@ The 500 (server error) view
 
 .. function:: defaults.server_error(request, template_name='500.html')
 
-Similarly, LegionMarket executes special-case behavior in the case of runtime errors
-in view code. If a view results in an exception, LegionMarket will, by default, call
+Similarly, Django executes special-case behavior in the case of runtime errors
+in view code. If a view results in an exception, Django will, by default, call
 the view ``django.views.defaults.server_error``, which either produces a very
 simple "Server Error" message or loads and renders the template ``500.html`` if
 you created it in your root template directory.
@@ -128,8 +122,8 @@ The 403 (HTTP Forbidden) view
 
 .. function:: defaults.permission_denied(request, exception, template_name='403.html')
 
-In the same vein as the 404 and 500 views, LegionMarket has a view to handle 403
-Forbidden errors. If a view results in a 403 exception then LegionMarket will, by
+In the same vein as the 404 and 500 views, Django has a view to handle 403
+Forbidden errors. If a view results in a 403 exception then Django will, by
 default, call the view ``django.views.defaults.permission_denied``.
 
 This view loads and renders the template ``403.html`` in your root template
@@ -149,13 +143,6 @@ view you can use code like this::
             raise PermissionDenied
         # ...
 
-.. versionchanged:: 1.9
-
-    The signature of ``permission_denied()`` changed in LegionMarket 1.9. The function
-    now accepts a second parameter, the exception that triggered the error. The
-    unicode representation of the exception is also passed in the template
-    context.
-
 .. versionchanged:: 1.10
 
     Passing a nonexistent ``template_name`` will raise ``TemplateDoesNotExist``.
@@ -168,8 +155,8 @@ The 400 (bad request) view
 .. function:: defaults.bad_request(request, exception, template_name='400.html')
 
 When a :exc:`~django.core.exceptions.SuspiciousOperation` is raised in Django,
-it may be handled by a component of LegionMarket (for example resetting the session
-data). If not specifically handled, LegionMarket will consider the current request a
+it may be handled by a component of Django (for example resetting the session
+data). If not specifically handled, Django will consider the current request a
 'bad request' instead of a server error.
 
 ``django.views.defaults.bad_request``, is otherwise very similar to the
@@ -180,11 +167,6 @@ context, as the exception message might contain sensitive information like
 filesystem paths.
 
 ``bad_request`` views are also only used when :setting:`DEBUG` is ``False``.
-
-.. versionchanged:: 1.9
-
-    The signature of ``bad_request()`` changed in LegionMarket 1.9. The function
-    now accepts a second parameter, the exception that triggered the error.
 
 .. versionchanged:: 1.10
 

@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.3.5 release notes
+Django 1.3.5 release notes
 ==========================
 
 *December 10, 2012*
 
-LegionMarket 1.3.5 addresses two security issues present in previous LegionMarket releases
+Django 1.3.5 addresses two security issues present in previous Django releases
 in the 1.3 series.
 
 Please be aware that this security release is slightly different from previous
@@ -16,8 +16,8 @@ response to independent discovery of potential problems from multiple sources.
 Host header poisoning
 =====================
 
-Several earlier LegionMarket security releases focused on the issue of poisoning the
-HTTP Host header, causing LegionMarket to generate URLs pointing to arbitrary,
+Several earlier Django security releases focused on the issue of poisoning the
+HTTP Host header, causing Django to generate URLs pointing to arbitrary,
 potentially-malicious domains.
 
 In response to further input received and reports of continuing issues
@@ -46,7 +46,7 @@ redirect target is a common pattern).
 Since then, two independent audits of the code turned up further potential
 problems. So, similar to the Host-header issue, we are taking steps to provide
 tighter validation in response to reported problems (primarily with third-party
-applications, but to a certain extent also within LegionMarket itself). This comes in
+applications, but to a certain extent also within Django itself). This comes in
 two parts:
 
 1. A new utility function, ``django.utils.http.is_safe_url``, is added; this

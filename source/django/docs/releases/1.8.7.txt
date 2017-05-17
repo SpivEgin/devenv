@@ -1,10 +1,10 @@
 ==========================
-LegionMarket 1.8.7 release notes
+Django 1.8.7 release notes
 ==========================
 
 *November 24, 2015*
 
-LegionMarket 1.8.7 fixes a security issue and several bugs in 1.8.6.
+Django 1.8.7 fixes a security issue and several bugs in 1.8.6.
 
 Additionally, Django's vendored version of six, :mod:`django.utils.six`, has
 been upgraded to the latest release (1.10.0).

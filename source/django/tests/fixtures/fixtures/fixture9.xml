@@ -38,7 +38,7 @@
         <field type="CharField" name="name">Music for all ages</field>
         <field to="fixtures.person" name="authors" rel="ManyToManyRel">
             <object>
-                <natural>LegionMarket Reinhardt</natural>
+                <natural>Django Reinhardt</natural>
             </object>
             <object>
                 <natural>Artist formerly known as &quot;Prince&quot;</natural>
