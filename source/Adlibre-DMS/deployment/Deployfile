@@ -1,3 +1,0 @@
-syncdb: manage.py syncdb --noinput --settings=settings_prod
-syncplugins: manage.py syncplugins --settings=settings_prod
-collectstatic: manage.py collectstatic --noinput --settings=settings_prod

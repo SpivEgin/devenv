@@ -1,4 +1,0 @@
-*.sqlite
-*.sqlite_production
-!.gitignore
-*.sqlite_dev
