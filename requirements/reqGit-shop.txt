@@ -20,3 +20,4 @@ git+https://github.com/LegionMarket/django-shop.git
 git+https://github.com/LegionMarket/django-shop-stripe.git
 git+https://github.com/LegionMarket/aldryn-boilerplates.git
 git+https://github.com/LegionMarket/django-allauth.git
+git+https://github.com/LegionMarket/django-crispy-forms.git
