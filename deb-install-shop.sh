@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 pip3 install -r requirements/common-shop.txt
 pip3 install -r requirements/reqGit-shop.txt
-pip3 uninstall -y django-cms django-shop django-jet pinax-stripe
+pip3 uninstall -y django-cms django-shop django-jet pinax-stripe djangocms-admin-style
 
 cwd=$(pwd)
 
@@ -24,7 +24,8 @@ cd ${cwd}/source/djangocms-cascade
 yarn install
 python setup.py build && python setup.py install
 
-cd ${cwd}/source/django-admin-interface
+cd ${cwd}/source/djangocms-admin-style
+npm install
 yarn install
 python setup.py build && python setup.py install
 

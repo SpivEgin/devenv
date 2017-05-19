@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="www_activeflyers_com">
+  <component name="PublishConfigData" autoUpload="Always" serverName="www_activeflyers_com" uploadOnCheckin="651080e8-fe3d-4014-a951-1f10ebb5f238">
     <serverData>
       <paths name="10.71.34.68">
         <serverdata>
@@ -161,6 +161,13 @@
           <mappings>
             <mapping deploy="/devenv" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/source/django/node_modules" />
+            <excludedPath local="true" path="$PROJECT_DIR$/source/django-oscar/node_modules" />
+            <excludedPath local="true" path="$PROJECT_DIR$/source/django-shop/node_modules" />
+            <excludedPath local="true" path="$PROJECT_DIR$/source/djangocms-cascade/node_modules" />
+            <excludedPath local="true" path="$PROJECT_DIR$/source/pinax-stripe/node_modules" />
+          </excludedPaths>
         </serverdata>
       </paths>
       <paths name="youcommune">
@@ -171,6 +178,7 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myUploadOnCheckinName" value="www_activeflyers_com" />
     <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>
