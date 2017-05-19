@@ -45,7 +45,7 @@ class Theme(models.Model):
 
         return obj
 
-    name = models.CharField( max_length = 50, default = 'Legion Market' )
+    name = models.CharField( max_length = 50, default = 'LegionMarker' )
     active = models.BooleanField( default = True )
 
     title = models.CharField( max_length = 50, default = 'TLM administration', blank = True )
@@ -54,13 +54,13 @@ class Theme(models.Model):
     logo = models.FileField( upload_to = 'admin-interface/logo/', blank = True )
     logo_visible = models.BooleanField( default = True, verbose_name = 'visible' )
 
-    css_header_background_color = ColorField( blank = True, default = '#0C4B33', help_text = '#0C4B33', verbose_name = 'background color' )
+    css_header_background_color = ColorField( blank = True, default = '#3E4095', help_text = '#0C4B33', verbose_name = 'background color' )
     css_header_title_color = ColorField( blank = True, default = '#F5DD5D', help_text = '#F5DD5D', verbose_name = 'title color' )
     css_header_text_color = ColorField( blank = True, default = '#44B78B', help_text = '#44B78B', verbose_name = 'text color' )
     css_header_link_color = ColorField( blank = True, default = '#FFFFFF', help_text = '#FFFFFF', verbose_name = 'link color' )
     css_header_link_hover_color = ColorField( blank = True, default = '#C9F0DD', help_text = '#C9F0DD', verbose_name = 'link hover color' )
 
-    css_module_background_color = ColorField( blank = True, default = '#44B78B', help_text = '#44B78B', verbose_name = 'background color' )
+    css_module_background_color = ColorField( blank = True, default = '#00A859', help_text = '#44B78B', verbose_name = 'background color' )
     css_module_text_color = ColorField( blank = True, default = '#FFFFFF', help_text = '#FFFFFF', verbose_name = 'text color' )
     css_module_link_color = ColorField( blank = True, default = '#FFFFFF', help_text = '#FFFFFF', verbose_name = 'link color' )
     css_module_link_hover_color = ColorField( blank = True, default = '#C9F0DD', help_text = '#C9F0DD', verbose_name = 'link hover color' )
@@ -69,8 +69,8 @@ class Theme(models.Model):
     css_generic_link_color = ColorField( blank = True, default = '#0C3C26', help_text = '#0C3C26', verbose_name = 'link color' )
     css_generic_link_hover_color = ColorField( blank = True, default = '#156641', help_text = '#156641', verbose_name = 'link hover color' )
 
-    css_save_button_background_color = ColorField( blank = True, default = '#0C4B33', help_text = '#0C4B33', verbose_name = 'background color' )
-    css_save_button_background_hover_color = ColorField( blank = True, default = '#0C3C26', help_text = '#0C3C26', verbose_name = 'background hover color' )
+    css_save_button_background_color = ColorField( blank = True, default = '#00A859', help_text = '#0C4B33', verbose_name = 'background color' )
+    css_save_button_background_hover_color = ColorField( blank = True, default = '#14623E', help_text = '#0C3C26', verbose_name = 'background hover color' )
     css_save_button_text_color = ColorField( blank = True, default = '#FFFFFF', help_text = '#FFFFFF', verbose_name = 'text color' )
 
     css_delete_button_background_color = ColorField( blank = True, default = '#BA2121', help_text = '#BA2121', verbose_name = 'background color' )
@@ -110,7 +110,7 @@ class Theme(models.Model):
         if self.logo and os.path.isfile(self.logo.url):
             return
 
-        logo_filename = 'tlm-logo.svg'
+        logo_filename = 'logo.svg'
         logo_path = os.path.normpath(os.path.dirname(__file__) + '/data/' + logo_filename)
         logo_file = open(logo_path)
 
