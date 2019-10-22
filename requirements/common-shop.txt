@@ -36,7 +36,7 @@ html5lib==0.9999999
 jsonfield==1.0.3
 libsass==0.12.3
 oauthlib==1.0.3
-Pillow==3.3.0
+Pillow==6.2.0
 pluggy==0.3.1
 py==1.4.30
 Pygments==2.0.2
