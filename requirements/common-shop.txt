@@ -4,7 +4,7 @@ django-allauth==0.23.0
 django-angular==0.8.4
 django-appconf==1.0.1
 django-classy-tags==0.8.0
-django-cms==3.4.2
+django-cms==3.4.7
 django-compressor==2.1.1
 django-filer==1.2.7
 django-filter==1.0.1
