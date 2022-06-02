@@ -32,7 +32,7 @@ drf-haystack==1.6.1
 easy-thumbnails==2.3
 elasticsearch==1.7.0
 hiredis==0.2.0
-html5lib==0.9999999
+html5lib==0.99999999
 jsonfield==1.0.3
 libsass==0.12.3
 oauthlib==1.0.3
