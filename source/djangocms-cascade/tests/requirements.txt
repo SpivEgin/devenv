@@ -11,7 +11,7 @@ django-sekizai==0.10.0
 django-treebeard==4.1.0
 djangocms-text-ckeditor==3.3.1
 easy-thumbnails==2.3
-html5lib==0.9999999
+html5lib==0.999999999
 jsonfield==1.0.3
 lxml==3.5.0
 pluggy==0.3.1
